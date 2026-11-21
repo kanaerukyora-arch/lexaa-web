@@ -36,6 +36,13 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 @media(max-height:650px) and (orientation:landscape){.login-card{transform:scale(.82);padding-top:27px}.brand{margin-bottom:12px}.tabs{margin-bottom:12px}.field{height:49px;margin:10px 0}.submit{height:54px}.other{bottom:5px}}
 @media(orientation:portrait){#loginScreen .login-layout{width:100dvh;height:100vw;left:100vw;top:0;right:auto;bottom:auto;transform:rotate(90deg);transform-origin:top left;padding:8px}#loginScreen .login-card{width:min(610px,94vw);transform:scale(.84)}#loginScreen .other{right:4%;bottom:2%}}
 @media(max-width:420px) and (orientation:portrait){#loginScreen .login-card{transform:scale(.73)}}
+
+#registerForm[hidden],#loginForm[hidden],#loginPrompt[hidden],#registerPrompt[hidden]{display:none!important}
+.tabs .tab{font-size:19px;cursor:pointer;width:100%;font-family:Arial;border:1px solid #8b9ab2}
+#registerForm .field{height:52px;margin:9px 0}
+#registerForm .field input{font-size:17px}
+#registerForm .submit{height:58px;font-size:25px}
+#authMessage.error{color:#ffb4b4!important}
 </style></head>
 <body>
 <div class="bg"></div>
@@ -43,20 +50,76 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 <main id="loginScreen"><div class="login-layout"><section class="login-card" aria-label="Login Lexaa">
 <span class="wing left" aria-hidden="true">❧</span><span class="wing right" aria-hidden="true">❧</span><span class="gem" aria-hidden="true">◆</span>
 <header class="brand"><h1>Lexaa</h1><p>New Generation</p></header>
-<div class="tabs"><div class="tab active">LOGIN</div><div class="tab">REGISTER</div></div>
-<form id="loginForm"><label class="field"><span class="symbol">✥</span><input name="username" placeholder="Username / Email" autocomplete="username" required></label>
+<div class="tabs"><button class="tab active" id="loginTab" type="button">LOGIN</button><button class="tab" id="registerTab" type="button">REGISTER</button></div>
+<div id="authMessage" role="status" aria-live="polite" style="min-height:22px;text-align:center;color:#ffe7a0;font:14px Arial;margin:0 0 8px"></div>
+<form id="loginForm">
+<label class="field"><span class="symbol">✥</span><input type="email" name="email" placeholder="Email" autocomplete="email" required></label>
 <label class="field password"><span class="symbol">♙</span><input type="password" name="password" placeholder="Password" autocomplete="current-password" required></label>
 <button class="submit" type="submit">MASUK / LOGIN</button></form>
+<form id="registerForm" hidden>
+<label class="field"><span class="symbol">✧</span><input name="displayName" placeholder="Nama Display" autocomplete="name" maxlength="40" required></label>
+<label class="field"><span class="symbol">♙</span><input name="username" placeholder="Username (tanpa spasi)" autocomplete="username" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" required></label>
+<label class="field"><span class="symbol">✉</span><input type="email" name="email" placeholder="Email (bebas, tanpa OTP)" autocomplete="email" required></label>
+<label class="field password"><span class="symbol">♙</span><input type="password" name="password" placeholder="Buat Password (min. 8 karakter)" minlength="8" autocomplete="new-password" required></label>
+<label class="field password"><span class="symbol">♙</span><input type="password" name="confirmPassword" placeholder="Ulangi Password" minlength="8" autocomplete="new-password" required></label>
+<button class="submit" type="submit">BUAT AKUN</button></form>
 <a class="forgot" href="#" id="forgotLink">Lupa Password?</a>
-<div class="register">Belum punya akun? <a href="#" class="no-nav">DAFTAR DISINI</a><br>Don't have an account? <a href="#" class="no-nav">REGISTER HERE</a></div>
+<div class="register" id="registerPrompt">Belum punya akun? <a href="#" id="openRegister">DAFTAR DISINI</a></div>
+<div class="register" id="loginPrompt" hidden>Sudah punya akun? <a href="#" id="openLogin">LOGIN DISINI</a></div>
 </section><div class="other"><span>Login dengan metode lain</span><span class="seal">⚔</span></div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-document.getElementById('enterBtn').addEventListener('click',async()=>{
+const SUPABASE_URL = "https://zfyezjvfiggzkmwcomrh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LPBiUYMB60WGxC9CRP3Nmg_ptQ3DQ0D";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = id => document.getElementById(id);
+const authMessage = $("authMessage");
+function showMessage(message, isError=false){authMessage.textContent=message;authMessage.classList.toggle("error",isError);}
+function setMode(mode){
+ const registering = mode === "register";
+ $("loginForm").hidden = registering;
+ $("registerForm").hidden = !registering;
+ $("loginTab").classList.toggle("active",!registering);
+ $("registerTab").classList.toggle("active",registering);
+ $("forgotLink").hidden = registering;
+ $("registerPrompt").hidden = registering;
+ $("loginPrompt").hidden = !registering;
+ showMessage("");
+}
+$("enterBtn").addEventListener("click",async()=>{
  try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}
- try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape')}catch(e){}
- document.getElementById('intro').classList.add('hide');document.getElementById('loginScreen').classList.add('show');
+ try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock("landscape")}catch(e){}
+ $("intro").classList.add("hide");$("loginScreen").classList.add("show");
 });
-document.getElementById('loginForm').addEventListener('submit',e=>{e.preventDefault();alert('Tampilan login siap. Backend autentikasi belum dipasang.')});
-document.querySelectorAll('.no-nav').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
-document.getElementById('forgotLink').addEventListener('click',e=>e.preventDefault());
+$("loginTab").addEventListener("click",()=>setMode("login"));
+$("registerTab").addEventListener("click",()=>setMode("register"));
+$("openRegister").addEventListener("click",e=>{e.preventDefault();setMode("register")});
+$("openLogin").addEventListener("click",e=>{e.preventDefault();setMode("login")});
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();const form=new FormData(e.currentTarget);
+ const {error}=await supabaseClient.auth.signInWithPassword({email:String(form.get("email")).trim(),password:String(form.get("password"))});
+ if(error){showMessage(error.message==="Invalid login credentials"?"Email atau password salah.":error.message,true);return;}
+ const {data}=await supabaseClient.auth.getUser();
+ showMessage("Berhasil login"+(data.user?.user_metadata?.display_name?" sebagai "+data.user.user_metadata.display_name:"")+"! Akun Lexaa aktif.");
+});
+$("registerForm").addEventListener("submit",async e=>{
+ e.preventDefault();const form=new FormData(e.currentTarget);
+ const displayName=String(form.get("displayName")).trim();
+ const username=String(form.get("username")).trim().toLowerCase();
+ const email=String(form.get("email")).trim();
+ const password=String(form.get("password"));
+ const confirmPassword=String(form.get("confirmPassword"));
+ if(password!==confirmPassword){showMessage("Konfirmasi password belum sama.",true);return;}
+ if(!/^[a-z0-9_]{3,20}$/.test(username)){showMessage("Username harus 3–20 karakter: huruf, angka, atau garis bawah.",true);return;}
+ const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName,username}}});
+ if(error){showMessage(error.message,true);return;}
+ if(data.session){showMessage("Akun berhasil dibuat! Selamat datang di Lexaa, "+displayName+".");}
+ else{showMessage("Pendaftaran diterima. Jika konfirmasi email masih aktif di Supabase, akun perlu dikonfirmasi sebelum login.");}
+});
+$("forgotLink").addEventListener("click",async e=>{
+ e.preventDefault();const email=$('loginForm').elements.email.value.trim();
+ if(!email){showMessage("Masukkan email dulu untuk menerima tautan reset password.",true);return;}
+ const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+ showMessage(error?error.message:"Jika email terdaftar, tautan reset password akan dikirim.");
+});
 </script></body></html>
