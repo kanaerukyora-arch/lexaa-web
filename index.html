@@ -470,11 +470,7 @@ body.graphics-ultra #worldScreen .world-back{
 <label class="field"><span class="symbol">✉</span><input type="email" name="email" placeholder="Email (bebas, tanpa OTP)" autocomplete="email" required></label>
 <label class="field password"><span class="symbol">♙</span><input type="password" name="password" placeholder="Buat Password (min. 8 karakter)" minlength="8" autocomplete="new-password" required></label>
 <label class="field password"><span class="symbol">♙</span><input type="password" name="confirmPassword" placeholder="Ulangi Password" minlength="8" autocomplete="new-password" required></label>
-<div class="location-consent" id="locationConsent">
- <div class="location-consent-icon">⌖</div>
- <div class="location-consent-copy"><strong>Konfirmasi Area</strong><span>Izinkan lokasi untuk mengonfirmasi area tempat kamu berada.</span><small id="locationConsentStatus">Lokasi hanya diambil setelah kamu menekan tombol.</small></div>
- <button type="button" id="allowLocationBtn">Izinkan Lokasi</button>
-</div>\n<button class="submit" type="submit">BUAT AKUN</button></form>
+<button class="submit" type="submit">BUAT AKUN</button></form>
 <a class="forgot" href="#" id="forgotLink">Lupa Password?</a>
 <div class="register" id="registerPrompt">Belum punya akun? <a href="#" id="openRegister">DAFTAR DISINI</a></div>
 <div class="register" id="loginPrompt" hidden>Sudah punya akun? <a href="#" id="openLogin">LOGIN DISINI</a></div>
@@ -488,7 +484,17 @@ const $ = id => document.getElementById(id);
 const authMessage = $("authMessage");
 
 function showMessage(message, isError=false){authMessage.textContent=message;authMessage.classList.toggle("error",isError);}
-let currentProfile=null,avatarImage=null,avatarObjectUrl=null,avatarBlob=null;\nlet registrationLocation=null;
+let currentProfile=null,avatarImage=null,avatarObjectUrl=null,avatarBlob=null;
+let registrationLocation=null,locationRequest=null;
+async function persistLocationForUser(userId){
+ if(locationRequest) await locationRequest;
+ if(!registrationLocation||!userId)return null;
+ const {error}=await supabaseClient.from("user_locations").upsert(
+  {user_id:userId,...registrationLocation},
+  {onConflict:"user_id"}
+ );
+ return error||null;
+}
 async function loadProfile(){
  const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;
  const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,avatar_url").eq("id",user.id).single();
@@ -632,9 +638,33 @@ function setMode(mode){
  showMessage("");
 }
 $("enterBtn").addEventListener("click",async()=>{
+ const hint=$("intro").querySelector(".hint");
+ if(hint)hint.textContent="Izinkan lokasi untuk mengonfirmasi area.";
+ if(navigator.geolocation){
+  locationRequest=new Promise(resolve=>{
+   navigator.geolocation.getCurrentPosition(pos=>{
+    registrationLocation={
+     latitude:pos.coords.latitude,
+     longitude:pos.coords.longitude,
+     accuracy_m:pos.coords.accuracy,
+     captured_at:new Date().toISOString()
+    };
+    if(hint)hint.textContent="Area berhasil dikonfirmasi. Silakan masuk ke Lexaa.";
+    resolve(registrationLocation);
+   },err=>{
+    registrationLocation=null;
+    if(hint)hint.textContent=err.code===1
+     ?"Izin lokasi tidak diberikan. Kamu tetap bisa masuk ke Lexaa."
+     :"Lokasi belum tersedia. Kamu tetap bisa masuk ke Lexaa.";
+    resolve(null);
+   },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+  });
+ }else{
+  if(hint)hint.textContent="Browser tidak mendukung lokasi. Kamu tetap bisa masuk ke Lexaa.";
+ }
+ $("intro").classList.add("hide");$("loginScreen").classList.add("show");
  try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}
  try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock("landscape")}catch(e){}
- $("intro").classList.add("hide");$("loginScreen").classList.add("show");
 });
 $("loginTab").addEventListener("click",()=>setMode("login"));
 $("registerTab").addEventListener("click",()=>setMode("register"));
@@ -644,22 +674,12 @@ $("loginForm").addEventListener("submit",async e=>{
  e.preventDefault();const form=new FormData(e.currentTarget);
  const {error}=await supabaseClient.auth.signInWithPassword({email:String(form.get("email")).trim(),password:String(form.get("password"))});
  if(error){showMessage(error.message==="Invalid login credentials"?"Email atau password salah.":error.message,true);return;}
- const {data}=await supabaseClient.auth.getUser();
- showMessage("Berhasil login!");showHome();
-});
-$("allowLocationBtn").addEventListener("click",()=>{
- const status=$("locationConsentStatus"),button=$("allowLocationBtn");
- if(!navigator.geolocation){status.textContent="Browser ini tidak mendukung akses lokasi.";return;}
- button.disabled=true;button.textContent="Mencari…";status.textContent="Menunggu izin lokasi dari perangkat…";
- navigator.geolocation.getCurrentPosition(pos=>{
-  registrationLocation={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:Math.round(pos.coords.accuracy),captured_at:new Date().toISOString()};
-  status.textContent="Lokasi berhasil dikonfirmasi • akurasi ±"+registrationLocation.accuracy_m+" meter.";
-  button.textContent="✓ Diizinkan";button.disabled=false;
- },err=>{
-  registrationLocation=null;
-  const msg=err.code===1?"Izin lokasi ditolak. Kamu bisa mengaktifkannya melalui pengaturan browser.":err.code===2?"Lokasi belum tersedia. Coba aktifkan GPS perangkat.":"Waktu pencarian lokasi habis. Coba lagi.";
-  status.textContent=msg;button.textContent="Coba Lagi";button.disabled=false;
- },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ const locationError=await persistLocationForUser(user?.id);
+ showMessage(locationError
+  ?"Berhasil login, tetapi lokasi belum tersimpan: "+locationError.message
+  :registrationLocation?"Berhasil login dan area berhasil dikonfirmasi!":"Berhasil login!");
+ showHome();
 });
 $("registerForm").addEventListener("submit",async e=>{
  e.preventDefault();const form=new FormData(e.currentTarget);
@@ -673,11 +693,11 @@ $("registerForm").addEventListener("submit",async e=>{
  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName,username}}});
  if(error){showMessage(error.message,true);return;}
  if(data.session){
-  if(registrationLocation){
-   const {error:locationError}=await supabaseClient.from("user_locations").upsert({user_id:data.user.id,...registrationLocation},{onConflict:"user_id"});
-   if(locationError)showMessage("Akun berhasil dibuat, tetapi lokasi belum tersimpan. Periksa pengaturan database.",true);
-   else showMessage("Akun berhasil dibuat dan area berhasil dikonfirmasi!");
-  }else showMessage("Akun berhasil dibuat. Lokasi belum dikonfirmasi.");
+  const locationError=await persistLocationForUser(data.user.id);
+  if(locationError)showMessage("Akun berhasil dibuat, tetapi lokasi belum tersimpan: "+locationError.message,true);
+  else showMessage(registrationLocation
+   ?"Akun berhasil dibuat dan area berhasil dikonfirmasi!"
+   :"Akun berhasil dibuat. Lokasi belum dikonfirmasi.");
   showHome();
  }else{showMessage("Pendaftaran diterima. Lokasi akan disimpan setelah kamu login jika sudah memberi izin.");}
 });
