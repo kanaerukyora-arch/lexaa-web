@@ -68,6 +68,16 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 .home-nav{height:66px;padding:0 22px;display:flex;align-items:center;gap:18px;color:#f4efff;font-size:20px;background:linear-gradient(90deg,rgba(8,13,46,.85),rgba(24,29,91,.58));border:1px solid #c3baff;clip-path:polygon(5% 0,92% 0,100% 50%,92% 100%,5% 100%,0 50%);box-shadow:inset 0 0 15px #7775ff44,0 0 12px #6b70ff44;text-shadow:0 0 8px #9eaaff}
 .home-nav.active{background:linear-gradient(90deg,rgba(45,38,160,.94),rgba(122,64,255,.78));border:2px solid #e4cfff;box-shadow:0 0 16px #a45cff,inset 0 0 18px #d8b4ff77}
 .home-nav span:first-child{font:30px Arial}
+.settings-backdrop{position:absolute;inset:0;z-index:20;display:none;place-items:center;background:rgba(2,4,20,.68);backdrop-filter:blur(7px)}
+.settings-backdrop.open{display:grid}
+.settings-card{width:min(430px,82vw);padding:26px 30px;text-align:center;background:linear-gradient(145deg,rgba(10,17,55,.97),rgba(31,25,91,.96));border:1px solid #d4c7ff;box-shadow:0 0 30px #886aff99,inset 0 0 22px #8c7bff33;clip-path:polygon(4% 0,96% 0,100% 8%,100% 92%,96% 100%,4% 100%,0 92%,0 8%);color:#fff}
+.settings-card h2{margin:0 0 8px;font:26px Georgia;color:#eee4ff;text-shadow:0 0 12px #a78bff}
+.settings-card p{margin:0 0 22px;color:#d8d2ff;font:14px Georgia}
+.settings-action{display:block;width:100%;margin:10px 0;padding:13px 16px;border:1px solid #c7baff;background:linear-gradient(90deg,#28236e,#6242ad);color:white;font:16px Georgia;cursor:pointer}
+.settings-action.logout{border-color:#e6a7c8;background:linear-gradient(90deg,#54234f,#8d315f)}
+.settings-close{position:absolute;top:10px;right:16px;border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}
+.home-nav{cursor:pointer}
+
 .welcome-panel{position:absolute;left:2%;bottom:4%;max-width:490px;padding:20px 26px 20px 82px;background:linear-gradient(90deg,rgba(7,12,37,.76),rgba(12,18,53,.42));border:1px solid #b6c5ff99;clip-path:polygon(5% 0,100% 0,96% 100%,0 100%,0 20%);text-shadow:0 0 8px #9eaaff}
 .welcome-panel:before{content:'✦';position:absolute;left:18px;top:17px;font-size:48px;color:#d8d4ff;text-shadow:0 0 16px #a4aaff}
 .welcome-panel strong{display:block;font-size:18px;margin-bottom:7px}.welcome-panel em{font-size:15px;color:#ddd9ff}
@@ -96,7 +106,8 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
   <div class="status-divider"></div>
   <div class="status-cell"><div><div class="status-main" id="clockText">--:--:--</div><span class="status-sub" id="dateText">--</span></div></div>
  </div>
- <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav"><span>♙</span>Profil</div><div class="home-nav"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav"><span>ⓘ</span>About</div></nav>
+ <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav"><span>♙</span>Profil</div><div class="home-nav" id="settingsMenu" role="button" tabindex="0"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav"><span>ⓘ</span>About</div></nav>
+ <div class="settings-backdrop" id="settingsBackdrop" aria-hidden="true"><div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><button class="settings-close" id="closeSettings" type="button" aria-label="Tutup">×</button><h2 id="settingsTitle">Pengaturan Akun</h2><p>Atur sesi akun Lexaa kamu.</p><button class="settings-action" id="switchAccountBtn" type="button">⇄　Ganti Akun</button><button class="settings-action logout" id="logoutBtn" type="button">↪　Log Out</button></div></div>
  <div class="welcome-panel"><strong>Selamat datang di Lexaa!</strong><em>Semoga harimu penuh dengan keberuntungan. ✦</em></div>
  <button class="explore-btn" type="button">Jelajahi Dunia　›</button>
 </section>
@@ -151,6 +162,25 @@ function startHomeIndicators(){
   try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan": "Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
  },()=>{$("locationText").textContent="Lokasi nonaktif";$("coordsText").textContent="Izinkan lokasi di browser";$("weatherText").textContent="Butuh lokasi";},{enableHighAccuracy:false,timeout:12000,maximumAge:300000});
 }
+
+function openSettings(){ $("settingsBackdrop").classList.add("open");$("settingsBackdrop").setAttribute("aria-hidden","false"); }
+function closeSettings(){ $("settingsBackdrop").classList.remove("open");$("settingsBackdrop").setAttribute("aria-hidden","true"); }
+async function leaveAccount(destination){
+ const button=$("switchAccountBtn");$("switchAccountBtn").disabled=true;$("logoutBtn").disabled=true;
+ const {error}=await supabaseClient.auth.signOut();
+ $("switchAccountBtn").disabled=false;$("logoutBtn").disabled=false;
+ if(error){alert("Gagal keluar dari akun: "+error.message);return;}
+ closeSettings();$("homeScreen").classList.remove("show");
+ if(destination==="login"){$("intro").classList.add("hide");$("loginScreen").classList.add("show");setMode("login");showMessage("Silakan login dengan akun lain.");}
+ else{$("loginScreen").classList.remove("show");$("intro").classList.remove("hide");}
+}
+$("settingsMenu").addEventListener("click",openSettings);
+$("settingsMenu").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openSettings();}});
+$("closeSettings").addEventListener("click",closeSettings);
+$("settingsBackdrop").addEventListener("click",e=>{if(e.target===$("settingsBackdrop"))closeSettings();});
+$("switchAccountBtn").addEventListener("click",()=>leaveAccount("login"));
+$("logoutBtn").addEventListener("click",()=>leaveAccount("intro"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSettings();});
 
 function setMode(mode){
  const registering = mode === "register";
