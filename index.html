@@ -176,6 +176,72 @@ body.graphics-low #worldScreen .world-card{animation:none!important;transition:n
 @media(prefers-reduced-motion:reduce){#worldScreen:after,body.graphics-ultra .world-card,body.graphics-ultra .world-card:before,body.graphics-ultra .world-card:after{animation:none!important}}
 @media(max-height:520px) and (orientation:landscape){.world-grid{top:25%;height:54%}.world-card .card-icon{min-height:30px}.world-card small{margin-top:4px}.world-card .divider{margin-top:4px}}
 
+
+/* Premium contrast and luminous typography — ULTRA only */
+body.graphics-ultra #worldScreen:before{
+ background:
+  radial-gradient(ellipse at 50% 45%,rgba(4,7,35,.22) 0%,rgba(3,5,30,.48) 62%,rgba(2,3,24,.68) 100%),
+  linear-gradient(180deg,rgba(2,4,24,.42),rgba(5,4,38,.52));
+}
+body.graphics-ultra .world-grid{filter:drop-shadow(0 0 14px rgba(92,112,255,.25))}
+body.graphics-ultra .world-card{
+ border-color:rgba(164,190,255,.98);
+ outline-color:rgba(219,224,255,.72);
+ box-shadow:0 0 14px rgba(93,139,255,.88),0 0 30px rgba(80,86,255,.48),inset 0 0 22px rgba(114,145,255,.38);
+}
+body.graphics-ultra .world-card strong{
+ color:#fff;
+ text-shadow:0 0 4px #fff,0 0 10px #a9c9ff,0 0 20px #718cff,0 0 32px rgba(100,105,255,.95);
+ letter-spacing:.035em;
+}
+body.graphics-ultra .world-card small{
+ color:#f2efff;
+ text-shadow:0 0 4px #fff,0 0 9px #a7bdff,0 0 17px rgba(126,126,255,.95);
+}
+body.graphics-ultra .world-card .divider{
+ color:#fff;
+ text-shadow:0 0 7px #fff,0 0 16px #b59aff,0 0 25px #7b69ff;
+}
+body.graphics-ultra .world-card .divider:before,
+body.graphics-ultra .world-card .divider:after{
+ height:1.5px;
+ background:linear-gradient(90deg,transparent,#e5eaff 28%,#bcaaff 72%,transparent);
+ box-shadow:0 0 7px #b8caff,0 0 14px #8e7bff;
+}
+body.graphics-ultra .world-card:before,
+body.graphics-ultra .world-card:after{
+ color:#fff;
+ text-shadow:0 0 6px #fff,0 0 14px #a9caff,0 0 26px #8275ff,0 0 38px #684aff;
+}
+body.graphics-ultra .world-card.featured{
+ border-color:#e2c7ff;
+ box-shadow:0 0 16px #c38bff,0 0 34px #9b55ff,0 0 58px rgba(107,47,255,.7),inset 0 0 30px rgba(194,126,255,.48);
+}
+body.graphics-ultra .world-card.featured strong{
+ text-shadow:0 0 5px #fff,0 0 12px #f0d2ff,0 0 24px #d09aff,0 0 38px #9b4cff;
+}
+body.graphics-ultra .world-card.featured small{
+ text-shadow:0 0 5px #fff,0 0 12px #e2bdff,0 0 23px #a65bff;
+}
+body.graphics-ultra .world-card .ornament{
+ border-color:#d8e4ff;
+ box-shadow:0 0 10px #fff,0 0 20px #8eafff,0 0 32px #706cff;
+}
+body.graphics-ultra .world-card.featured .ornament{
+ border-color:#ffe5ff;
+ box-shadow:0 0 12px #fff,0 0 24px #e2aaff,0 0 40px #a34dff;
+}
+body.graphics-ultra .world-card .card-icon{
+ filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 17px #91baff) drop-shadow(0 0 28px #6b73ff);
+}
+body.graphics-ultra .world-card.featured .card-icon{
+ filter:drop-shadow(0 0 9px #fff) drop-shadow(0 0 20px #e0b5ff) drop-shadow(0 0 34px #9c4cff);
+}
+body.graphics-ultra .world-card:focus-visible,
+body.graphics-ultra .world-card:hover{
+ filter:brightness(1.25) saturate(1.16);
+}
+
 </style></head>
 <body>
 <div class="bg"></div>
