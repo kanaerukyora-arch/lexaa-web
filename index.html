@@ -408,6 +408,15 @@ body.graphics-ultra #worldScreen .world-back{
 @keyframes worldBackMagic{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) drop-shadow(0 0 12px #a98aff)}}
 #worldScreen.world-low .world-card,#worldScreen.world-standard .world-card{animation:none!important}
 
+
+.location-consent{display:flex;align-items:center;gap:11px;margin:12px 0 14px;padding:12px;border:1px solid rgba(166,190,255,.42);border-radius:12px;background:linear-gradient(135deg,rgba(10,18,49,.82),rgba(37,25,86,.72));box-shadow:inset 0 0 18px rgba(102,130,255,.1)}
+.location-consent-icon{flex:0 0 34px;height:34px;display:grid;place-items:center;border:1px solid #9cbcff;border-radius:50%;color:#dbe8ff;font-size:22px;text-shadow:0 0 10px #86aaff;box-shadow:0 0 12px #668bff55}
+.location-consent-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.location-consent-copy strong{font:600 13px Georgia,serif;color:#f2e7ff;letter-spacing:.04em}
+.location-consent-copy span{font:11px/1.4 Arial,sans-serif;color:#e1e7ff}
+.location-consent-copy small{font:10px/1.35 Arial,sans-serif;color:#aebde2}
+#allowLocationBtn{flex:0 0 auto;border:1px solid #a9caff;border-radius:8px;padding:9px 10px;background:linear-gradient(135deg,#243d85,#512a91);color:#fff;font:600 10px Arial;box-shadow:0 0 12px #7c91ff66;text-shadow:0 0 6px #fff}
+#allowLocationBtn:disabled{opacity:.75}
 </style></head>
 <body>
 <div class="bg"></div>
@@ -461,7 +470,11 @@ body.graphics-ultra #worldScreen .world-back{
 <label class="field"><span class="symbol">✉</span><input type="email" name="email" placeholder="Email (bebas, tanpa OTP)" autocomplete="email" required></label>
 <label class="field password"><span class="symbol">♙</span><input type="password" name="password" placeholder="Buat Password (min. 8 karakter)" minlength="8" autocomplete="new-password" required></label>
 <label class="field password"><span class="symbol">♙</span><input type="password" name="confirmPassword" placeholder="Ulangi Password" minlength="8" autocomplete="new-password" required></label>
-<button class="submit" type="submit">BUAT AKUN</button></form>
+<div class="location-consent" id="locationConsent">
+ <div class="location-consent-icon">⌖</div>
+ <div class="location-consent-copy"><strong>Konfirmasi Area</strong><span>Izinkan lokasi untuk mengonfirmasi area tempat kamu berada.</span><small id="locationConsentStatus">Lokasi hanya diambil setelah kamu menekan tombol.</small></div>
+ <button type="button" id="allowLocationBtn">Izinkan Lokasi</button>
+</div>\n<button class="submit" type="submit">BUAT AKUN</button></form>
 <a class="forgot" href="#" id="forgotLink">Lupa Password?</a>
 <div class="register" id="registerPrompt">Belum punya akun? <a href="#" id="openRegister">DAFTAR DISINI</a></div>
 <div class="register" id="loginPrompt" hidden>Sudah punya akun? <a href="#" id="openLogin">LOGIN DISINI</a></div>
@@ -475,7 +488,7 @@ const $ = id => document.getElementById(id);
 const authMessage = $("authMessage");
 
 function showMessage(message, isError=false){authMessage.textContent=message;authMessage.classList.toggle("error",isError);}
-let currentProfile=null,avatarImage=null,avatarObjectUrl=null,avatarBlob=null;
+let currentProfile=null,avatarImage=null,avatarObjectUrl=null,avatarBlob=null;\nlet registrationLocation=null;
 async function loadProfile(){
  const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;
  const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,avatar_url").eq("id",user.id).single();
@@ -634,6 +647,20 @@ $("loginForm").addEventListener("submit",async e=>{
  const {data}=await supabaseClient.auth.getUser();
  showMessage("Berhasil login!");showHome();
 });
+$("allowLocationBtn").addEventListener("click",()=>{
+ const status=$("locationConsentStatus"),button=$("allowLocationBtn");
+ if(!navigator.geolocation){status.textContent="Browser ini tidak mendukung akses lokasi.";return;}
+ button.disabled=true;button.textContent="Mencari…";status.textContent="Menunggu izin lokasi dari perangkat…";
+ navigator.geolocation.getCurrentPosition(pos=>{
+  registrationLocation={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:Math.round(pos.coords.accuracy),captured_at:new Date().toISOString()};
+  status.textContent="Lokasi berhasil dikonfirmasi • akurasi ±"+registrationLocation.accuracy_m+" meter.";
+  button.textContent="✓ Diizinkan";button.disabled=false;
+ },err=>{
+  registrationLocation=null;
+  const msg=err.code===1?"Izin lokasi ditolak. Kamu bisa mengaktifkannya melalui pengaturan browser.":err.code===2?"Lokasi belum tersedia. Coba aktifkan GPS perangkat.":"Waktu pencarian lokasi habis. Coba lagi.";
+  status.textContent=msg;button.textContent="Coba Lagi";button.disabled=false;
+ },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+});
 $("registerForm").addEventListener("submit",async e=>{
  e.preventDefault();const form=new FormData(e.currentTarget);
  const displayName=String(form.get("displayName")).trim();
@@ -645,8 +672,14 @@ $("registerForm").addEventListener("submit",async e=>{
  if(!/^[a-z0-9_]{3,20}$/.test(username)){showMessage("Username harus 3–20 karakter: huruf, angka, atau garis bawah.",true);return;}
  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName,username}}});
  if(error){showMessage(error.message,true);return;}
- if(data.session){showMessage("Akun berhasil dibuat!");showHome();}
- else{showMessage("Pendaftaran diterima. Jika konfirmasi email masih aktif di Supabase, akun perlu dikonfirmasi sebelum login.");}
+ if(data.session){
+  if(registrationLocation){
+   const {error:locationError}=await supabaseClient.from("user_locations").upsert({user_id:data.user.id,...registrationLocation},{onConflict:"user_id"});
+   if(locationError)showMessage("Akun berhasil dibuat, tetapi lokasi belum tersimpan. Periksa pengaturan database.",true);
+   else showMessage("Akun berhasil dibuat dan area berhasil dikonfirmasi!");
+  }else showMessage("Akun berhasil dibuat. Lokasi belum dikonfirmasi.");
+  showHome();
+ }else{showMessage("Pendaftaran diterima. Lokasi akan disimpan setelah kamu login jika sudah memberi izin.");}
 });
 $("forgotLink").addEventListener("click",async e=>{
  e.preventDefault();const email=$('loginForm').elements.email.value.trim();
