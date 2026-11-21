@@ -242,6 +242,63 @@ body.graphics-ultra .world-card:hover{
  filter:brightness(1.25) saturate(1.16);
 }
 
+
+/* Strong, unmistakable ULTRA-only fantasy lighting */
+#worldScreen .world-back{position:absolute;z-index:8;top:3.2%;left:2.2%;display:flex;align-items:center;gap:10px;padding:10px 19px;border:1px solid #9dbbff;background:linear-gradient(120deg,rgba(7,13,49,.92),rgba(30,24,100,.88));color:#fff;font:clamp(13px,1.1vw,19px) Georgia,serif;letter-spacing:.04em;cursor:pointer;clip-path:polygon(8% 0,100% 0,100% 78%,92% 100%,0 100%,0 22%);box-shadow:0 0 12px #658cff66}
+#worldScreen .world-back .back-arrow{font: bold 1.5em Arial;line-height:.7}
+body.graphics-ultra #worldScreen:before{
+ background:linear-gradient(rgba(1,3,24,.57),rgba(4,5,35,.57)),radial-gradient(ellipse at 50% 48%,rgba(5,7,38,.05),rgba(1,2,20,.45) 85%);
+}
+body.graphics-ultra #worldScreen:after{
+ opacity:1;
+ background-image:
+  radial-gradient(3px 3px at 8% 22%,#fff 98%,transparent),
+  radial-gradient(2px 2px at 17% 78%,#d8d5ff 98%,transparent),
+  radial-gradient(3px 3px at 34% 15%,#fff 98%,transparent),
+  radial-gradient(2px 2px at 51% 83%,#b8d7ff 98%,transparent),
+  radial-gradient(3px 3px at 73% 25%,#fff 98%,transparent),
+  radial-gradient(2px 2px at 88% 68%,#d8baff 98%,transparent);
+ background-size:260px 190px;
+ animation:worldStars 4s linear infinite;
+}
+body.graphics-ultra #worldScreen .world-grid{filter:drop-shadow(0 0 20px rgba(104,135,255,.5))}
+body.graphics-ultra #worldScreen .world-card{
+ position:relative;
+ border:2px solid #c4d6ff;
+ outline:1px solid rgba(255,255,255,.88);
+ box-shadow:0 0 12px #9fc5ff,0 0 28px #667dff,0 0 48px rgba(85,72,255,.7),inset 0 0 26px rgba(147,170,255,.5);
+ animation:worldUltraBreath 2.8s ease-in-out infinite;
+}
+body.graphics-ultra #worldScreen .world-card:nth-child(2){animation-delay:.35s}
+body.graphics-ultra #worldScreen .world-card:nth-child(3){animation-delay:.7s}
+body.graphics-ultra #worldScreen .world-card:nth-child(4){animation-delay:1.05s}
+body.graphics-ultra #worldScreen .world-card:nth-child(5){animation-delay:1.4s}
+body.graphics-ultra #worldScreen .world-card:nth-child(6){animation-delay:1.75s}
+body.graphics-ultra #worldScreen .world-card:focus-visible,
+body.graphics-ultra #worldScreen .world-card:hover{filter:brightness(1.35) saturate(1.2)}
+body.graphics-ultra #worldScreen .world-card strong{
+ color:#fff;text-shadow:0 0 3px #fff,0 0 8px #fff,0 0 16px #b9d7ff,0 0 30px #738bff,0 0 44px #596cff;
+}
+body.graphics-ultra #worldScreen .world-card small{
+ color:#fff;text-shadow:0 0 4px #fff,0 0 10px #b8ceff,0 0 22px #778cff;
+}
+body.graphics-ultra #worldScreen .world-card .divider{color:white;text-shadow:0 0 8px white,0 0 20px #b6a1ff,0 0 32px #8b65ff}
+body.graphics-ultra #worldScreen .world-card .divider:before,
+body.graphics-ultra #worldScreen .world-card .divider:after{background:#fff;box-shadow:0 0 8px #fff,0 0 18px #8faaff,0 0 30px #8d78ff}
+body.graphics-ultra #worldScreen .world-card:before,
+body.graphics-ultra #worldScreen .world-card:after{color:white;text-shadow:0 0 8px #fff,0 0 18px #a9caff,0 0 34px #806aff}
+body.graphics-ultra #worldScreen .world-card .ornament{box-shadow:0 0 10px #fff,0 0 22px #a6c9ff,0 0 38px #788aff}
+body.graphics-ultra #worldScreen .world-card.featured{
+ border-color:#f0d5ff;
+ background:linear-gradient(135deg,rgba(63,19,166,.97),rgba(104,45,211,.95),rgba(34,9,107,.98));
+ box-shadow:0 0 16px #fff,0 0 30px #d9a5ff,0 0 55px #a24dff,0 0 78px rgba(111,49,255,.75),inset 0 0 34px #e1b6ff99;
+}
+body.graphics-ultra #worldScreen .world-card.featured strong{ text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 24px #f0caff,0 0 42px #bd73ff}
+body.graphics-ultra #worldScreen .world-card.featured .card-icon{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 22px #f2caff) drop-shadow(0 0 40px #b14dff)}
+body.graphics-ultra #worldScreen .world-back{border-color:#d7c5ff;box-shadow:0 0 12px #9fbcff,0 0 28px #8b62ff;color:#fff;text-shadow:0 0 8px #fff,0 0 16px #a9baff}
+@keyframes worldUltraBreath{0%,100%{filter:brightness(1);box-shadow:0 0 12px #9fc5ff,0 0 28px #667dff,inset 0 0 22px rgba(147,170,255,.4)}50%{filter:brightness(1.22);box-shadow:0 0 20px #fff,0 0 42px #8caaff,0 0 62px #7c69ff,inset 0 0 34px rgba(190,190,255,.75)}}
+@media(prefers-reduced-motion:reduce){body.graphics-ultra #worldScreen .world-card{animation:none}}
+
 </style></head>
 <body>
 <div class="bg"></div>
@@ -269,6 +326,7 @@ body.graphics-ultra .world-card:hover{
 </section>
 
 <section id="worldScreen" aria-label="Jelajahi Dunia Lexaa">
+ <button class="world-back" id="worldBackBtn" type="button"><span class="back-arrow">‹</span> KEMBALI</button>
  <div class="world-grid">
   <button class="world-card featured" type="button" aria-label="Saldo Lexaa">
    <span class="ornament top"></span><span class="ornament bottom"></span>
@@ -370,6 +428,7 @@ $("saveProfile").addEventListener("click",saveProfile);
 function openWorld(){ $("homeScreen").classList.remove("show");$("worldScreen").classList.add("open");history.pushState({lexaaWorld:true},"","#jelajahi-dunia");}
 function closeWorld(){ $("worldScreen").classList.remove("open");$("homeScreen").classList.add("show");if(location.hash==="#jelajahi-dunia")history.replaceState({},"",location.pathname+location.search);}
 $("exploreWorldBtn").addEventListener("click",openWorld);
+$("worldBackBtn").addEventListener("click",closeWorld);
 window.addEventListener("popstate",()=>{if(!$("worldScreen").classList.contains("open"))return;closeWorld();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("worldScreen").classList.contains("open"))closeWorld();});
 
