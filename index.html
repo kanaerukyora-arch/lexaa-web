@@ -84,7 +84,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 body.graphics-low #bgVideo{filter:saturate(.78) brightness(.9);transform:scale(1.001)}
 body.graphics-low #homeScreen *{animation:none!important;transition:none!important;backdrop-filter:none!important;box-shadow:none!important;text-shadow:none!important}
 body.graphics-low .home-nav,body.graphics-low .home-top,body.graphics-low .home-brand,body.graphics-low .welcome-panel,body.graphics-low .explore-btn{background:rgba(7,12,38,.88)!important}
-body.graphics-standard #bgVideo{filter:saturate(.86) brightness(.94)}
+body.graphics-standard #bgVideo{filter:saturate(.86) brightness(.94) blur(.35px)}
 body.graphics-standard #homeScreen *{backdrop-filter:none!important}
 body.graphics-standard .home-nav,body.graphics-standard .home-top,body.graphics-standard .home-brand,body.graphics-standard .welcome-panel,body.graphics-standard .explore-btn{box-shadow:0 0 7px #7775ff33}
 body.graphics-ultra #bgVideo{filter:none}
@@ -185,8 +185,8 @@ function applyGraphics(mode,save=true){
  document.body.classList.add("graphics-"+mode);
  const video=$("bgVideo");
  if(video){
-  if(mode==="low"){video.pause();}
-  else {const p=video.play();if(p&&typeof p.catch==="function")p.catch(()=>{});}
+  if(mode==="low"){video.autoplay=false;video.pause();}
+  else {video.autoplay=true;const p=video.play();if(p&&typeof p.catch==="function")p.catch(()=>{});}
  }
  document.querySelectorAll("[data-graphics]").forEach(btn=>{
   const active=btn.dataset.graphics===mode;
