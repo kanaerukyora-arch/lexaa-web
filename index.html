@@ -75,6 +75,20 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 .settings-card p{margin:0 0 22px;color:#d8d2ff;font:14px Georgia}
 .settings-action{display:block;width:100%;margin:10px 0;padding:13px 16px;border:1px solid #c7baff;background:linear-gradient(90deg,#28236e,#6242ad);color:white;font:16px Georgia;cursor:pointer}
 .settings-action.logout{border-color:#e6a7c8;background:linear-gradient(90deg,#54234f,#8d315f)}
+.graphics-title{margin:20px 0 8px!important;padding-top:15px;border-top:1px solid #aaa0e966;font-size:19px!important}
+.graphics-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 7px}
+.graphics-option{min-width:0;padding:11px 5px;border:1px solid #aaa0df88;background:rgba(16,20,65,.8);color:#e9e3ff;font:14px Georgia;cursor:pointer}
+.graphics-option.active{border-color:#f0dcff;background:linear-gradient(145deg,#5140a4,#8b55d4);box-shadow:0 0 14px #a78bff99}
+.graphics-option small{display:block;margin-top:5px;font:10px Arial;color:#d9d2ff}
+.graphics-note{font:11px Arial!important;color:#c7c3e9!important;margin:6px 0 15px!important}
+body.graphics-low #bgVideo{filter:saturate(.78) brightness(.9);transform:scale(1.001)}
+body.graphics-low #homeScreen *{animation:none!important;transition:none!important;backdrop-filter:none!important;box-shadow:none!important;text-shadow:none!important}
+body.graphics-low .home-nav,body.graphics-low .home-top,body.graphics-low .home-brand,body.graphics-low .welcome-panel,body.graphics-low .explore-btn{background:rgba(7,12,38,.88)!important}
+body.graphics-standard #bgVideo{filter:saturate(.86) brightness(.94)}
+body.graphics-standard #homeScreen *{backdrop-filter:none!important}
+body.graphics-standard .home-nav,body.graphics-standard .home-top,body.graphics-standard .home-brand,body.graphics-standard .welcome-panel,body.graphics-standard .explore-btn{box-shadow:0 0 7px #7775ff33}
+body.graphics-ultra #bgVideo{filter:none}
+
 .settings-close{position:absolute;top:10px;right:16px;border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}
 .home-nav{cursor:pointer}
 
@@ -107,7 +121,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
   <div class="status-cell"><div><div class="status-main" id="clockText">--:--:--</div><span class="status-sub" id="dateText">--</span></div></div>
  </div>
  <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav"><span>♙</span>Profil</div><div class="home-nav" id="settingsMenu" role="button" tabindex="0"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav"><span>ⓘ</span>About</div></nav>
- <div class="settings-backdrop" id="settingsBackdrop" aria-hidden="true"><div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><button class="settings-close" id="closeSettings" type="button" aria-label="Tutup">×</button><h2 id="settingsTitle">Pengaturan Akun</h2><p>Atur sesi akun Lexaa kamu.</p><button class="settings-action" id="switchAccountBtn" type="button">⇄　Ganti Akun</button><button class="settings-action logout" id="logoutBtn" type="button">↪　Log Out</button></div></div>
+ <div class="settings-backdrop" id="settingsBackdrop" aria-hidden="true"><div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><button class="settings-close" id="closeSettings" type="button" aria-label="Tutup">×</button><h2 id="settingsTitle">Pengaturan</h2><p>Atur kualitas visual dan sesi akun Lexaa.</p><h3 class="graphics-title">Pengaturan Grafik</h3><div class="graphics-options" role="group" aria-label="Pilih kualitas grafik"><button class="graphics-option" data-graphics="low" type="button">LOW<small>Hemat baterai</small></button><button class="graphics-option" data-graphics="standard" type="button">STANDAR<small>Seimbang</small></button><button class="graphics-option" data-graphics="ultra" type="button">ULTRA<small>Efek maksimal</small></button></div><p class="graphics-note" id="graphicsDescription">Pilih kualitas sesuai kemampuan HP kamu.</p><button class="settings-action" id="switchAccountBtn" type="button">⇄　Ganti Akun</button><button class="settings-action logout" id="logoutBtn" type="button">↪　Log Out</button></div></div>
  <div class="welcome-panel"><strong>Selamat datang di Lexaa!</strong><em>Semoga harimu penuh dengan keberuntungan. ✦</em></div>
  <button class="explore-btn" type="button">Jelajahi Dunia　›</button>
 </section>
@@ -163,6 +177,29 @@ function startHomeIndicators(){
  },()=>{$("locationText").textContent="Lokasi nonaktif";$("coordsText").textContent="Izinkan lokasi di browser";$("weatherText").textContent="Butuh lokasi";},{enableHighAccuracy:false,timeout:12000,maximumAge:300000});
 }
 
+const GRAPHICS_KEY="lexaa_graphics";
+const GRAPHICS_MODES={low:{description:"LOW: efek visual diminimalkan dan background berhenti bergerak untuk menghemat performa."},standard:{description:"STANDAR: background tetap bergerak dengan efek visual ringan agar lebih seimbang."},ultra:{description:"ULTRA: background bergerak dengan kualitas visual dan efek penuh; gunakan pada HP yang kuat."}};
+function applyGraphics(mode,save=true){
+ if(!GRAPHICS_MODES[mode]) mode="standard";
+ document.body.classList.remove("graphics-low","graphics-standard","graphics-ultra");
+ document.body.classList.add("graphics-"+mode);
+ const video=$("bgVideo");
+ if(video){
+  if(mode==="low"){video.pause();}
+  else {const p=video.play();if(p&&typeof p.catch==="function")p.catch(()=>{});}
+ }
+ document.querySelectorAll("[data-graphics]").forEach(btn=>{
+  const active=btn.dataset.graphics===mode;
+  btn.classList.toggle("active",active);
+  btn.setAttribute("aria-pressed",String(active));
+ });
+ $("graphicsDescription").textContent=GRAPHICS_MODES[mode].description;
+ if(save){try{localStorage.setItem(GRAPHICS_KEY,mode);}catch(e){}}
+}
+let savedGraphics="standard";
+try{savedGraphics=localStorage.getItem(GRAPHICS_KEY)||"standard";}catch(e){}
+applyGraphics(savedGraphics,false);
+document.querySelectorAll("[data-graphics]").forEach(btn=>btn.addEventListener("click",()=>applyGraphics(btn.dataset.graphics)));
 function openSettings(){ $("settingsBackdrop").classList.add("open");$("settingsBackdrop").setAttribute("aria-hidden","false"); }
 function closeSettings(){ $("settingsBackdrop").classList.remove("open");$("settingsBackdrop").setAttribute("aria-hidden","true"); }
 async function leaveAccount(destination){
