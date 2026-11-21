@@ -43,9 +43,61 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 #registerForm .field input{font-size:17px}
 #registerForm .submit{height:58px;font-size:25px}
 #authMessage.error{color:#ffb4b4!important}
+
+/* LEXAA HOME */
+#bgVideo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
+.bg{z-index:-1}
+#homeScreen{position:fixed;inset:0;z-index:5;display:none;color:#f8f4ff;font-family:Georgia,serif}
+#homeScreen.show{display:block}
+.home-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,5,22,.78) 0%,rgba(4,7,25,.2) 42%,rgba(4,7,25,.18) 100%),linear-gradient(0deg,rgba(3,5,20,.48),transparent 40%);pointer-events:none}
+.home-top{position:absolute;top:16px;left:30%;right:3%;height:84px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 20px;background:linear-gradient(110deg,rgba(8,13,43,.72),rgba(16,25,66,.46));border:1px solid rgba(195,190,255,.75);clip-path:polygon(2% 0,98% 0,100% 50%,98% 100%,2% 100%,0 50%);box-shadow:0 0 20px #526bff66,inset 0 0 18px #7d82ff33;backdrop-filter:blur(8px)}
+.status-cell{min-width:0;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;text-shadow:0 0 10px #a7b9ff}
+.status-icon{font:32px Arial;color:#c9d7ff}
+.status-main{font:clamp(14px,1.5vw,22px) Georgia,serif;white-space:nowrap}
+.status-sub{display:block;font:13px Georgia,serif;color:#d5d8ff;white-space:nowrap}
+.status-divider{height:48px;width:1px;background:linear-gradient(transparent,#d6d5ff,transparent)}
+#signalBars{display:flex;align-items:end;gap:3px;height:27px}
+#signalBars i{display:block;width:6px;background:#a8dfff;box-shadow:0 0 8px #66aaff}
+#signalBars i:nth-child(1){height:8px}#signalBars i:nth-child(2){height:13px}#signalBars i:nth-child(3){height:19px}#signalBars i:nth-child(4){height:26px}
+.home-brand{position:absolute;top:25px;left:2.2%;display:flex;align-items:center;gap:16px;width:26%;padding:12px 16px;border-bottom:1px solid #d3d5ff99;text-shadow:0 0 12px #8daaff}
+.home-avatar{width:112px;height:112px;flex:0 0 112px;border-radius:50%;display:grid;place-items:center;font-size:52px;background:radial-gradient(circle at 35% 25%,#d5c5ff,#6655bd 45%,#111b50 72%);border:3px double #c4c7ff;box-shadow:0 0 0 5px #5e62c655,0 0 24px #8c83ff}
+.home-brand h1{font: bold clamp(27px,3vw,42px) Georgia;margin:0;color:#f5efff}
+.home-brand .level{font-size:24px;margin-top:8px;color:#c5d8ff}
+.home-brand .motto{font:italic 14px Georgia;margin-top:8px;color:#e0d9ff}
+.home-side{position:absolute;left:2%;top:34%;width:300px;display:grid;gap:12px}
+.home-nav{height:66px;padding:0 22px;display:flex;align-items:center;gap:18px;color:#f4efff;font-size:20px;background:linear-gradient(90deg,rgba(8,13,46,.85),rgba(24,29,91,.58));border:1px solid #c3baff;clip-path:polygon(5% 0,92% 0,100% 50%,92% 100%,5% 100%,0 50%);box-shadow:inset 0 0 15px #7775ff44,0 0 12px #6b70ff44;text-shadow:0 0 8px #9eaaff}
+.home-nav.active{background:linear-gradient(90deg,rgba(45,38,160,.94),rgba(122,64,255,.78));border:2px solid #e4cfff;box-shadow:0 0 16px #a45cff,inset 0 0 18px #d8b4ff77}
+.home-nav span:first-child{font:30px Arial}
+.welcome-panel{position:absolute;left:2%;bottom:4%;max-width:490px;padding:20px 26px 20px 82px;background:linear-gradient(90deg,rgba(7,12,37,.76),rgba(12,18,53,.42));border:1px solid #b6c5ff99;clip-path:polygon(5% 0,100% 0,96% 100%,0 100%,0 20%);text-shadow:0 0 8px #9eaaff}
+.welcome-panel:before{content:'✦';position:absolute;left:18px;top:17px;font-size:48px;color:#d8d4ff;text-shadow:0 0 16px #a4aaff}
+.welcome-panel strong{display:block;font-size:18px;margin-bottom:7px}.welcome-panel em{font-size:15px;color:#ddd9ff}
+.explore-btn{position:absolute;right:3%;bottom:7%;padding:22px 54px;border:2px solid #cfc4ff;color:white;font:24px Georgia;background:linear-gradient(90deg,rgba(48,35,150,.78),rgba(95,55,212,.82));clip-path:polygon(5% 0,95% 0,100% 50%,95% 100%,5% 100%,0 50%);box-shadow:0 0 20px #926bff,inset 0 0 15px #d2b5ff66}
+@media(max-width:900px){.home-top{left:2%;right:2%;top:12px;height:68px;padding:5px 10px}.home-brand{top:95px;left:4%;width:auto}.home-avatar{width:66px;height:66px;flex-basis:66px;font-size:30px}.home-brand h1{font-size:25px}.home-brand .level{font-size:16px;margin-top:3px}.home-brand .motto{display:none}.home-side{top:34%;left:3%;width:min(245px,47vw);gap:8px}.home-nav{height:54px;font-size:17px;padding:0 14px}.status-cell{gap:5px;padding:0 4px}.status-icon{font-size:22px}.status-sub{font-size:10px}.status-main{font-size:13px}.status-divider{height:34px}.welcome-panel{bottom:3%;left:3%;max-width:58%;padding:13px 12px 13px 52px}.welcome-panel:before{left:10px;font-size:32px}.welcome-panel strong{font-size:14px}.welcome-panel em{font-size:11px}.explore-btn{right:3%;bottom:4%;font-size:16px;padding:14px 24px}}
+@media(max-width:560px){.home-top{left:1%;right:1%;gap:3px}.status-cell{gap:3px;padding:0 2px}.status-icon{font-size:17px}.status-main{font-size:10px}.status-sub{font-size:8px}.status-divider{height:28px}.home-side{top:37%;width:48vw}.home-nav{height:47px;font-size:14px;gap:9px}.home-nav span:first-child{font-size:22px}.welcome-panel{max-width:60%}.explore-btn{font-size:13px;padding:12px 17px}}
+
 </style></head>
 <body>
 <div class="bg"></div>
+
+<video id="bgVideo" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="background.mp4" type="video/mp4"></video>
+<section id="homeScreen" aria-label="Beranda Lexaa">
+ <div class="home-shade"></div>
+ <div class="home-brand"><div class="home-avatar">♛</div><div><h1>✥ Lexaa ✦</h1><div class="level">Lv. 99</div><div class="motto">Dream Bigger, Reach Higher.</div></div></div>
+ <div class="home-top">
+  <div class="status-cell"><div id="signalBars"><i></i><i></i><i></i><i></i></div><div><div class="status-main" id="networkType">Online</div><span class="status-sub">Jaringan</span></div></div>
+  <div class="status-divider"></div>
+  <div class="status-cell"><span class="status-icon">ϟ</span><div><div class="status-main" id="pingValue">-- ms</div><span class="status-sub">Latency</span></div></div>
+  <div class="status-divider"></div>
+  <div class="status-cell"><span class="status-icon" id="weatherIcon">☁</span><div><div class="status-main" id="weatherTemp">--°C</div><span class="status-sub" id="weatherText">Cuaca</span></div></div>
+  <div class="status-divider"></div>
+  <div class="status-cell"><span class="status-icon">⌖</span><div><div class="status-main" id="locationText">Mencari lokasi</div><span class="status-sub" id="coordsText">Izinkan akses lokasi</span></div></div>
+  <div class="status-divider"></div>
+  <div class="status-cell"><div><div class="status-main" id="clockText">--:--:--</div><span class="status-sub" id="dateText">--</span></div></div>
+ </div>
+ <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav"><span>♙</span>Profil</div><div class="home-nav"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav"><span>ⓘ</span>About</div></nav>
+ <div class="welcome-panel"><strong>Selamat datang di Lexaa!</strong><em>Semoga harimu penuh dengan keberuntungan. ✦</em></div>
+ <button class="explore-btn" type="button">Jelajahi Dunia　›</button>
+</section>
 <section id="intro"><div class="intro-content"><div class="small">WELCOME TO THE REALM OF</div><h1>Lexaa</h1><p>New Generation</p><button class="enter" id="enterBtn">MASUK KE LEXAA</button><div class="hint">Ketuk untuk memasuki dunia Lexaa</div></div></section>
 <main id="loginScreen"><div class="login-layout"><section class="login-card" aria-label="Login Lexaa">
 <span class="wing left" aria-hidden="true">❧</span><span class="wing right" aria-hidden="true">❧</span><span class="gem" aria-hidden="true">◆</span>
@@ -74,7 +126,30 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LPBiUYMB60WGxC9CRP3Nmg_ptQ3DQ0D
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = id => document.getElementById(id);
 const authMessage = $("authMessage");
+
 function showMessage(message, isError=false){authMessage.textContent=message;authMessage.classList.toggle("error",isError);}
+function showHome(){
+ $("intro").classList.add("hide");$("loginScreen").classList.remove("show");$("homeScreen").classList.add("show");
+ const v=$("bgVideo");if(v){v.muted=true;v.loop=true;v.play().catch(()=>{});}
+ startHomeIndicators();
+}
+function startHomeIndicators(){
+ const updateClock=()=>{const d=new Date();$("clockText").textContent=d.toLocaleTimeString("id-ID",{hour12:false});$("dateText").textContent=d.toLocaleDateString("id-ID",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});};
+ updateClock();setInterval(updateClock,1000);
+ const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+ const updateNetwork=()=>{const online=navigator.onLine;const type=online?(conn?.effectiveType||"Online"):"Offline";$("networkType").textContent=online?(type==="4g"?"4G":type.toUpperCase()):"Offline";$("signalBars").style.opacity=online?"1":".25";};
+ updateNetwork();window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);if(conn)conn.addEventListener("change",updateNetwork);
+ const ping=async()=>{const start=performance.now();try{await fetch(SUPABASE_URL+"/auth/v1/health",{method:"GET",headers:{apikey:SUPABASE_PUBLISHABLE_KEY},cache:"no-store"});$("pingValue").textContent=Math.round(performance.now()-start)+" ms";}catch(e){$("pingValue").textContent="-- ms";}};
+ ping();setInterval(ping,15000);
+ if(!navigator.geolocation){$("locationText").textContent="Tidak tersedia";return;}
+ navigator.geolocation.getCurrentPosition(async pos=>{
+  const lat=pos.coords.latitude,lon=pos.coords.longitude;$("coordsText").textContent=lat.toFixed(3)+", "+lon.toFixed(3);
+  $("locationText").textContent="Lokasi aktif";
+  try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+lat+"&lon="+lon);const j=await r.json();const a=j.address||{};$("locationText").textContent=a.city||a.town||a.county||a.state||"Lokasi aktif";}catch(e){}
+  try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan": "Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
+ },()=>{$("locationText").textContent="Lokasi nonaktif";$("coordsText").textContent="Izinkan lokasi di browser";$("weatherText").textContent="Butuh lokasi";},{enableHighAccuracy:false,timeout:12000,maximumAge:300000});
+}
+
 function setMode(mode){
  const registering = mode === "register";
  $("loginForm").hidden = registering;
@@ -100,7 +175,7 @@ $("loginForm").addEventListener("submit",async e=>{
  const {error}=await supabaseClient.auth.signInWithPassword({email:String(form.get("email")).trim(),password:String(form.get("password"))});
  if(error){showMessage(error.message==="Invalid login credentials"?"Email atau password salah.":error.message,true);return;}
  const {data}=await supabaseClient.auth.getUser();
- showMessage("Berhasil login"+(data.user?.user_metadata?.display_name?" sebagai "+data.user.user_metadata.display_name:"")+"! Akun Lexaa aktif.");
+ showMessage("Berhasil login!");showHome();
 });
 $("registerForm").addEventListener("submit",async e=>{
  e.preventDefault();const form=new FormData(e.currentTarget);
@@ -113,7 +188,7 @@ $("registerForm").addEventListener("submit",async e=>{
  if(!/^[a-z0-9_]{3,20}$/.test(username)){showMessage("Username harus 3–20 karakter: huruf, angka, atau garis bawah.",true);return;}
  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName,username}}});
  if(error){showMessage(error.message,true);return;}
- if(data.session){showMessage("Akun berhasil dibuat! Selamat datang di Lexaa, "+displayName+".");}
+ if(data.session){showMessage("Akun berhasil dibuat!");showHome();}
  else{showMessage("Pendaftaran diterima. Jika konfirmasi email masih aktif di Supabase, akun perlu dikonfirmasi sebelum login.");}
 });
 $("forgotLink").addEventListener("click",async e=>{
@@ -122,4 +197,6 @@ $("forgotLink").addEventListener("click",async e=>{
  const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
  showMessage(error?error.message:"Jika email terdaftar, tautan reset password akan dikirim.");
 });
+
+(async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
 </script></body></html>
