@@ -369,6 +369,45 @@ body.graphics-ultra #worldScreen .world-back{
 @keyframes lexaaCardAura{0%,100%{filter:brightness(1);box-shadow:0 0 9px #fff,0 0 18px #9fcaff,0 0 34px #718bff,inset 0 0 22px #9ebaff77}50%{filter:brightness(1.24);box-shadow:0 0 16px #fff,0 0 30px #b9d8ff,0 0 52px #8e82ff,0 0 70px #6752ff,inset 0 0 36px #c8d5ffcc}}
 @keyframes lexaaBackAura{0%,100%{filter:brightness(1);box-shadow:0 0 8px #fff,0 0 18px #91baff,0 0 34px #795dff,inset 0 0 16px #a8baff66}50%{filter:brightness(1.3);box-shadow:0 0 14px #fff,0 0 28px #b9caff,0 0 46px #a77aff,inset 0 0 24px #d5caff99}}
 
+
+/* World page visual mode is applied directly to #worldScreen for reliable ULTRA rendering */
+#worldScreen.world-ultra:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(2,3,28,.50),rgba(3,4,30,.62)),radial-gradient(ellipse at center,transparent 20%,rgba(1,2,20,.35) 100%)}
+#worldScreen.world-ultra .world-grid{z-index:5;filter:drop-shadow(0 0 22px rgba(106,135,255,.75))}
+#worldScreen.world-ultra .world-card{border:2px solid #e2eaff!important;outline:1px solid rgba(255,255,255,.9)!important;box-shadow:0 0 10px #fff,0 0 22px #9fcaff,0 0 42px #718bff,0 0 65px rgba(104,72,255,.85),inset 0 0 28px rgba(166,190,255,.7)!important;animation:worldCardMagic 2s ease-in-out infinite!important}
+#worldScreen.world-ultra .world-card:nth-child(2){animation-delay:.25s!important}
+#worldScreen.world-ultra .world-card:nth-child(3){animation-delay:.5s!important}
+#worldScreen.world-ultra .world-card:nth-child(4){animation-delay:.75s!important}
+#worldScreen.world-ultra .world-card:nth-child(5){animation-delay:1s!important}
+#worldScreen.world-ultra .world-card:nth-child(6){animation-delay:1.25s!important}
+#worldScreen.world-ultra .world-card strong{color:#fff!important;text-shadow:0 0 3px #fff,0 0 9px #fff,0 0 18px #c6dcff,0 0 30px #8ba7ff,0 0 48px #6376ff!important;filter:drop-shadow(0 0 8px #9bc5ff)!important}
+#worldScreen.world-ultra .world-card small{color:#fff!important;text-shadow:0 0 4px #fff,0 0 11px #c5d8ff,0 0 22px #879cff!important}
+#worldScreen.world-ultra .world-card .divider{color:#fff!important;text-shadow:0 0 8px #fff,0 0 20px #d0b5ff,0 0 34px #9b75ff!important}
+#worldScreen.world-ultra .world-card .card-icon{filter:drop-shadow(0 0 9px #fff) drop-shadow(0 0 20px #a9caff) drop-shadow(0 0 36px #7584ff)!important}
+#worldScreen.world-ultra .world-card .ornament{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 19px #a8caff) drop-shadow(0 0 30px #7b78ff)!important}
+#worldScreen.world-ultra .world-card.featured{border-color:#ffeaff!important;background:linear-gradient(130deg,rgba(65,17,160,.98),rgba(111,42,214,.98),rgba(34,7,105,.99))!important;box-shadow:0 0 12px #fff,0 0 26px #f2caff,0 0 48px #c27aff,0 0 72px #8c43ff,inset 0 0 36px rgba(232,185,255,.8)!important}
+#worldScreen.world-ultra .world-card.featured strong{ text-shadow:0 0 4px #fff,0 0 12px #fff,0 0 24px #f4d4ff,0 0 40px #d38cff,0 0 56px #a84cff!important}
+#worldScreen.world-ultra .world-card.featured small{ text-shadow:0 0 5px #fff,0 0 14px #f0caff,0 0 26px #b86cff!important}
+#worldScreen.world-ultra .world-card.featured .card-icon{filter:drop-shadow(0 0 10px #fff) drop-shadow(0 0 24px #e8baff) drop-shadow(0 0 42px #b34dff)!important}
+#worldScreen .world-back{
+ position:absolute!important;z-index:20!important;top:3.5%!important;left:2.5%!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;
+ min-width:145px!important;height:48px!important;padding:0 19px!important;
+ color:#f7f4ff!important;background:linear-gradient(110deg,rgba(5,11,43,.84),rgba(30,20,91,.78),rgba(5,11,43,.84))!important;
+ border:1px solid rgba(177,196,255,.78)!important;border-radius:3px!important;
+ clip-path:polygon(10% 0,90% 0,100% 50%,90% 100%,10% 100%,0 50%)!important;
+ box-shadow:0 0 9px rgba(112,145,255,.55),inset 0 0 15px rgba(123,139,255,.2)!important;
+ font-family:Georgia,"Times New Roman",serif!important;font-size:13px!important;font-weight:bold!important;letter-spacing:.18em!important;
+ text-shadow:0 0 7px #fff,0 0 15px #9ebaff!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;
+}
+#worldScreen .world-back .back-arrow{font:700 22px Georgia,serif!important;color:#dce9ff!important;text-shadow:0 0 8px #fff,0 0 17px #8eb8ff!important}
+#worldScreen .world-back .back-gem{color:#e8d5ff!important;font-size:17px!important;text-shadow:0 0 8px #fff,0 0 19px #c18aff!important}
+#worldScreen .world-back .back-halo{position:absolute!important;inset:3px!important;border:1px solid rgba(194,208,255,.3)!important;pointer-events:none!important}
+#worldScreen.world-ultra .world-back{border-color:#e4d5ff!important;box-shadow:0 0 10px #fff,0 0 22px #a5baff,0 0 38px #8a61ff,inset 0 0 18px #bcaaff66!important;animation:worldBackMagic 2.5s ease-in-out infinite!important}
+#worldScreen .world-back:active{transform:scale(.96)!important}
+@keyframes worldCardMagic{0%,100%{filter:brightness(1);box-shadow:0 0 10px #fff,0 0 22px #9fcaff,0 0 42px #718bff,inset 0 0 24px #a6beff88}50%{filter:brightness(1.28);box-shadow:0 0 17px #fff,0 0 34px #c2dcff,0 0 58px #9d8aff,0 0 78px #684bff,inset 0 0 40px #d6dfff}}
+@keyframes worldBackMagic{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) drop-shadow(0 0 12px #a98aff)}}
+#worldScreen.world-low .world-card,#worldScreen.world-standard .world-card{animation:none!important}
+
 </style></head>
 <body>
 <div class="bg"></div>
@@ -396,7 +435,7 @@ body.graphics-ultra #worldScreen .world-back{
 </section>
 
 <section id="worldScreen" aria-label="Jelajahi Dunia Lexaa">
- <button class="world-back" id="worldBackBtn" type="button"><span class="back-halo"></span><span class="back-arrow">⟵</span><span class="back-label">KEMBALI</span><span class="back-gem">✦</span></button>
+ <button class="world-back" id="worldBackBtn" type="button" aria-label="Kembali ke beranda"><span class="back-halo"></span><span class="back-arrow">⟵</span><span class="back-label">KEMBALI</span><span class="back-gem">✧</span></button>
  <div class="world-grid">
   <button class="world-card featured" type="button" aria-label="Saldo Lexaa">
    <span class="ornament top"></span><span class="ornament bottom"></span>
@@ -531,6 +570,7 @@ function applyGraphics(mode,save=true){
  if(!GRAPHICS_MODES[mode]) mode="standard";
  document.body.classList.remove("graphics-low","graphics-standard","graphics-ultra");
  document.body.classList.add("graphics-"+mode);
+ const world=$("worldScreen");if(world){world.classList.remove("world-low","world-standard","world-ultra");world.classList.add("world-"+mode);}
  const video=$("bgVideo");
  if(video){
   if(mode==="low"){video.autoplay=false;video.pause();}
