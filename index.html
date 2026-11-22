@@ -64,7 +64,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:#f5f1e9}
 .home-brand h1{font: bold clamp(27px,3vw,42px) Georgia;margin:0;color:#f5efff}
 .home-brand .level{font-size:24px;margin-top:8px;color:#c5d8ff}
 .home-brand .motto{font:italic 14px Georgia;margin-top:8px;color:#e0d9ff}
-.home-side{position:absolute;left:2%;top:34%;width:300px;display:grid;gap:12px;z-index:1000;pointer-events:auto}
+.home-side{position:absolute;left:2%;top:34%;width:300px;display:grid;gap:12px;z-index:2147483000;pointer-events:auto;isolation:isolate}
 .home-nav{position:relative;z-index:1001;pointer-events:auto;cursor:pointer;width:100%;text-align:left;font-family:Georgia,serif;height:66px;padding:0 22px;display:flex;align-items:center;gap:18px;color:#f4efff;font-size:20px;background:linear-gradient(90deg,rgba(8,13,46,.85),rgba(24,29,91,.58));border:1px solid #c3baff;clip-path:polygon(5% 0,92% 0,100% 50%,92% 100%,5% 100%,0 50%);box-shadow:inset 0 0 15px #7775ff44,0 0 12px #6b70ff44;text-shadow:0 0 8px #9eaaff}
 .home-nav.active{background:linear-gradient(90deg,rgba(45,38,160,.94),rgba(122,64,255,.78));border:2px solid #e4cfff;box-shadow:0 0 16px #a45cff,inset 0 0 18px #d8b4ff77}
 .home-nav span:first-child{font:30px Arial}
@@ -470,7 +470,7 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 @media(prefers-reduced-motion:reduce){#saldoScreen:after,#saldoScreen .saldo-panel{animation:none!important}}
 
  
-#installAppBackdrop{position:fixed!important;inset:0!important;z-index:2147483647!important;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,7,24,.78)}
+#installAppBackdrop{position:fixed!important;inset:0!important;z-index:2147483647!important;isolation:isolate;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,7,24,.78)}
 #installAppBackdrop.show{display:flex!important;visibility:visible!important;opacity:1!important}
 .install-app-card{position:relative;width:min(420px,92vw);padding:30px 24px 26px;text-align:center;border:1px solid #d7c2ff;border-radius:24px;background:linear-gradient(145deg,#171d42,#090e29);box-shadow:0 0 18px #b68aff,0 0 42px #6844bd;color:#fff}
 .install-app-card h2{margin:0 24px 10px;font-size:25px;color:#fff0c4;text-shadow:0 0 12px #b78aff}
@@ -560,6 +560,9 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 <script>
 window.lexaaShowInstallPopup=function(){const p=document.getElementById("installAppBackdrop");if(!p)return;p.hidden=false;p.style.setProperty("display","flex","important");p.style.setProperty("visibility","visible","important");p.style.setProperty("opacity","1","important");p.classList.add("show");p.setAttribute("aria-hidden","false");};
 window.lexaaHideInstallPopup=function(){const p=document.getElementById("installAppBackdrop");if(!p)return;p.classList.remove("show");p.style.setProperty("display","none","important");p.setAttribute("aria-hidden","true");};
+document.addEventListener("pointerup",function(e){const t=e.target&&e.target.closest&&e.target.closest("#installAppMenu");if(t){e.preventDefault();e.stopPropagation();window.lexaaShowInstallPopup();}},true);
+document.addEventListener("click",function(e){const t=e.target&&e.target.closest&&e.target.closest("#installAppMenu");if(t){e.preventDefault();e.stopPropagation();window.lexaaShowInstallPopup();}},true);
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
