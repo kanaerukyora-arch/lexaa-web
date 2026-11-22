@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#13052f"><title>Lexaa Top Up</title>
+<meta name="theme-color" content="#13052f"><link rel="preload" as="image" href="topup-background.png"><title>Lexaa Top Up</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10052d;color:#fff;font-family:Georgia,serif}
-#stage{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#10052d}
-#art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block}
+#stage{position:fixed;left:0;top:0;width:100vw;height:100dvh;overflow:hidden;background:#10052d;transform-origin:top left}
+#art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#10052d}
 .hit{position:absolute;z-index:2;border:0;background:transparent;cursor:pointer;padding:0}
 .hit:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:18px}
 #back{left:1.5%;top:1.5%;width:12%;height:10%}
@@ -21,7 +21,7 @@
 .dialog p{margin:8px 0 20px;font:16px Arial,sans-serif}
 .dialog button{margin:5px;padding:11px 20px;border:1px solid #f2d9ff;border-radius:25px;color:#fff;background:linear-gradient(90deg,#7330df,#ad66ff);font-weight:bold}
 .dialog button.secondary{background:#25134d}
-@media(orientation:portrait){#stage{width:100dvh;height:100vw;left:100vw;top:0;transform:rotate(90deg);transform-origin:top left}}
+
 </style></head>
 <body><main id="stage">
 <img id="art" src="topup-background.png" alt="Lexaa Top Up">
@@ -34,6 +34,23 @@
 </main>
 <script>
 const modal=document.getElementById("modal");
+function fitStage(){
+ const W=window.innerWidth,H=window.innerHeight,portrait=H>W;
+ if(portrait){
+  const logicalW=Math.min(H,W*16/9),logicalH=W;
+  const stage=document.getElementById("stage");
+  stage.style.width=logicalW+"px";stage.style.height=logicalH+"px";
+  stage.style.left=W+"px";stage.style.top=((H-logicalW)/2)+"px";
+  stage.style.transform="rotate(90deg)";
+ }else{
+  const logicalW=Math.min(W,H*16/9),logicalH=logicalW*9/16;
+  const stage=document.getElementById("stage");
+  stage.style.width=logicalW+"px";stage.style.height=logicalH+"px";
+  stage.style.left=((W-logicalW)/2)+"px";stage.style.top=((H-logicalH)/2)+"px";
+  stage.style.transform="none";
+ }
+}
+fitStage();window.addEventListener("resize",fitStage);window.addEventListener("orientationchange",()=>setTimeout(fitStage,120));
 function choose(value){document.getElementById("title").textContent="Top Up "+value+"RB";document.getElementById("desc").textContent="Kamu memilih paket saldo "+value+"RB.";modal.classList.add("show")}
 [20,50,75,100].forEach(v=>document.getElementById("p"+v).addEventListener("click",()=>choose(v)));
 function back(){if(modal.classList.contains("show")){modal.classList.remove("show");return}if(window.parent!==window){window.parent.postMessage("LEXAA_CLOSE_TOPUP",location.origin)}else history.back()}
