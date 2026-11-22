@@ -46,12 +46,87 @@
 @media(max-height:430px) and (orientation:landscape){.wallet-area{top:20%}.panel{min-height:105px}.actions{margin-top:22px}.user{height:64px}.avatar{width:50px;height:50px}}
 body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
 @media(prefers-reduced-motion:reduce){#sparkles,.panel{animation:none!important}}
+
+/* WALLET ACCESS GATE — fantasy phone + PIN keypad */
+#walletContent[hidden]{display:none!important}
+#accessGate{position:absolute;inset:0;z-index:20;display:grid;grid-template-columns:54% 46%;padding:0 4.5%;background:linear-gradient(90deg,rgba(10,0,30,.08),rgba(12,0,38,.10) 48%,rgba(12,0,40,.34));}
+#accessGate[hidden]{display:none!important}
+.gate-left{position:relative;display:flex;align-items:flex-end;padding:0 0 8.5% 2.5%;min-width:0}
+.gate-register{position:relative;width:min(82%,570px);min-height:clamp(190px,30vh,280px);padding:22px 30px 20px 34px;border:2px solid #cda2ff;border-radius:15px;background:linear-gradient(120deg,rgba(12,0,42,.88),rgba(30,4,80,.78));box-shadow:0 0 10px #fff,0 0 24px #8d35ff,inset 0 0 24px #9c4aff88}
+.gate-register:before{content:"✦";position:absolute;left:31%;top:-21px;color:#fff;font-size:34px;text-shadow:0 0 10px #fff,0 0 24px #a44bff}
+.gate-register h2{margin:0 0 10px;text-align:center;font-size:clamp(18px,1.8vw,28px);font-style:italic;font-weight:700;text-shadow:0 0 10px #cba5ff}
+.gate-register button{display:block;margin:0 auto 12px;padding:10px 34px;border:2px solid #f2d9ff;border-radius:30px;color:#fff;font:700 clamp(16px,1.55vw,24px) Georgia,serif;background:linear-gradient(110deg,#5e13d8,#a42dff 55%,#5b12d7);box-shadow:0 0 9px #fff,0 0 22px #a72cff;cursor:pointer}
+.gate-register ol{margin:0;padding:0 0 0 24px;font-size:clamp(11px,1.05vw,16px);line-height:1.65;color:#fff4ff}
+.gate-register li::marker{color:#d7aaff}
+.gate-seal{position:absolute;right:-8px;bottom:14px;width:76px;height:76px;display:grid;place-items:center;border:2px solid #e5c2ff;border-radius:18px;background:linear-gradient(135deg,#21065c,#7623d7);font-size:40px;color:#ffe5a2;transform:rotate(-7deg);box-shadow:0 0 14px #b85cff}
+.gate-right{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:0;padding:3.5% 0 2% 2%}
+.gate-controls{width:min(100%,590px);display:flex;flex-direction:column;gap:clamp(9px,1.6vh,16px)}
+.gate-region,.gate-number{height:clamp(54px,8.8vh,78px);display:flex;align-items:center;gap:16px;padding:0 24px;border:2px solid #cba0ff;border-radius:18px;background:linear-gradient(100deg,rgba(19,0,57,.94),rgba(27,3,76,.92));box-shadow:0 0 9px #fff,0 0 20px #9e39ff,inset 0 0 18px #8c36ff66}
+.gate-region{font-size:clamp(16px,1.5vw,23px);font-style:italic}
+.gate-region .globe{font-size:30px;color:#fff}
+.gate-region .flag{margin-left:auto;font-size:27px;font-style:normal}
+.gate-region .country{font:clamp(19px,1.8vw,27px) Georgia,serif}
+.gate-region .chevron{font:30px Arial}
+.gate-number{gap:14px}
+.gate-number .phone-icon{font:34px Arial}
+#phoneDisplay{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#fff;font:clamp(20px,2vw,31px) Georgia,serif;letter-spacing:.04em;text-shadow:0 0 8px #b98cff}
+#phoneDisplay::placeholder{color:#b8a1d5;opacity:1}
+#stepLabel{min-height:25px;text-align:center;color:#fff1ff;font:clamp(12px,1.1vw,17px) Georgia,serif;text-shadow:0 0 8px #a94cff}
+#gateHint{min-height:18px;margin:-5px 0 0;text-align:center;color:#e9d5ff;font:clamp(10px,.95vw,14px) Georgia,serif}
+.gate-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(7px,1.2vh,12px);margin-top:2px}
+.gate-key{height:clamp(54px,8.5vh,76px);border:2px solid #d7aaff;border-radius:14px;color:#fff;font:700 clamp(30px,3.4vw,48px) Georgia,serif;background:linear-gradient(145deg,rgba(16,0,48,.96),rgba(47,8,111,.96));box-shadow:0 0 7px #fff,0 0 16px #a43bff,inset 0 0 18px #7d25ff88;cursor:pointer;text-shadow:0 0 9px #fff}
+.gate-key:active{transform:scale(.96);filter:brightness(1.4)}
+.gate-key.enter{background:linear-gradient(135deg,#5e0bd9,#c02cff 55%,#7a18ee);box-shadow:0 0 10px #fff,0 0 24px #bd4bff,inset 0 0 20px #f0baff}
+.gate-key.utility{font-family:Arial,sans-serif}
+#gateMessage{min-height:22px;text-align:center;color:#ffe5a5;font:clamp(11px,1vw,15px) Arial,sans-serif;text-shadow:0 0 8px #a94cff}
+#gateMessage.error{color:#ffc1d0}
+.pin-dots{display:flex;justify-content:center;gap:clamp(10px,1.2vw,18px);width:100%;height:clamp(54px,8.8vh,78px);align-items:center;border:2px solid #cba0ff;border-radius:18px;background:linear-gradient(100deg,rgba(19,0,57,.94),rgba(27,3,76,.92));box-shadow:0 0 9px #fff,0 0 20px #9e39ff,inset 0 0 18px #8c36ff66}
+.pin-dot{width:clamp(10px,1vw,15px);height:clamp(10px,1vw,15px);border-radius:50%;background:#6d4b92;box-shadow:0 0 5px #fff}
+.pin-dot.filled{background:#fff;box-shadow:0 0 8px #fff,0 0 16px #c28aff}
+#pinDisplay[hidden],#phoneDisplay[hidden]{display:none!important}
+#gateBackStep{position:absolute;left:3%;top:3%;z-index:3;border:1px solid #d5aaff;border-radius:24px;padding:8px 14px;color:#fff;background:rgba(22,2,62,.75);font:14px Georgia,serif;box-shadow:0 0 12px #a74aff}
+@media(max-height:520px) and (orientation:landscape){.gate-register{min-height:160px;padding:13px 22px}.gate-register ol{line-height:1.4}.gate-key{height:48px}.gate-region,.gate-number,.pin-dots{height:48px}.gate-controls{gap:7px}.gate-right{padding-top:1%}}
+@media(max-width:700px){#accessGate{grid-template-columns:42% 58%;padding:0 2%}.gate-left{padding-left:0}.gate-register{width:96%;padding:12px 12px 12px 16px}.gate-seal{display:none}.gate-right{padding-left:1%}.gate-controls{gap:8px}.gate-region,.gate-number,.pin-dots{padding:0 12px}.gate-key{height:clamp(44px,8vh,65px)}}
+
 </style>
 </head>
 <body>
 <div id="scene">
  <video id="bg" autoplay muted loop playsinline preload="auto"><source src="saldo-background.mp4?v=3" type="video/mp4"></video>
  <div id="veil"></div><div id="sparkles"></div>
+
+ <section id="accessGate" aria-label="Wallet Lexaa login">
+  <button id="gateBackStep" type="button" hidden>⟵ Kembali</button>
+  <div class="gate-left">
+   <div class="gate-register">
+    <h2 id="gateQuestion">Belum Punya Wallet Lexaa?</h2>
+    <button id="registerWallet" type="button">Daftar Sekarang&nbsp; ❯</button>
+    <ol id="gateInstructions">
+     <li>Klik tombol Daftar Sekarang</li>
+     <li>Masukkan nomor handphone</li>
+     <li>Buat PIN dan konfirmasi</li>
+     <li>Login dan mulai top up!</li>
+    </ol>
+    <div class="gate-seal" aria-hidden="true">♛</div>
+   </div>
+  </div>
+  <div class="gate-right">
+   <div class="gate-controls">
+    <div class="gate-region"><span class="globe">◎</span><span>Region</span><span class="flag">🇮🇩</span><span class="country">+62</span><span class="chevron">⌄</span></div>
+    <div class="gate-number"><span class="phone-icon">☎</span><input id="phoneDisplay" type="text" inputmode="none" placeholder="+62 81234567890" readonly aria-label="Nomor handphone"><div id="pinDisplay" class="pin-dots" hidden aria-label="PIN"><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span></div></div>
+    <div id="stepLabel">✦ &nbsp; Contoh: 81234567890 (tanpa 0 di depan) &nbsp; ✦</div>
+    <div class="gate-keypad" id="gateKeypad">
+     <button class="gate-key" data-key="1" type="button">1</button><button class="gate-key" data-key="2" type="button">2</button><button class="gate-key" data-key="3" type="button">3</button>
+     <button class="gate-key" data-key="4" type="button">4</button><button class="gate-key" data-key="5" type="button">5</button><button class="gate-key" data-key="6" type="button">6</button>
+     <button class="gate-key" data-key="7" type="button">7</button><button class="gate-key" data-key="8" type="button">8</button><button class="gate-key" data-key="9" type="button">9</button>
+     <button class="gate-key utility" data-key="backspace" type="button">✖</button><button class="gate-key" data-key="0" type="button">0</button><button class="gate-key enter" data-key="enter" type="button">➜</button>
+    </div>
+    <div id="gateMessage" role="status" aria-live="polite"></div>
+   </div>
+  </div>
+ </section>
+ <div id="walletContent" hidden>
+
  <div class="brand">Lexaa Saldo</div>
  <div class="user"><div class="avatar" id="avatar"><span style="display:grid;place-items:center;height:100%;font-size:30px">♛</span></div><div class="user-info"><div class="username" id="displayName">Lexaaa</div><div class="level" id="level">Lv. 0</div></div><div class="down">▼</div></div>
  <main class="wallet-area">
@@ -67,6 +142,7 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
   </div>
  </main>
  <button class="back" id="back">⟵ Kembali</button><div class="toast" id="toast">Fitur ini segera hadir!</div>
+ </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -87,7 +163,111 @@ async function loadAccount(){
   if(data.avatar_url)$("avatar").innerHTML='<img src="'+data.avatar_url.replace(/"/g,"&quot;")+'" alt="Foto profil">';
  }else $("displayName").textContent=params.get("name")||"Lexaa";
 }
-loadAccount();
+// Wallet gate unlocks the balance screen only after the phone/PIN RPC succeeds.
+
+let gateMode="login",gateStep="phone",phoneDigits="",pinDigits="",firstPin="";
+function gateMessage(message,isError=false){$("gateMessage").textContent=message;$("gateMessage").classList.toggle("error",isError)}
+function setGateStep(step){
+ gateStep=step;gateMessage("");
+ $("phoneDisplay").hidden=step!=="phone";
+ $("pinDisplay").hidden=step==="phone";
+ $("gateBackStep").hidden=step==="phone";
+ if(step==="phone"){
+  $("phoneDisplay").value=phoneDigits?"+62 "+phoneDigits:"";
+  $("stepLabel").textContent="✦  Contoh: 81234567890 (tanpa 0 di depan)  ✦";
+ }else{
+  $("pinDisplay").querySelectorAll(".pin-dot").forEach((dot,i)=>dot.classList.toggle("filled",i<pinDigits.length));
+  $("stepLabel").textContent=step==="pin"?(gateMode==="register"?"Buat PIN 6 digit":"Masukkan PIN 6 digit"):"Konfirmasi PIN 6 digit";
+ }
+}
+function resetGate(){gateMode="login";phoneDigits="";pinDigits="";firstPin="";$("registerWallet").textContent="Daftar Sekarang  ❯";$("gateQuestion").textContent="Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML="<li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li>";setGateStep("phone")}
+function formatPhone(){ $("phoneDisplay").value=phoneDigits?"+62 "+phoneDigits:""; }
+function gateNumberKey(key){
+ if(key==="backspace"){
+  if(gateStep==="phone")phoneDigits=phoneDigits.slice(0,-1);
+  else pinDigits=pinDigits.slice(0,-1);
+  if(gateStep==="phone")formatPhone();else setGateStep(gateStep);
+  return;
+ }
+ if(key==="enter"){advanceGate();return;}
+ if(!/^\d$/.test(key))return;
+ if(gateStep==="phone"){
+  if(phoneDigits.length<13)phoneDigits+=key;
+  formatPhone();
+ }else if(pinDigits.length<6){
+  pinDigits+=key;setGateStep(gateStep);
+  if(pinDigits.length===6)setTimeout(advanceGate,130);
+ }
+}
+function normalizePhone(){return "+62"+phoneDigits.replace(/^0+/,"")}
+async function advanceGate(){
+ if(gateStep==="phone"){
+  if(phoneDigits.length<9||phoneDigits.length>13){gateMessage("Masukkan nomor handphone yang valid.",true);return}
+  if(gateMode==="login"){setGateStep("pin");return}
+  setGateStep("pin");return;
+ }
+ if(gateStep==="pin"){
+  if(pinDigits.length!==6){gateMessage("PIN harus terdiri dari 6 angka.",true);return}
+  if(gateMode==="login"){await submitWalletLogin();return}
+  firstPin=pinDigits;pinDigits="";setGateStep("confirm");return;
+ }
+ if(gateStep==="confirm"){
+  if(pinDigits.length!==6){gateMessage("Masukkan ulang 6 digit PIN.",true);return}
+  if(pinDigits!==firstPin){pinDigits="";firstPin="";setGateStep("pin");gateMessage("PIN tidak sama. Silakan buat PIN kembali.",true);return}
+  await submitWalletRegistration();
+ }
+}
+async function submitWalletLogin(){
+ const btns=[...$("gateKeypad").querySelectorAll("button")];btns.forEach(b=>b.disabled=true);
+ gateMessage("Memeriksa wallet...");
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user)throw new Error("Silakan login ke akun utama Lexaa terlebih dahulu.");
+  const {data,error}=await db.rpc("lexaa_wallet_login",{p_phone:normalizePhone(),p_pin:pinDigits});
+  if(error)throw error;
+  if(data!==true)throw new Error("Nomor atau PIN salah. Jika belum punya wallet, pilih Daftar Sekarang.");
+  await unlockWallet();
+ }catch(err){gateMessage(err.message==="Invalid wallet credentials"?"Nomor atau PIN salah.":(err.message||"Gagal masuk ke wallet."),true);pinDigits="";setGateStep("pin")}
+ finally{btns.forEach(b=>b.disabled=false)}
+}
+async function submitWalletRegistration(){
+ const btns=[...$("gateKeypad").querySelectorAll("button")];btns.forEach(b=>b.disabled=true);
+ gateMessage("Mendaftarkan wallet...");
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user)throw new Error("Silakan login ke akun utama Lexaa terlebih dahulu.");
+  const {data,error}=await db.rpc("lexaa_wallet_register",{p_phone:normalizePhone(),p_pin:firstPin});
+  if(error)throw error;
+  if(data!==true)throw new Error("Nomor ini sudah terdaftar.");
+  gateMessage("Wallet berhasil dibuat! Membuka saldo...");
+  await unlockWallet();
+ }catch(err){gateMessage(err.message||"Pendaftaran gagal. Coba nomor lain.",true);pinDigits="";firstPin="";setGateStep("phone")}
+ finally{btns.forEach(b=>b.disabled=false)}
+}
+async function unlockWallet(){
+ $("accessGate").hidden=true;$("walletContent").hidden=false;
+ await loadAccount();
+}
+$("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});
+$("registerWallet").addEventListener("click",()=>{
+ gateMode="register";phoneDigits="";pinDigits="";firstPin="";
+ $("gateQuestion").textContent="Buat Wallet Lexaa Sekarang!";
+ $("registerWallet").textContent="Mode Pendaftaran Aktif";
+ $("gateInstructions").innerHTML="<li>Masukkan nomor handphone</li><li>Buat PIN 6 digit</li><li>Konfirmasi PIN kamu</li><li>Wallet siap digunakan!</li>";
+ setGateStep("phone");
+});
+$("gateBackStep").addEventListener("click",()=>{
+ if(gateStep==="confirm"){pinDigits="";firstPin="";setGateStep("pin")}
+ else if(gateStep==="pin"){pinDigits="";setGateStep("phone")}
+});
+document.addEventListener("keydown",e=>{
+ if($("accessGate").hidden)return;
+ if(/^\d$/.test(e.key))gateNumberKey(e.key);
+ else if(e.key==="Backspace")gateNumberKey("backspace");
+ else if(e.key==="Enter")gateNumberKey("enter");
+});
+resetGate();
+
 let toastTimer;
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
 const topupLayer=document.createElement("div");
