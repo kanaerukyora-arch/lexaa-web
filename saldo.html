@@ -227,7 +227,11 @@ async function submitWalletLogin(){
   if(error)throw error;
   if(data!==true)throw new Error("Nomor atau PIN salah. Jika belum punya wallet, pilih Daftar Sekarang.");
   await unlockWallet();
- }catch(err){gateMessage(err.message==="Invalid wallet credentials"?"Nomor atau PIN salah.":(err.message||"Gagal masuk ke wallet."),true);pinDigits="";setGateStep("pin")}
+ }catch(err){
+  const message=err.message||"Gagal masuk ke wallet.";
+  gateMessage(message.includes("not registered")?"Nomor belum terdaftar. Tekan Daftar Sekarang untuk membuat wallet.":message.includes("Invalid wallet credentials")?"PIN salah. Silakan coba lagi.":message,true);
+  pinDigits="";setGateStep("pin")
+ }
  finally{btns.forEach(b=>b.disabled=false)}
 }
 async function submitWalletRegistration(){
@@ -250,9 +254,10 @@ async function unlockWallet(){
 }
 $("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});
 $("registerWallet").addEventListener("click",()=>{
+ if(gateMode==="register"){resetGate();return}
  gateMode="register";phoneDigits="";pinDigits="";firstPin="";
  $("gateQuestion").textContent="Buat Wallet Lexaa Sekarang!";
- $("registerWallet").textContent="Mode Pendaftaran Aktif";
+ $("registerWallet").textContent="Kembali ke Login  ❯";
  $("gateInstructions").innerHTML="<li>Masukkan nomor handphone</li><li>Buat PIN 6 digit</li><li>Konfirmasi PIN kamu</li><li>Wallet siap digunakan!</li>";
  setGateStep("phone");
 });
