@@ -222,6 +222,64 @@ html.register-page #accessGate #registerWallet{
  background:linear-gradient(110deg,#5e13d8,#a42dff 55%,#5b12d7)!important;
  box-shadow:0 0 9px #fff,0 0 22px #a72cff!important;
 }
+
+/* LEXAA WALLET — rebuilt access UI over the clean fantasy background */
+#scene{background:#10052d url("saldo-login-background.png") center center/cover no-repeat!important}
+#bg,#veil,#sparkles{display:none!important}
+#accessGate{position:absolute!important;inset:0!important;z-index:20!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;padding:4.5% 7%!important;background:linear-gradient(90deg,rgba(8,0,28,.02) 0%,rgba(10,0,34,.02) 38%,rgba(12,0,35,.46) 100%)!important;overflow:auto!important}
+#accessGate[hidden]{display:none!important}
+.wallet-gate-card{position:relative;width:min(43vw,590px);min-width:360px;padding:clamp(18px,2.3vw,32px);border:1px solid rgba(225,190,255,.9);border-radius:22px;background:linear-gradient(145deg,rgba(17,3,49,.88),rgba(37,8,85,.82));box-shadow:0 0 12px rgba(255,255,255,.8),0 0 36px rgba(153,69,255,.68),inset 0 0 28px rgba(177,112,255,.2);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.wallet-gate-card:before{content:"";position:absolute;inset:7px;border:1px solid rgba(196,151,255,.32);border-radius:16px;pointer-events:none}
+.wallet-gate-brand{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 22px;text-align:left}
+.brand-crystal{width:48px;height:48px;display:grid;place-items:center;border:1px solid #f0d5ff;border-radius:14px;background:linear-gradient(145deg,#6c28d7,#26075c);color:#ffe5a8;font-size:27px;box-shadow:0 0 14px #b65cff;transform:rotate(-7deg)}
+.wallet-gate-brand h1{margin:0;color:#fff;font:800 clamp(20px,2vw,29px) 'Playfair Display',Georgia,serif;letter-spacing:.16em;text-shadow:0 0 12px #c18aff}
+.wallet-gate-brand p{margin:4px 0 0;color:#d9c3ff;font:10px Arial,sans-serif;letter-spacing:.25em}
+.wallet-region,.wallet-number-field{position:relative;display:flex;align-items:center;gap:13px;width:100%;height:54px;padding:0 17px;border:1px solid #cda2ff;border-radius:12px;background:linear-gradient(100deg,rgba(22,3,62,.96),rgba(39,7,91,.96));box-shadow:0 0 8px rgba(255,255,255,.7),0 0 18px rgba(160,69,255,.6),inset 0 0 16px rgba(154,75,255,.24)}
+.wallet-region{margin-bottom:12px;color:#fff}
+.region-globe{font-size:22px;color:#e8d3ff}.region-label{font:italic 14px 'Playfair Display',Georgia,serif;letter-spacing:.12em;color:#e9d8ff}
+.region-flag{margin-left:auto;font-size:22px}.wallet-region strong{font:20px Georgia,serif;color:#fff}
+#accessGate #regionSelect{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+.wallet-number-field{height:58px}
+.wallet-field-icon{font:24px Arial,sans-serif;color:#fff}
+#accessGate #phoneDisplay{flex:1;width:100%;min-width:0;height:100%;padding:0;border:0;outline:0;background:transparent;color:#f4eaff;font:clamp(17px,1.65vw,23px) Georgia,serif;letter-spacing:.035em;text-shadow:0 0 8px #b98cff}
+#accessGate #phoneDisplay::placeholder{color:#bda7d9;opacity:.85}
+#accessGate .pin-dots{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:22px;border:0;border-radius:12px;background:transparent;box-shadow:none}
+#accessGate .pin-dot{width:11px;height:11px;border-radius:50%;background:#76529c;box-shadow:0 0 6px #b98cff}
+#accessGate .pin-dot.filled{background:#fff;box-shadow:0 0 8px #fff,0 0 15px #c18aff}
+#accessGate #stepLabel{min-height:26px;margin:12px 0 10px;text-align:center;color:#ead8ff;font:13px 'Playfair Display',Georgia,serif;letter-spacing:.025em;text-shadow:0 0 8px #a94cff;opacity:1!important}
+.wallet-keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.wallet-key{height:clamp(48px,6.2vh,62px);border:1px solid #d7b2ff;border-radius:11px;color:#fff;font:700 clamp(25px,2.6vw,35px) 'Playfair Display',Georgia,serif;background:linear-gradient(145deg,rgba(24,4,68,.98),rgba(65,14,135,.96));box-shadow:0 0 6px rgba(255,255,255,.75),0 0 15px rgba(161,61,255,.58),inset 0 0 14px rgba(161,76,255,.35);text-shadow:0 0 9px #fff;cursor:pointer;transition:transform .12s,filter .12s}
+.wallet-key:active{transform:scale(.96);filter:brightness(1.5)}
+.wallet-key.wallet-enter{background:linear-gradient(130deg,#6513d9,#c12dff 55%,#7619e9);box-shadow:0 0 9px #fff,0 0 23px #c14cff,inset 0 0 18px #f0baff}
+.wallet-key.wallet-delete{font-family:Arial,sans-serif}
+#accessGate #gateMessage{min-height:22px;margin:8px 0 2px;text-align:center;color:#ffe5a5;font:12px Arial,sans-serif;text-shadow:0 0 7px #a94cff}
+#accessGate #gateMessage.error{color:#ffc1d0}
+.wallet-gate-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:13px;border-top:1px solid rgba(206,166,255,.35)}
+.wallet-gate-footer span{color:#e8d8ff;font:13px 'Playfair Display',Georgia,serif}
+#accessGate #registerWallet{position:relative!important;inset:auto!important;width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;margin:0!important;padding:10px 16px!important;border:1px solid #f0d9ff!important;border-radius:999px!important;opacity:1!important;z-index:10!important;display:block!important;pointer-events:auto!important;cursor:pointer!important;color:#fff!important;font:700 13px 'Playfair Display',Georgia,serif!important;background:linear-gradient(110deg,#5e13d8,#a42dff 55%,#5b12d7)!important;box-shadow:0 0 8px #fff,0 0 17px #a72cff!important;white-space:nowrap}
+#accessGate #registerWallet span{color:#fff;font-size:15px}
+#accessGate #gateBackStep{display:none!important}
+@media(max-width:760px){
+ #accessGate{justify-content:center!important;padding:18px!important;background:linear-gradient(0deg,rgba(8,0,28,.58),rgba(8,0,28,.12))!important}
+ .wallet-gate-card{width:min(94vw,460px);min-width:0;padding:17px;border-radius:18px}
+ .wallet-gate-brand{margin-bottom:15px}
+ .wallet-region,.wallet-number-field{height:48px}
+ .wallet-keypad{gap:7px}
+ .wallet-key{height:clamp(42px,6.8vh,55px);font-size:25px}
+ .wallet-gate-footer{flex-wrap:wrap}
+}
+@media(max-height:520px) and (orientation:landscape){
+ #accessGate{padding:2% 5%!important}
+ .wallet-gate-card{width:min(43vw,500px);padding:12px 18px}
+ .wallet-gate-brand{margin-bottom:8px}
+ .brand-crystal{width:34px;height:34px;font-size:20px}
+ .wallet-region,.wallet-number-field{height:39px;margin-bottom:7px}
+ #accessGate #stepLabel{margin:5px 0}
+ .wallet-keypad{gap:5px}
+ .wallet-key{height:36px;font-size:22px}
+ #accessGate #gateMessage{min-height:14px;margin:3px}
+ .wallet-gate-footer{margin-top:5px;padding-top:6px}
+}
 </style>
 </head>
 <body>
@@ -229,42 +287,39 @@ html.register-page #accessGate #registerWallet{
  <video id="bg" autoplay muted loop playsinline preload="auto"><source src="saldo-background.mp4?v=3" type="video/mp4"></video>
  <div id="veil"></div><div id="sparkles"></div>
 
- <section id="accessGate" aria-label="Wallet Lexaa login">
-  <button id="gateBackStep" type="button" hidden>⟵ Kembali</button>
-  <div class="gate-left">
-   <div class="gate-register">
-    <h2 id="gateQuestion">Belum Punya Wallet Lexaa?</h2>
-    <button id="registerWallet" type="button">Daftar Sekarang&nbsp; ❯</button>
-    <ol id="gateInstructions"><li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li></ol>
-    <div class="gate-seal" aria-hidden="true">♛</div>
-   </div>
+ <section id="accessGate" aria-label="Lexaa Wallet access">
+ <button id="gateBackStep" type="button" hidden>⟵ Kembali</button>
+ <div class="wallet-gate-card">
+  <header class="wallet-gate-brand">
+   <div class="brand-crystal">♛</div>
+   <div><h1>LEXAA WALLET</h1><p>YOUR TREASURE, YOUR WORLD</p></div>
+  </header>
+  <div class="wallet-region" id="regionSelectWrap">
+   <span class="region-globe">◎</span><span class="region-label">REGION</span>
+   <span class="region-flag" id="regionFlag">🇮🇩</span><strong id="regionCode">+62</strong>
+   <select id="regionSelect" aria-label="Region"><option value="ID" data-dial="+62" data-flag="🇮🇩" selected>Indonesia (+62)</option></select>
   </div>
-  <div class="gate-right"><div class="gate-controls">
-   <div class="gate-region" id="regionSelectWrap"><span class="globe">◎</span><span>Region</span><span class="flag" id="regionFlag">🇮🇩</span><span class="country" id="regionCode">+62</span><span class="chevron">⌄</span>
-    <select id="regionSelect" aria-label="Region">
-     <option value="ID" data-dial="+62" data-flag="🇮🇩" selected>Indonesia (+62)</option>
-     <option value="MY" data-dial="+60" data-flag="🇲🇾">Malaysia (+60)</option>
-     <option value="SG" data-dial="+65" data-flag="🇸🇬">Singapore (+65)</option>
-     <option value="US" data-dial="+1" data-flag="🇺🇸">United States (+1)</option>
-     <option value="GB" data-dial="+44" data-flag="🇬🇧">United Kingdom (+44)</option>
-     <option value="AU" data-dial="+61" data-flag="🇦🇺">Australia (+61)</option>
-     <option value="JP" data-dial="+81" data-flag="🇯🇵">Japan (+81)</option>
-     <option value="KR" data-dial="+82" data-flag="🇰🇷">South Korea (+82)</option>
-     <option value="PH" data-dial="+63" data-flag="🇵🇭">Philippines (+63)</option>
-     <option value="IN" data-dial="+91" data-flag="🇮🇳">India (+91)</option>
-    </select>
-   </div>
-   <div class="gate-number"><span class="phone-icon">☎</span><input id="phoneDisplay" type="text" inputmode="none" placeholder="+62 81234567890" readonly aria-label="Nomor handphone"><div id="pinDisplay" class="pin-dots" hidden aria-label="PIN"><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span></div></div>
-   <div id="stepLabel">✦ Contoh: 81234567890 (tanpa 0 di depan) ✦</div>
-   <div class="gate-keypad" id="gateKeypad">
-    <button class="gate-key" data-key="1" type="button">1</button><button class="gate-key" data-key="2" type="button">2</button><button class="gate-key" data-key="3" type="button">3</button>
-    <button class="gate-key" data-key="4" type="button">4</button><button class="gate-key" data-key="5" type="button">5</button><button class="gate-key" data-key="6" type="button">6</button>
-    <button class="gate-key" data-key="7" type="button">7</button><button class="gate-key" data-key="8" type="button">8</button><button class="gate-key" data-key="9" type="button">9</button>
-    <button class="gate-key utility" data-key="backspace" type="button">✖</button><button class="gate-key" data-key="0" type="button">0</button><button class="gate-key enter" data-key="enter" type="button">➜</button>
-   </div>
-   <div id="gateMessage" role="status" aria-live="polite"></div>
-  </div></div>
- </section>
+  <div class="wallet-number-field">
+   <span class="wallet-field-icon">☎</span>
+   <input id="phoneDisplay" type="text" inputmode="none" placeholder="+62 81234567890" readonly aria-label="Nomor handphone">
+   <div id="pinDisplay" class="pin-dots" hidden aria-label="PIN"><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span></div>
+  </div>
+  <div id="stepLabel" class="wallet-step-label">Masukkan nomor handphone</div>
+  <div class="wallet-keypad" id="gateKeypad">
+   <button class="wallet-key" data-key="1" type="button">1</button><button class="wallet-key" data-key="2" type="button">2</button><button class="wallet-key" data-key="3" type="button">3</button>
+   <button class="wallet-key" data-key="4" type="button">4</button><button class="wallet-key" data-key="5" type="button">5</button><button class="wallet-key" data-key="6" type="button">6</button>
+   <button class="wallet-key" data-key="7" type="button">7</button><button class="wallet-key" data-key="8" type="button">8</button><button class="wallet-key" data-key="9" type="button">9</button>
+   <button class="wallet-key wallet-delete" data-key="backspace" type="button">⌫</button><button class="wallet-key" data-key="0" type="button">0</button><button class="wallet-key wallet-enter" data-key="enter" type="button">➜</button>
+  </div>
+  <div id="gateMessage" role="status" aria-live="polite"></div>
+  <footer class="wallet-gate-footer">
+   <span id="gateQuestion">Belum punya Wallet Lexaa?</span>
+   <button id="registerWallet" type="button">Daftar Sekarang <span>❯</span></button>
+  </footer>
+  <ol id="gateInstructions" hidden><li>Klik Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN 4 digit dan konfirmasi</li></ol>
+  <div class="gate-seal" hidden>♛</div>
+ </div>
+</section>
  <div id="walletContent" hidden>
 
  <div class="brand">Lexaa Saldo</div>
