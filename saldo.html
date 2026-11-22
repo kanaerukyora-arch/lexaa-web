@@ -99,12 +99,12 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
 #accessGate .gate-controls{display:contents}
 #accessGate .gate-region{position:absolute;left:55.2%;top:25.6%;width:38%;height:9%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;pointer-events:auto;font-size:0}
 #accessGate .gate-region .globe,#accessGate .gate-region>span:nth-child(2),#accessGate .gate-region .chevron{display:none}
-#accessGate .gate-region .flag{position:absolute;left:66%;top:23%;margin:0;font-size:clamp(18px,2vw,29px);line-height:1}
+#accessGate .gate-region .flag,#accessGate .gate-region .country{display:none}\n#accessGate.region-changed .gate-region .flag,#accessGate.region-changed .gate-region .country{display:block}\n#accessGate .gate-region .flag{position:absolute;left:66%;top:23%;margin:0;font-size:clamp(18px,2vw,29px);line-height:1}
 #accessGate .gate-region .country{position:absolute;left:77%;top:22%;font:clamp(18px,1.9vw,28px) Georgia,serif;color:#fff;text-shadow:0 0 7px #fff}
 #accessGate #regionSelect{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 #accessGate .gate-number{position:absolute;left:55.2%;top:36.5%;width:38%;height:9.5%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;pointer-events:none}
 #accessGate .gate-number .phone-icon{display:none}
-#accessGate #phoneDisplay{position:absolute;left:16%;top:0;width:82%;height:100%;padding:0;border:0;background:transparent;color:#e5d5ff;font:clamp(20px,2vw,31px) Georgia,serif;letter-spacing:.04em;text-shadow:0 0 8px #b98cff;pointer-events:auto}
+#accessGate #phoneDisplay{position:absolute;left:16%;top:0;width:82%;height:100%;padding:0;border:0;background:transparent;color:transparent;font:clamp(20px,2vw,31px) Georgia,serif;letter-spacing:.04em;text-shadow:0 0 8px #b98cff;pointer-events:auto}
 #accessGate #phoneDisplay::placeholder{color:#bca5d7;opacity:1}
 #accessGate .gate-number:has(#pinDisplay:not([hidden])):before{content:"";position:absolute;left:14%;right:2%;top:9%;height:82%;background:linear-gradient(90deg,rgba(16,0,49,.98),rgba(28,4,77,.98));}
 #accessGate .pin-dots{position:absolute;left:15%;top:0;width:83%;height:100%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;gap:clamp(12px,1.6vw,24px);pointer-events:none}
@@ -117,7 +117,7 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
 #accessGate #gateBackStep{display:none!important}
 #accessGate.region-changed .gate-region:after{content:"";position:absolute;right:2%;top:8%;width:42%;height:84%;background:linear-gradient(100deg,rgba(18,0,54,.98),rgba(24,2,67,.98));pointer-events:none}
 #accessGate.region-changed .gate-region .flag,#accessGate.region-changed .gate-region .country{z-index:2}
-#accessGate.phone-entered .gate-number:before{content:"";position:absolute;left:14%;right:2%;top:9%;height:82%;background:linear-gradient(90deg,rgba(16,0,49,.98),rgba(28,4,77,.98));}
+#accessGate.phone-entered #phoneDisplay{color:#e5d5ff}\n#accessGate.phone-entered .gate-number:before{content:"";position:absolute;left:14%;right:2%;top:9%;height:82%;background:linear-gradient(90deg,rgba(16,0,49,.98),rgba(28,4,77,.98));}
 @media(max-aspect-ratio:1/1){#scene{width:100dvh;height:100vw;left:100vw;top:0;transform:rotate(90deg);transform-origin:top left}}
 </style>
 </head>
@@ -202,7 +202,8 @@ async function loadAccount(){
 }
 // Wallet gate unlocks the balance screen only after the phone/PIN RPC succeeds.
 
-let gateMode="login",gateStep="phone",phoneDigits="",pinDigits="",firstPin="";\nlet selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};
+let gateMode="login",gateStep="phone",phoneDigits="",pinDigits="",firstPin="";
+let selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};
 function gateMessage(message,isError=false){$("gateMessage").textContent=message;$("gateMessage").classList.toggle("error",isError)}
 function setGateStep(step){
  gateStep=step;gateMessage("");
@@ -239,7 +240,8 @@ function gateNumberKey(key){
 function normalizePhone(){return selectedRegion.dial+phoneDigits.replace(/^0+/,"")}
 async function advanceGate(){
  if(gateStep==="phone"){
-  const fullDigits=selectedRegion.dial.replace("+","").length+phoneDigits.replace(/^0+/,"").length;\n  if(fullDigits<8||fullDigits>15){gateMessage("Masukkan nomor handphone yang valid.",true);return}
+  const fullDigits=selectedRegion.dial.replace("+","").length+phoneDigits.replace(/^0+/,"").length;
+  if(fullDigits<8||fullDigits>15){gateMessage("Masukkan nomor handphone yang valid.",true);return}
   if(gateMode==="login"){setGateStep("pin");return}
   setGateStep("pin");return;
  }
@@ -289,7 +291,8 @@ async function unlockWallet(){
  $("accessGate").hidden=true;$("walletContent").hidden=false;
  await loadAccount();
 }
-$("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});\n$("regionSelect").addEventListener("change",e=>{const o=e.target.selectedOptions[0];selectedRegion={code:o.value,dial:o.dataset.dial,flag:o.dataset.flag};$("regionFlag").textContent=selectedRegion.flag;$("regionCode").textContent=selectedRegion.dial;$("accessGate").classList.toggle("region-changed",selectedRegion.code!=="ID");phoneDigits="";formatPhone();gateMessage("");});
+$("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});
+$("regionSelect").addEventListener("change",e=>{const o=e.target.selectedOptions[0];selectedRegion={code:o.value,dial:o.dataset.dial,flag:o.dataset.flag};$("regionFlag").textContent=selectedRegion.flag;$("regionCode").textContent=selectedRegion.dial;$("accessGate").classList.toggle("region-changed",selectedRegion.code!=="ID");phoneDigits="";formatPhone();gateMessage("");});
 $("registerWallet").addEventListener("click",()=>{
  if(gateMode==="register"){resetGate();return}
  gateMode="register";phoneDigits="";pinDigits="";firstPin="";
