@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#13052f"><title>Lexaa Top Up</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10052d;color:#fff;font-family:Georgia,serif}
+#stage{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#10052d}
+#art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block}
+.hit{position:absolute;z-index:2;border:0;background:transparent;cursor:pointer;padding:0}
+.hit:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:18px}
+#back{left:1.5%;top:1.5%;width:12%;height:10%}
+#p20{left:9.5%;top:53%;width:18%;height:25%}
+#p50{left:30%;top:53%;width:18%;height:25%}
+#p75{left:51%;top:53%;width:18%;height:25%}
+#p100{left:72%;top:53%;width:18%;height:25%}
+#modal{position:absolute;z-index:5;inset:0;display:none;align-items:center;justify-content:center;background:#09021dcc;backdrop-filter:blur(7px);padding:18px}
+#modal.show{display:flex}
+.dialog{width:min(460px,90vw);padding:26px 24px;text-align:center;border:2px solid #e5c5ff;border-radius:24px;background:linear-gradient(145deg,#321078f5,#100535f5);box-shadow:0 0 18px #fff,0 0 42px #9c4bff,inset 0 0 25px #b36aff66}
+.dialog h2{margin:0 0 12px;font-size:clamp(22px,3vw,34px);text-shadow:0 0 12px #c78aff}
+.dialog p{margin:8px 0 20px;font:16px Arial,sans-serif}
+.dialog button{margin:5px;padding:11px 20px;border:1px solid #f2d9ff;border-radius:25px;color:#fff;background:linear-gradient(90deg,#7330df,#ad66ff);font-weight:bold}
+.dialog button.secondary{background:#25134d}
+@media(orientation:portrait){#stage{width:100dvh;height:100vw;left:100vw;top:0;transform:rotate(90deg);transform-origin:top left}}
+</style></head>
+<body><main id="stage">
+<img id="art" src="topup-background.png" alt="Lexaa Top Up">
+<button class="hit" id="back" aria-label="Kembali"></button>
+<button class="hit" id="p20" aria-label="Pilih Top Up 20RB"></button>
+<button class="hit" id="p50" aria-label="Pilih Top Up 50RB"></button>
+<button class="hit" id="p75" aria-label="Pilih Top Up 75RB"></button>
+<button class="hit" id="p100" aria-label="Pilih Top Up 100RB"></button>
+<div id="modal"><section class="dialog"><h2 id="title">Paket 20RB</h2><p id="desc">Kamu memilih paket Top Up 20RB.</p><p style="font-size:13px;opacity:.8">Pembayaran belum diaktifkan.</p><button id="confirm">Mengerti</button><button class="secondary" id="cancel">Batal</button></section></div>
+</main>
+<script>
+const modal=document.getElementById("modal");
+function choose(value){document.getElementById("title").textContent="Top Up "+value+"RB";document.getElementById("desc").textContent="Kamu memilih paket saldo "+value+"RB.";modal.classList.add("show")}
+[20,50,75,100].forEach(v=>document.getElementById("p"+v).addEventListener("click",()=>choose(v)));
+function back(){if(modal.classList.contains("show")){modal.classList.remove("show");return}if(window.parent!==window){window.parent.postMessage("LEXAA_CLOSE_TOPUP",location.origin)}else history.back()}
+document.getElementById("back").addEventListener("click",back);
+document.getElementById("cancel").addEventListener("click",()=>modal.classList.remove("show"));
+document.getElementById("confirm").addEventListener("click",()=>modal.classList.remove("show"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")back()});
+document.getElementById("art").addEventListener("error",()=>{document.body.innerHTML="Gambar topup-background.png tidak ditemukan. Pastikan file ada di root repository."});
+</script></body></html>
