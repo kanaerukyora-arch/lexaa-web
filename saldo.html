@@ -196,7 +196,7 @@ function gateNumberKey(key){
   formatPhone();
  }else if(pinDigits.length<6){
   pinDigits+=key;setGateStep(gateStep);
-  if(pinDigits.length===6)setTimeout(advanceGate,130);
+  
  }
 }
 function normalizePhone(){return "+62"+phoneDigits.replace(/^0+/,"")}
