@@ -56,7 +56,7 @@ begin
   where user_id = v_user and phone_e164 = p_phone
   for update;
 
-  if not found then raise exception 'Invalid wallet credentials.'; end if;
+  if not found then raise exception 'Wallet number is not registered for this account.'; end if;
   if v_row.locked_until is not null and v_row.locked_until > now() then
     raise exception 'Too many attempts. Try again in 15 minutes.';
   end if;
