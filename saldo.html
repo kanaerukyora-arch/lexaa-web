@@ -90,7 +90,13 @@ async function loadAccount(){
 loadAccount();
 let toastTimer;
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
-$("topup").addEventListener("click",()=>toast("Fitur Top Up akan segera hadir!"));
+$("topup").addEventListener("click",()=>{
+ const layer=document.createElement("div");layer.id="topupFullscreenLayer";
+ layer.style.cssText="position:fixed;inset:0;width:100vw;height:100dvh;z-index:2147483647;background:#100532;overflow:hidden";
+ const frame=document.createElement("iframe");frame.title="Lexaa Top Up";frame.src="topup.html";frame.allow="autoplay; fullscreen";frame.style.cssText="display:block;border:0;width:100%;height:100%;background:#100532";
+ layer.appendChild(frame);document.body.appendChild(layer);
+});
+window.addEventListener("message",event=>{if(event.origin===location.origin&&event.data==="LEXAA_CLOSE_TOPUP")document.getElementById("topupFullscreenLayer")?.remove();});
 $("reward").addEventListener("click",()=>toast("Misi dan Event akan segera hadir!"));
 window.addEventListener("pagehide",()=>sessionStorage.setItem("lexaa_return_world","1"));
 $("back").addEventListener("click",()=>{if(window.parent!==window){window.parent.postMessage("LEXAA_CLOSE_SALDO",location.origin);return;}if(history.length>1)history.back();else location.href="index.html";});
