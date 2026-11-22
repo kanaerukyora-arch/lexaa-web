@@ -823,10 +823,18 @@ function setMode(mode){
  $("loginPrompt").hidden = !registering;
  showMessage("");
 }
-$("enterBtn").addEventListener("click",async()=>{
+async function continueToLogin(){
  $("intro").classList.add("hide");$("loginScreen").classList.add("show");
  try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}
  try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock("landscape")}catch(e){}
+}
+$("enterBtn").addEventListener("click",async()=>{
+ const needsConsent=localStorage.getItem("lexaa_location_consent_v1")!=="granted"&&!sessionStorage.getItem("lexaa_location_later_v1");
+ if(needsConsent){
+  const modal=$("locationConsent");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+  return;
+ }
+ await continueToLogin();
 });
 $("loginTab").addEventListener("click",()=>setMode("login"));
 $("registerTab").addEventListener("click",()=>setMode("register"));
@@ -906,16 +914,15 @@ $("allowLocationBtn").addEventListener("click",async()=>{
   if(user)startLiveLocationSharing();
  }
  $("allowLocationBtn").disabled=false;$("laterLocationBtn").disabled=false;
+ await continueToLogin();
 });
-$("laterLocationBtn").addEventListener("click",()=>{
+$("laterLocationBtn").addEventListener("click",async()=>{
  sessionStorage.setItem("lexaa_location_later_v1","1");
  closeLocationConsent();
  $("locationText").textContent="Lokasi belum diizinkan";
  $("coordsText").textContent="Kamu memilih Lain Kali";
+ await continueToLogin();
 });
-if(localStorage.getItem("lexaa_location_consent_v1")!=="granted"&&!sessionStorage.getItem("lexaa_location_later_v1")){
- const modal=$("locationConsent");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
-}
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
 
 let lexaaInstallPrompt=null,lexaaInstallTimer=null;
