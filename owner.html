@@ -31,7 +31,7 @@ button:disabled{opacity:.55;cursor:wait}.ghost{background:#101a34;color:#dcecff;
 <main id="dashboard" class="hidden">
 <div><div class="sub">ACCESS GRANTED</div><h1>Panel <span class="gold">Owner</span></h1><p class="muted">Daftar lokasi GPS yang dibagikan pengguna setelah memberikan izin melalui Lexaa.</p></div>
 <div class="stats"><div class="stat"><span class="muted">Pengguna membagikan lokasi</span><strong id="total">0</strong></div><div class="stat"><span class="muted">Akun Owner</span><strong style="font-size:16px">OWNER_LEXAA</strong></div></div>
-<div class="toolbar"><button id="refreshBtn">Muat ulang data</button><span id="status" class="muted" aria-live="polite"></span></div>
+<div class="toolbar"><button id="refreshBtn">↻ Refresh Lokasi Sekarang</button><span id="status" class="muted" aria-live="polite"></span></div>
 <div id="locationCards" class="cards"><div class="empty">Memuat data lokasi...</div></div>
 </main>
 </div>
@@ -43,12 +43,15 @@ const $=id=>document.getElementById(id);
 function showError(message){$('loginError').textContent=message||''}
 function showDashboard(){ $('loginPanel').classList.add('hidden');$('dashboard').classList.remove('hidden');$('logoutBtn').classList.remove('hidden'); }
 function showLogin(){ $('dashboard').classList.add('hidden');$('loginPanel').classList.remove('hidden');$('logoutBtn').classList.add('hidden'); }
+let ownerAutoRefresh=null;
 async function verifyOwner(){
  const {data:{user},error}=await db.auth.getUser();
  if(error||!user){showLogin();return false}
  const {data,isError}=await db.rpc('is_lexaa_owner');
  if(isError||data!==true){await db.auth.signOut();showLogin();showError('Akun ini belum terdaftar sebagai Owner Lexaa.');return false}
- showDashboard();await loadLocations();return true;
+ showDashboard();await loadLocations();
+ if(ownerAutoRefresh===null)ownerAutoRefresh=setInterval(()=>{if(document.visibilityState==="visible"&&!$("dashboard").classList.contains("hidden"))loadLocations();},15000);
+ return true;
 }
 async function loadLocations(){
  $('status').textContent='Mengambil data lokasi...';$('locationCards').replaceChildren();
@@ -66,7 +69,10 @@ async function loadLocations(){
   const username=document.createElement('div');username.className='meta';username.textContent=profile.username?'@'+profile.username:'Akun: '+item.user_id;
   const coords=document.createElement('div');coords.className='coords';coords.textContent=Number(item.latitude).toFixed(7)+', '+Number(item.longitude).toFixed(7);
   const accuracy=document.createElement('div');accuracy.className='meta';accuracy.textContent='Akurasi perangkat: '+(item.accuracy_m==null?'Tidak tersedia':'±'+Math.round(Number(item.accuracy_m))+' meter');
-  const date=document.createElement('div');date.className='meta';date.textContent='Waktu dibagikan: '+(item.captured_at?new Date(item.captured_at).toLocaleString('id-ID'):'Tidak tersedia');
+  const date=document.createElement('div');date.className='meta';
+  const captured=item.captured_at?new Date(item.captured_at):null;
+  const ageSeconds=captured?Math.max(0,Math.floor((Date.now()-captured.getTime())/1000)):Infinity;
+  date.textContent=captured?(ageSeconds<=60?'🟢 LIVE · diperbarui '+captured.toLocaleString('id-ID'):'Lokasi terakhir · '+captured.toLocaleString('id-ID')+' · '+(ageSeconds<3600?Math.floor(ageSeconds/60)+' menit lalu':Math.floor(ageSeconds/3600)+' jam lalu')):'Waktu pembaruan tidak tersedia';
   const map=document.createElement('a');map.className='btn map';map.target='_blank';map.rel='noopener noreferrer';map.href='https://www.google.com/maps?q='+encodeURIComponent(item.latitude+','+item.longitude);map.textContent='Buka di Google Maps';
   card.append(who,username,coords,accuracy,date,map);$('locationCards').append(card);
  }
@@ -80,7 +86,7 @@ $('loginForm').addEventListener('submit',async e=>{
  await verifyOwner();
 });
 $('refreshBtn').addEventListener('click',loadLocations);
-$('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();showLogin();showError('')});
+$('logoutBtn').addEventListener('click',async()=>{if(ownerAutoRefresh!==null){clearInterval(ownerAutoRefresh);ownerAutoRefresh=null;}await db.auth.signOut();showLogin();showError('')});
 verifyOwner();
 </script>
 </body>
