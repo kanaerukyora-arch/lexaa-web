@@ -212,6 +212,16 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
  position:absolute!important;left:16.5%!important;top:66.5%!important;width:18.5%!important;height:7.5%!important;
  z-index:10000!important;opacity:.01!important;display:block!important;pointer-events:auto!important;cursor:pointer!important;
 }
+
+/* Registration is a dedicated URL state; keep the login screen's Indonesia +62 artwork unchanged. */
+html.register-page #accessGate #registerWallet{
+ position:absolute!important;left:16.5%!important;top:66.5%!important;width:18.5%!important;height:7.5%!important;
+ opacity:1!important;display:block!important;z-index:10000!important;pointer-events:auto!important;
+ border:1px solid #ead1ff!important;border-radius:999px!important;color:#fff!important;
+ font:700 clamp(14px,1.45vw,22px) Georgia,serif!important;
+ background:linear-gradient(110deg,#5e13d8,#a42dff 55%,#5b12d7)!important;
+ box-shadow:0 0 9px #fff,0 0 22px #a72cff!important;
+}
 </style>
 </head>
 <body>
@@ -295,7 +305,7 @@ async function loadAccount(){
 }
 // Wallet gate unlocks the balance screen only after the phone/PIN RPC succeeds.
 
-let gateMode="login",gateStep="phone",phoneDigits="",pinDigits="",firstPin="";
+let gateMode=new URLSearchParams(location.search).get("register")==="1"?"register":"login",gateStep="phone",phoneDigits="",pinDigits="",firstPin="",registrationComplete=false;
 let selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};
 function gateMessage(message,isError=false){$("gateMessage").textContent=message;$("gateMessage").classList.toggle("error",isError)}
 function setGateStep(step){
@@ -311,7 +321,7 @@ function setGateStep(step){
   $("stepLabel").textContent=step==="pin"?(gateMode==="register"?"Buat PIN 4 digit":"Masukkan PIN 4 digit"):"Konfirmasi PIN 4 digit"; $("stepLabel").style.opacity="1";
  }
 }
-function resetGate(){gateMode="login";phoneDigits="";pinDigits="";firstPin="";$("regionSelect").value="ID";selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};$("regionFlag").textContent="🇮🇩";$("regionCode").textContent="+62";$("accessGate").classList.remove("region-changed","phone-entered");$("registerWallet").textContent="Daftar Sekarang  ❯";$("gateQuestion").textContent="Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML="<li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li>";setGateStep("phone");formatPhone()}
+function resetGate(){gateMode=new URLSearchParams(location.search).get("register")==="1"?"register":"login";phoneDigits="";pinDigits="";firstPin="";registrationComplete=false;$("regionSelect").value="ID";selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};$("regionFlag").textContent="🇮🇩";$("regionCode").textContent="+62";$("accessGate").classList.remove("region-changed","phone-entered");$("registerWallet").textContent=gateMode==="register"?"Kembali ke Login  ❯":"Daftar Sekarang  ❯";$("gateQuestion").textContent=gateMode==="register"?"Daftar Wallet Lexaa":"Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML=gateMode==="register"?"<li>Masukkan nomor handphone</li><li>Buat PIN 4 digit</li><li>Konfirmasi PIN 4 digit</li><li>Tekan LOGIN setelah berhasil</li>":"<li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li>";document.documentElement.classList.toggle("register-page",gateMode==="register");setGateStep("phone");formatPhone()}
 function formatPhone(){ $("phoneDisplay").value=phoneDigits?selectedRegion.dial+" "+phoneDigits:""; $("accessGate").classList.toggle("phone-entered",!!phoneDigits); }
 function gateNumberKey(key){
  if(key==="backspace"){
@@ -375,8 +385,8 @@ async function submitWalletRegistration(){
   const {data,error}=await db.rpc("lexaa_wallet_register",{p_phone:normalizePhone(),p_pin:firstPin});
   if(error)throw error;
   if(data!==true)throw new Error("Nomor ini sudah terdaftar.");
-  gateMessage("Wallet berhasil dibuat! Membuka saldo...");
-  await unlockWallet();
+  gateMessage("Wallet berhasil dibuat! Tekan LOGIN untuk masuk.");
+  registrationComplete=true;$("registerWallet").textContent="LOGIN  ❯";
  }catch(err){gateMessage(err.message||"Pendaftaran gagal. Coba nomor lain.",true);pinDigits="";firstPin="";setGateStep("phone")}
  finally{btns.forEach(b=>b.disabled=false)}
 }
@@ -386,7 +396,7 @@ async function unlockWallet(){
 }
 $("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});
 $("regionSelect").disabled=true;$("regionSelect").value="ID";
-$("registerWallet").addEventListener("click",()=>{location.href="wallet-register.html"});
+$("registerWallet").addEventListener("click",()=>{if(gateMode==="register"&&registrationComplete){location.href="saldo.html";return}if(gateMode==="register"){location.href="saldo.html";return}location.href="wallet-register.html"});
 $("gateBackStep").addEventListener("click",()=>{
  if(gateStep==="confirm"){pinDigits="";firstPin="";setGateStep("pin")}
  else if(gateStep==="pin"){pinDigits="";setGateStep("phone")}
