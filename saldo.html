@@ -285,6 +285,146 @@ html.register-page #accessGate #registerWallet{
 #accessGate:not(.artwork-ready){display:flex!important;grid-template-columns:none!important;justify-content:flex-end!important;align-items:center!important;padding:4.5% 7%!important;background:linear-gradient(90deg,rgba(8,0,28,.02),rgba(12,0,35,.46))!important}
 #accessGate:not(.artwork-ready) .wallet-gate-card{justify-self:auto!important;align-self:center!important}
 @media(max-width:760px){#accessGate:not(.artwork-ready){justify-content:center!important;padding:18px!important}}
+
+/* FINAL POLISH — keep prompts below the keypad and registration controls below the bottom row. */
+.wallet-gate-card{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-content:center!important;
+ column-gap:10px!important;
+ row-gap:0!important;
+ width:min(48vw,690px)!important;
+ min-width:390px!important;
+ padding:clamp(20px,2.2vw,32px)!important;
+}
+.wallet-gate-brand,.wallet-region,.wallet-number-field,.wallet-gate-card #gateMessage{
+ grid-column:1/-1!important;
+}
+.wallet-gate-brand{margin:0 0 20px!important}
+.wallet-region{margin-bottom:12px!important}
+.wallet-number-field{margin-bottom:10px!important}
+.wallet-gate-card #stepLabel{
+ position:static!important;
+ grid-column:3!important;
+ grid-row:auto!important;
+ width:100%!important;
+ height:auto!important;
+ min-height:48px!important;
+ margin:9px 0 5px!important;
+ padding:5px 3px!important;
+ display:flex!important;
+ align-items:flex-start!important;
+ justify-content:center!important;
+ text-align:center!important;
+ color:#fff!important;
+ font:700 clamp(14px,1.25vw,18px)/1.35 Georgia,serif!important;
+ letter-spacing:.01em!important;
+ text-shadow:0 0 7px #c18aff,0 1px 3px #17002e!important;
+ white-space:normal!important;
+ overflow:visible!important;
+}
+.wallet-gate-card .wallet-keypad{
+ grid-column:1/-1!important;
+ grid-row:auto!important;
+ width:100%!important;
+ gap:9px!important;
+ margin:0!important;
+}
+.wallet-gate-card .wallet-key{
+ height:clamp(49px,6.5vh,62px)!important;
+ font-size:clamp(28px,2.7vw,38px)!important;
+}
+.wallet-gate-card #gateMessage{
+ position:static!important;
+ grid-column:1/-1!important;
+ width:100%!important;
+ min-height:38px!important;
+ margin:5px 0 0!important;
+ padding:7px 10px!important;
+ display:flex!important;
+ justify-content:center!important;
+ align-items:center!important;
+ text-align:center!important;
+ color:#fff1b8!important;
+ font:700 clamp(14px,1.2vw,17px)/1.35 Arial,sans-serif!important;
+ text-shadow:0 0 7px #a94cff!important;
+ border-radius:9px!important;
+}
+.wallet-gate-card #gateMessage:empty{visibility:hidden!important}
+.wallet-gate-card #gateMessage.error{
+ color:#ffe0e8!important;
+ background:rgba(112,9,55,.42)!important;
+ border:1px solid rgba(255,175,211,.6)!important;
+ box-shadow:0 0 12px rgba(255,67,153,.28)!important;
+}
+.wallet-gate-card .wallet-gate-footer{
+ grid-column:1/-1!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:space-between!important;
+ gap:10px!important;
+ margin-top:8px!important;
+ padding-top:13px!important;
+ border-top:1px solid rgba(206,166,255,.35)!important;
+}
+.wallet-gate-card #gateQuestion{font-size:clamp(14px,1.15vw,17px)!important}
+.wallet-gate-card #registerWallet{
+ position:relative!important;inset:auto!important;
+ width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;
+ padding:12px 20px!important;opacity:1!important;display:block!important;
+ pointer-events:auto!important;z-index:20!important;
+ font:700 clamp(14px,1.2vw,17px) Georgia,serif!important;
+}
+.wallet-gate-card #gateInstructions{
+ grid-column:3!important;
+ grid-row:auto!important;
+ display:block!important;
+ margin:4px 0 0!important;
+ padding:0 0 0 18px!important;
+ color:#fff!important;
+ font:700 clamp(14px,1.15vw,16px)/1.55 Georgia,serif!important;
+ text-shadow:0 0 7px #a94cff,0 1px 3px #17002e!important;
+}
+.wallet-gate-card #gateInstructions[hidden]{display:none!important}
+html.register-page .wallet-gate-card .wallet-gate-footer{
+ grid-column:1!important;
+ grid-row:auto!important;
+ justify-content:flex-start!important;
+ margin-top:7px!important;
+ padding:0!important;
+ border:0!important;
+}
+html.register-page .wallet-gate-card #gateQuestion{display:none!important}
+html.register-page .wallet-gate-card #registerWallet{
+ width:100%!important;
+ min-height:48px!important;
+ padding:10px 12px!important;
+ font-size:clamp(15px,1.3vw,18px)!important;
+ white-space:nowrap!important;
+}
+html.register-page .wallet-gate-card #gateInstructions{
+ grid-column:3!important;
+ margin-top:5px!important;
+ align-self:start!important;
+}
+@media(max-width:760px){
+ .wallet-gate-card{width:min(94vw,490px)!important;min-width:0!important;padding:17px!important}
+ .wallet-gate-brand{margin-bottom:14px!important}
+ .wallet-gate-card .wallet-key{height:clamp(45px,6.5vh,56px)!important;font-size:29px!important}
+ .wallet-gate-card #stepLabel{min-height:50px!important;font-size:14px!important}
+ .wallet-gate-card #gateMessage{font-size:14px!important}
+ .wallet-gate-card #gateInstructions{font-size:13px!important;line-height:1.45!important}
+ .wallet-gate-card #registerWallet{font-size:14px!important;padding:10px 9px!important}
+}
+@media(max-height:560px) and (orientation:landscape){
+ .wallet-gate-card{padding:12px 18px!important}
+ .wallet-gate-brand{margin-bottom:8px!important}
+ .wallet-gate-card .wallet-key{height:38px!important}
+ .wallet-gate-card #stepLabel{min-height:36px!important;margin:4px 0!important}
+ .wallet-gate-card #gateMessage{min-height:28px!important;margin:2px 0 0!important}
+ .wallet-gate-card .wallet-gate-footer{margin-top:4px!important;padding-top:6px!important}
+}
+
 </style>
 </head>
 <body>
@@ -375,13 +515,13 @@ function setGateStep(step){
  $("gateBackStep").hidden=step==="phone";
  if(step==="phone"){
   $("phoneDisplay").value=selectedRegion.dial+(phoneDigits?" "+phoneDigits:"");
-  $("stepLabel").textContent=gateMode==="register"?"Masukkan nomor handphone lalu tekan Enter":"Masukkan nomor handphone"; $("stepLabel").style.opacity="1";
+  $("stepLabel").textContent="Masukkan nomor handphone lalu tekan Enter"; $("stepLabel").style.opacity="1";
  }else{
   $("pinDisplay").querySelectorAll(".pin-dot").forEach((dot,i)=>dot.classList.toggle("filled",i<pinDigits.length));
-  $("stepLabel").textContent=step==="pin"?(gateMode==="register"?"Buat PIN 4 digit":"Masukkan PIN 4 digit"):"Konfirmasi PIN 4 digit"; $("stepLabel").style.opacity="1";
+  $("stepLabel").textContent=step==="pin"?(gateMode==="register"?"Buat PIN 4 digit lalu tekan Enter":"Masukkan PIN 4 digit lalu tekan Enter"):"Konfirmasi PIN 4 digit lalu tekan Enter"; $("stepLabel").style.opacity="1";
  }
 }
-function resetGate(){gateMode=new URLSearchParams(location.search).get("register")==="1"?"register":"login";phoneDigits="";pinDigits="";firstPin="";registrationComplete=false;$("regionSelect").value="ID";selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};$("regionFlag").textContent="🇮🇩";$("regionCode").textContent="+62";$("accessGate").classList.remove("region-changed","phone-entered");$("registerWallet").textContent=gateMode==="register"?"Kembali ke Login  ❯":"Daftar Sekarang  ❯";$("gateQuestion").textContent=gateMode==="register"?"Daftar Wallet Lexaa":"Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML=gateMode==="register"?"<li>Masukkan nomor handphone</li><li>Buat PIN 4 digit</li><li>Konfirmasi PIN 4 digit</li><li>Tekan LOGIN setelah berhasil</li>":"<li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li>";document.documentElement.classList.toggle("register-page",gateMode==="register");setGateStep("phone");formatPhone()}
+function resetGate(){gateMode=new URLSearchParams(location.search).get("register")==="1"?"register":"login";phoneDigits="";pinDigits="";firstPin="";registrationComplete=false;$("regionSelect").value="ID";selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};$("regionFlag").textContent="🇮🇩";$("regionCode").textContent="+62";$("accessGate").classList.remove("region-changed","phone-entered");$("registerWallet").textContent=gateMode==="register"?"Kembali ke Login  ❯":"Daftar Sekarang  ❯";$("gateQuestion").textContent=gateMode==="register"?"Daftar Wallet Lexaa":"Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML=gateMode==="register"?"<li>Masukkan nomor handphone</li><li>Buat PIN 4 digit</li><li>Konfirmasi PIN 4 digit</li>":"<li>Masukkan nomor handphone lalu tekan Enter</li>";$("gateInstructions").hidden=gateMode!=="register";document.documentElement.classList.toggle("register-page",gateMode==="register");setGateStep("phone");formatPhone()}
 function formatPhone(){ $("phoneDisplay").value=phoneDigits?selectedRegion.dial+" "+phoneDigits:""; $("accessGate").classList.toggle("phone-entered",!!phoneDigits); }
 function gateNumberKey(key){
  if(key==="backspace"){
@@ -431,7 +571,8 @@ async function submitWalletLogin(){
   await unlockWallet();
  }catch(err){
   const message=err.message||"Gagal masuk ke wallet.";
-  gateMessage(message.includes("not registered")?"Nomor belum terdaftar. Tekan Daftar Sekarang untuk membuat wallet.":message.includes("Invalid wallet credentials")?"PIN salah. Silakan coba lagi.":message,true);
+  const lower=String(message).toLowerCase();
+  gateMessage((lower.includes("not registered")||lower.includes("wallet not found")||lower.includes("no wallet")||lower.includes("phone number not found"))?"Nomor handphone belum terdaftar. Silakan pilih Daftar Sekarang.":(lower.includes("invalid wallet credentials")||lower.includes("invalid pin")||lower.includes("pin salah")||lower.includes("incorrect pin"))?"PIN yang kamu masukkan salah. Periksa 4 digit PIN lalu coba lagi.":message,true);
   pinDigits="";setGateStep("pin")
  }
  finally{btns.forEach(b=>b.disabled=false)}
