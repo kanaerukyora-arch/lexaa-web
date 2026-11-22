@@ -556,6 +556,7 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 <div class="register" id="registerPrompt">Belum punya akun? <a href="#" id="openRegister">DAFTAR DISINI</a></div>
 <div class="register" id="loginPrompt" hidden>Sudah punya akun? <a href="#" id="openLogin">LOGIN DISINI</a></div>
 </section><div class="other"><span>Login dengan metode lain</span><span class="seal">⚔</span></div></div></main>
+<div id="installAppBackdrop" aria-hidden="true"><section class="install-app-card" role="dialog" aria-modal="true" aria-labelledby="installAppTitle"><button class="install-app-close" id="installAppClose" type="button" aria-label="Tutup">×</button><h2 id="installAppTitle">Unduh Lexaa App</h2><p id="installAppDescription">Pasang Lexaa di perangkat kamu agar lebih mudah dibuka seperti aplikasi.</p><button class="primary" id="installAppNow" type="button">Unduh Sekarang</button><div id="installAppProgress" hidden><div class="install-progress"><span id="installAppBar"></span></div><div class="install-state" id="installAppState">Menyiapkan instalasi...</div></div></section></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://zfyezjvfiggzkmwcomrh.supabase.co";
@@ -855,5 +856,5 @@ document.getElementById("installAppNow").addEventListener("click",async()=>{
  }
 });
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(err=>console.warn("PWA service worker:",err)));
-</script><div id="installAppBackdrop" aria-hidden="true"><section class="install-app-card" role="dialog" aria-modal="true" aria-labelledby="installAppTitle"><button class="install-app-close" id="installAppClose" type="button" aria-label="Tutup">×</button><h2 id="installAppTitle">Unduh Lexaa App</h2><p id="installAppDescription">Pasang Lexaa di perangkat kamu agar lebih mudah dibuka seperti aplikasi.</p><button class="primary" id="installAppNow" type="button">Unduh Sekarang</button><div id="installAppProgress" hidden><div class="install-progress"><span id="installAppBar"></span></div><div class="install-state" id="installAppState">Menyiapkan instalasi...</div></div></section></div>
+</script>
 </body></html>
