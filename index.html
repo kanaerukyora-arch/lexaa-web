@@ -915,12 +915,12 @@ $("allowLocationBtn").addEventListener("click",async()=>{
  $("allowLocationBtn").disabled=false;$("laterLocationBtn").disabled=false;
 });
 $("laterLocationBtn").addEventListener("click",()=>{
- localStorage.setItem("lexaa_location_consent_v1","later");
+ sessionStorage.setItem("lexaa_location_later_v1","1");
  closeLocationConsent();
  $("locationText").textContent="Lokasi belum diizinkan";
  $("coordsText").textContent="Kamu memilih Lain Kali";
 });
-if(!localStorage.getItem("lexaa_location_consent_v1")){
+if(localStorage.getItem("lexaa_location_consent_v1")!=="granted"&&!sessionStorage.getItem("lexaa_location_later_v1")){
  const modal=$("locationConsent");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
 }
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
