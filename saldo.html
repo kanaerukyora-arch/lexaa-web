@@ -342,7 +342,10 @@ document.addEventListener("keydown",e=>{
  else if(e.key==="Backspace")gateNumberKey("backspace");
  else if(e.key==="Enter")gateNumberKey("enter");
 });
-resetGate();\nconst gateArtwork=new Image();gateArtwork.onload=()=> $("accessGate").classList.add("artwork-ready");gateArtwork.src="saldo-login-background.png";\n\nlet toastTimer;
+resetGate();
+const gateArtwork=new Image();gateArtwork.onload=()=> $("accessGate").classList.add("artwork-ready");gateArtwork.src="saldo-login-background.png";
+
+let toastTimer;
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
 const topupLayer=document.createElement("div");
 topupLayer.id="topupFullscreenLayer";
