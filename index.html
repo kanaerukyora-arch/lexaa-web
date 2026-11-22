@@ -482,8 +482,9 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 .install-state{font-size:13px;color:#dce8ff;min-height:20px}
 
 /* Opt-in live location sharing */
-.live-location-card{position:relative;z-index:5;width:min(560px,calc(100% - 32px));margin:18px auto 14px;padding:14px 16px;border:1px solid rgba(190,170,255,.48);border-radius:16px;background:linear-gradient(135deg,rgba(18,12,48,.88),rgba(31,18,75,.82));box-shadow:0 0 22px rgba(139,91,255,.18);color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-location-card{position:absolute;z-index:8;top:112px;right:3%;width:min(480px,46vw);margin:0;padding:14px 16px;border:1px solid rgba(190,170,255,.48);border-radius:16px;background:linear-gradient(135deg,rgba(18,12,48,.88),rgba(31,18,75,.82));box-shadow:0 0 22px rgba(139,91,255,.18);color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .live-location-copy{flex:1 1 220px;min-width:0}.live-location-copy strong{display:block;font:700 14px Georgia,serif;color:#f4eaff}.live-location-copy span{display:block;margin-top:5px;font:11px/1.45 Arial,sans-serif;color:#d7cbea}.live-location-status{display:block!important;color:#cbb6ff!important;font-weight:700}.live-location-actions{display:flex;gap:8px;flex-wrap:wrap}.live-location-actions button{border:1px solid #c8a7ff;border-radius:10px;padding:10px 13px;background:linear-gradient(135deg,#5724ad,#8b35e8);color:#fff;font:700 11px Arial,sans-serif;cursor:pointer}.live-location-actions button.stop{background:rgba(65,26,87,.85);border-color:#a78ac8}.live-location-actions button:disabled{opacity:.55;cursor:wait}
+@media(max-width:760px){.live-location-card{top:108px;right:10px;width:min(420px,calc(100% - 20px));padding:10px 12px}.live-location-copy strong{font-size:13px}.live-location-copy span{font-size:10px}.live-location-actions button{padding:8px 10px;font-size:10px}}
 </style></head>
 <body>
 <div class="bg"></div>
