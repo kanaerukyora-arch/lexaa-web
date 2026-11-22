@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080e24">
+<title>Owner Console — Lexaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--gold:#ffe7a0;--ice:#b8e6ff;--panel:rgba(13,22,48,.88);--line:rgba(184,230,255,.18)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0%,#26315c 0,transparent 42%),radial-gradient(ellipse at 100% 90%,#182d4b 0,transparent 40%),#070c1c;color:#f5f1e9;font-family:Arial,Helvetica,sans-serif;padding:24px}
+.wrap{width:min(980px,100%);margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:12px 0 28px}.brand{font-weight:900;letter-spacing:.18em;color:var(--gold);font-size:14px}.sub{color:#aab9d4;font-size:12px;margin-top:7px;letter-spacing:.12em}
+h1{font-size:clamp(26px,5vw,42px);margin:0;color:#fff}.gold{color:var(--gold)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 18px 60px #0006;backdrop-filter:blur(14px)}
+.login{max-width:440px;margin:8vh auto}.muted{color:#aab9d4;line-height:1.6}.field{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:12px;background:#080f25;color:white;margin:8px 0 14px;font-size:15px}
+button,.btn{border:1px solid #ffe7a077;background:linear-gradient(135deg,#ffe7a0,#b98a42);color:#171323;padding:13px 18px;border-radius:12px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+button:disabled{opacity:.55;cursor:wait}.ghost{background:#101a34;color:#dcecff;border-color:var(--line)}.error{color:#ffaaa8;min-height:22px;font-size:13px}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.stats{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.stat{flex:1;min-width:150px;padding:17px;border-radius:15px;background:#0b1530;border:1px solid var(--line)}.stat strong{display:block;font-size:25px;color:var(--gold);margin-top:6px}
+.cards{display:grid;gap:13px;margin-top:16px}.card{border:1px solid var(--line);background:#0b1530;border-radius:16px;padding:18px;display:grid;gap:10px}.who{font-size:17px;font-weight:800}.meta{color:#aab9d4;font-size:13px;line-height:1.6;overflow-wrap:anywhere}.coords{font-variant-numeric:tabular-nums;color:var(--ice);font-size:14px}.map{justify-self:start}.empty{text-align:center;padding:35px;color:#aab9d4}.hidden{display:none!important}
+@media(max-width:600px){body{padding:16px}.panel{padding:18px}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div><div class="brand">LEXAA · NEW GENERATION</div><div class="sub">PRIVATE OWNER CONSOLE</div></div><div class="toolbar"><a class="btn ghost" href="/">Kembali ke Lexaa</a><button id="logoutBtn" class="ghost hidden">Keluar</button></div></header>
+<section id="loginPanel" class="panel login">
+<h1>Owner <span class="gold">Access</span></h1>
+<p class="muted">Masuk menggunakan akun Owner Lexaa yang sudah terdaftar.</p>
+<form id="loginForm"><label class="muted" for="email">Email</label><input class="field" id="email" type="email" value="fathanmufadhil04@gmail.com" autocomplete="username" required><label class="muted" for="password">Password akun Lexaa</label><input class="field" id="password" type="password" autocomplete="current-password" required><button id="loginBtn" type="submit">MASUK KE OWNER</button></form>
+<div id="loginError" class="error" role="status"></div>
+</section>
+<main id="dashboard" class="hidden">
+<div><div class="sub">ACCESS GRANTED</div><h1>Panel <span class="gold">Owner</span></h1><p class="muted">Daftar lokasi GPS yang dibagikan pengguna setelah memberikan izin melalui Lexaa.</p></div>
+<div class="stats"><div class="stat"><span class="muted">Pengguna membagikan lokasi</span><strong id="total">0</strong></div><div class="stat"><span class="muted">Akun Owner</span><strong style="font-size:16px">OWNER_LEXAA</strong></div></div>
+<div class="toolbar"><button id="refreshBtn">Muat ulang data</button><span id="status" class="muted" aria-live="polite"></span></div>
+<div id="locationCards" class="cards"><div class="empty">Memuat data lokasi...</div></div>
+</main>
+</div>
+<script>
+const SUPABASE_URL='https://zfyezjvfiggzkmwcomrh.supabase.co';
+const SUPABASE_KEY='sb_publishable_LPBiUYMB60WGxC9CRP3Nmg_ptQ3DQ0D';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+function showError(message){$('loginError').textContent=message||''}
+function showDashboard(){ $('loginPanel').classList.add('hidden');$('dashboard').classList.remove('hidden');$('logoutBtn').classList.remove('hidden'); }
+function showLogin(){ $('dashboard').classList.add('hidden');$('loginPanel').classList.remove('hidden');$('logoutBtn').classList.add('hidden'); }
+async function verifyOwner(){
+ const {data:{user},error}=await db.auth.getUser();
+ if(error||!user){showLogin();return false}
+ const {data,isError}=await db.rpc('is_lexaa_owner');
+ if(isError||data!==true){await db.auth.signOut();showLogin();showError('Akun ini belum terdaftar sebagai Owner Lexaa.');return false}
+ showDashboard();await loadLocations();return true;
+}
+async function loadLocations(){
+ $('status').textContent='Mengambil data lokasi...';$('locationCards').replaceChildren();
+ const {data:locations,error}=await db.from('user_locations').select('user_id,latitude,longitude,accuracy_m,captured_at').order('captured_at',{ascending:false});
+ if(error){$('status').textContent='Gagal memuat data: '+error.message;return}
+ $('total').textContent=locations.length;
+ if(!locations.length){$('locationCards').innerHTML='<div class="empty">Belum ada pengguna yang membagikan lokasi.</div>';$('status').textContent='Data terbaru';return}
+ const ids=[...new Set(locations.map(x=>x.user_id))];
+ const {data:profiles}=await db.from('profiles').select('id,display_name,username').in('id',ids);
+ const profileMap=new Map((profiles||[]).map(p=>[p.id,p]));
+ for(const item of locations){
+  const profile=profileMap.get(item.user_id)||{};
+  const card=document.createElement('article');card.className='card';
+  const who=document.createElement('div');who.className='who';who.textContent=profile.display_name||profile.username||'Pengguna Lexaa';
+  const username=document.createElement('div');username.className='meta';username.textContent=profile.username?'@'+profile.username:'Akun: '+item.user_id;
+  const coords=document.createElement('div');coords.className='coords';coords.textContent=Number(item.latitude).toFixed(7)+', '+Number(item.longitude).toFixed(7);
+  const accuracy=document.createElement('div');accuracy.className='meta';accuracy.textContent='Akurasi perangkat: '+(item.accuracy_m==null?'Tidak tersedia':'±'+Math.round(Number(item.accuracy_m))+' meter');
+  const date=document.createElement('div');date.className='meta';date.textContent='Waktu dibagikan: '+(item.captured_at?new Date(item.captured_at).toLocaleString('id-ID'):'Tidak tersedia');
+  const map=document.createElement('a');map.className='btn map';map.target='_blank';map.rel='noopener noreferrer';map.href='https://www.google.com/maps?q='+encodeURIComponent(item.latitude+','+item.longitude);map.textContent='Buka di Google Maps';
+  card.append(who,username,coords,accuracy,date,map);$('locationCards').append(card);
+ }
+ $('status').textContent='Data berhasil dimuat';
+}
+$('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();showError('');$('loginBtn').disabled=true;$('loginBtn').textContent='MEMERIKSA...';
+ const {error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ $('loginBtn').disabled=false;$('loginBtn').textContent='MASUK KE OWNER';
+ if(error){showError('Login gagal: '+error.message);return}
+ await verifyOwner();
+});
+$('refreshBtn').addEventListener('click',loadLocations);
+$('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();showLogin();showError('')});
+verifyOwner();
+</script>
+</body>
+</html>
