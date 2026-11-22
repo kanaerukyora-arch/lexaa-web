@@ -122,6 +122,34 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
 #accessGate.phone-entered #phoneDisplay{color:#e5d5ff}
 #accessGate.phone-entered .gate-number:before{content:"";position:absolute;left:14%;right:2%;top:9%;height:82%;background:linear-gradient(90deg,rgba(16,0,49,.98),rgba(28,4,77,.98));}
 @media(max-aspect-ratio:1/1){#scene{width:100dvh;height:100vw;left:100vw;top:0;transform:rotate(90deg);transform-origin:top left}}
+
+/* Styled fallback remains usable until saldo-login-background.png is added to the repo. */
+#accessGate:not(.artwork-ready){display:grid!important;grid-template-columns:54% 46%;padding:0 4.5%!important;background:radial-gradient(ellipse at 22% 28%,#351078 0%,#170744 42%,#09021f 100%)!important}
+#accessGate:not(.artwork-ready) .gate-left{position:relative;inset:auto;display:flex;align-items:flex-end;padding:0 0 8.5% 2.5%;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-register{position:relative;left:auto;top:auto;width:min(82%,570px);height:auto;min-height:clamp(190px,30vh,280px);padding:22px 30px 20px 34px;border:2px solid #cda2ff;border-radius:12px;background:linear-gradient(120deg,rgba(12,0,42,.88),rgba(30,4,80,.78));box-shadow:0 0 10px #fff,0 0 24px #8d35ff,inset 0 0 24px #9c4aff88;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-register h2,#accessGate:not(.artwork-ready) .gate-register ol,#accessGate:not(.artwork-ready) .gate-seal{display:block}
+#accessGate:not(.artwork-ready) .gate-register h2{margin:0 0 10px;text-align:center;font-size:clamp(18px,1.8vw,28px);font-style:italic}
+#accessGate:not(.artwork-ready) .gate-register ol{margin:0;padding:0 0 0 24px;font-size:clamp(11px,1.05vw,16px);line-height:1.65}
+#accessGate:not(.artwork-ready) #registerWallet{position:relative;left:auto;top:auto;width:auto;height:auto;opacity:1;display:block;margin:0 auto 12px;padding:10px 34px;border:2px solid #f2d9ff;border-radius:30px;color:#fff;font:700 clamp(16px,1.55vw,24px) Georgia,serif;background:linear-gradient(110deg,#5e13d8,#a42dff 55%,#5b12d7);box-shadow:0 0 9px #fff,0 0 22px #a72cff;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-right{position:relative;inset:auto;display:flex;align-items:center;justify-content:center;padding:3.5% 0 2% 2%;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-controls{display:flex;width:min(100%,590px);flex-direction:column;gap:clamp(9px,1.6vh,16px)}
+#accessGate:not(.artwork-ready) .gate-region{position:relative;left:auto;top:auto;width:100%;height:clamp(54px,8.8vh,78px);padding:0 24px;border:2px solid #cba0ff;border-radius:14px;background:linear-gradient(100deg,rgba(19,0,57,.94),rgba(27,3,76,.92));box-shadow:0 0 9px #fff,0 0 20px #9e39ff,inset 0 0 18px #8c36ff66;font-size:clamp(16px,1.5vw,23px);pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-region .globe,#accessGate:not(.artwork-ready) .gate-region>span:nth-child(2),#accessGate:not(.artwork-ready) .gate-region .chevron{display:inline}
+#accessGate:not(.artwork-ready) .gate-region .flag{display:inline;position:static;margin-left:auto;font-size:27px}
+#accessGate:not(.artwork-ready) .gate-region .country{display:inline;position:static;font:clamp(19px,1.8vw,27px) Georgia,serif}
+#accessGate:not(.artwork-ready) #regionSelect{z-index:4}
+#accessGate:not(.artwork-ready) .gate-number{position:relative;left:auto;top:auto;width:100%;height:clamp(54px,8.8vh,78px);padding:0 18px;border:2px solid #cba0ff;border-radius:14px;background:linear-gradient(100deg,rgba(19,0,57,.94),rgba(27,3,76,.92));box-shadow:0 0 9px #fff,0 0 20px #9e39ff,inset 0 0 18px #8c36ff66;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-number .phone-icon{display:inline;font:30px Arial}
+#accessGate:not(.artwork-ready) #phoneDisplay{position:static;width:100%;height:100%;color:#fff;font:clamp(20px,2vw,31px) Georgia,serif;pointer-events:none}
+#accessGate:not(.artwork-ready) #phoneDisplay::placeholder{color:#b8a1d5}
+#accessGate:not(.artwork-ready) .gate-number:before{display:none}
+#accessGate:not(.artwork-ready) .pin-dots{position:absolute;left:16%;top:0;width:82%;height:100%;display:flex;border:0;background:transparent;box-shadow:none}
+#accessGate:not(.artwork-ready) #stepLabel{position:relative;left:auto;top:auto;width:100%;height:auto;min-height:25px;opacity:1!important;margin:0;text-align:center;font:clamp(12px,1.1vw,17px) Georgia,serif}
+#accessGate:not(.artwork-ready) .gate-keypad{position:relative;left:auto;top:auto;width:100%;height:auto;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:clamp(7px,1.2vh,12px);margin-top:2px;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-key{height:clamp(54px,8.5vh,76px);border:2px solid #d7aaff;border-radius:12px;color:#fff;font:700 clamp(30px,3.4vw,48px) Georgia,serif;background:linear-gradient(145deg,rgba(16,0,48,.96),rgba(47,8,111,.96));box-shadow:0 0 7px #fff,0 0 16px #a43bff,inset 0 0 18px #7d25ff88;opacity:1;pointer-events:auto}
+#accessGate:not(.artwork-ready) .gate-key.enter{background:linear-gradient(135deg,#5e0bd9,#c02cff 55%,#7a18ee)}
+#accessGate:not(.artwork-ready) #gateMessage{position:relative;left:auto;top:auto;width:100%;min-height:22px}
+#accessGate:not(.artwork-ready) #gateBackStep{display:none!important}
 </style>
 </head>
 <body>
@@ -314,9 +342,7 @@ document.addEventListener("keydown",e=>{
  else if(e.key==="Backspace")gateNumberKey("backspace");
  else if(e.key==="Enter")gateNumberKey("enter");
 });
-resetGate();
-
-let toastTimer;
+resetGate();\nconst gateArtwork=new Image();gateArtwork.onload=()=> $("accessGate").classList.add("artwork-ready");gateArtwork.src="saldo-login-background.png";\n\nlet toastTimer;
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
 const topupLayer=document.createElement("div");
 topupLayer.id="topupFullscreenLayer";
