@@ -198,6 +198,20 @@ body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
 #accessGate.region-changed .gate-region .country{z-index:3!important}
 #accessGate #stepLabel{z-index:4!important}
 #accessGate #gateMessage{z-index:5!important}
+
+/* Login screen: fixed Indonesian region; keep reference artwork's sample digits visible. */
+#accessGate .gate-region{pointer-events:none!important}
+#accessGate #regionSelect{display:none!important;pointer-events:none!important}
+#accessGate .gate-region .flag,#accessGate .gate-region .country{display:block!important}
+#accessGate .gate-number:before,#accessGate .gate-number:after,
+#accessGate.region-changed .gate-region:after{content:none!important;display:none!important}
+#accessGate #phoneDisplay{color:transparent!important;text-shadow:none!important}
+#accessGate.phone-entered #phoneDisplay{color:#f0ddff!important;text-shadow:0 0 7px #b98cff!important}
+#accessGate #phoneDisplay::placeholder{color:transparent!important;opacity:0!important}
+#accessGate #registerWallet{
+ position:absolute!important;left:16.5%!important;top:66.5%!important;width:18.5%!important;height:7.5%!important;
+ z-index:10000!important;opacity:.01!important;display:block!important;pointer-events:auto!important;cursor:pointer!important;
+}
 </style>
 </head>
 <body>
@@ -298,7 +312,7 @@ function setGateStep(step){
  }
 }
 function resetGate(){gateMode="login";phoneDigits="";pinDigits="";firstPin="";$("regionSelect").value="ID";selectedRegion={code:"ID",dial:"+62",flag:"🇮🇩"};$("regionFlag").textContent="🇮🇩";$("regionCode").textContent="+62";$("accessGate").classList.remove("region-changed","phone-entered");$("registerWallet").textContent="Daftar Sekarang  ❯";$("gateQuestion").textContent="Belum Punya Wallet Lexaa?";$("gateInstructions").innerHTML="<li>Klik tombol Daftar Sekarang</li><li>Masukkan nomor handphone</li><li>Buat PIN dan konfirmasi</li><li>Login dan mulai top up!</li>";setGateStep("phone");formatPhone()}
-function formatPhone(){ $("phoneDisplay").value=selectedRegion.dial+(phoneDigits?" "+phoneDigits:""); $("accessGate").classList.toggle("phone-entered",!!phoneDigits); }
+function formatPhone(){ $("phoneDisplay").value=phoneDigits?selectedRegion.dial+" "+phoneDigits:""; $("accessGate").classList.toggle("phone-entered",!!phoneDigits); }
 function gateNumberKey(key){
  if(key==="backspace"){
   if(gateStep==="phone")phoneDigits=phoneDigits.slice(0,-1);
@@ -371,15 +385,8 @@ async function unlockWallet(){
  await loadAccount();
 }
 $("gateKeypad").addEventListener("click",e=>{const b=e.target.closest("button[data-key]");if(b)gateNumberKey(b.dataset.key)});
-$("regionSelect").addEventListener("change",e=>{const o=e.target.selectedOptions[0];selectedRegion={code:o.value,dial:o.dataset.dial,flag:o.dataset.flag};$("regionFlag").textContent=selectedRegion.flag;$("regionCode").textContent=selectedRegion.dial;$("accessGate").classList.toggle("region-changed",selectedRegion.code!=="ID");phoneDigits="";formatPhone();gateMessage("");});
-$("registerWallet").addEventListener("click",()=>{
- if(gateMode==="register"){resetGate();return}
- gateMode="register";phoneDigits="";pinDigits="";firstPin="";
- $("gateQuestion").textContent="Buat Wallet Lexaa Sekarang!";
- $("registerWallet").textContent="Kembali ke Login  ❯";
- $("gateInstructions").innerHTML="<li>Masukkan nomor handphone</li><li>Buat PIN 4 digit</li><li>Konfirmasi PIN 4 digit</li><li>Wallet siap digunakan!</li>";
- setGateStep("phone");
-});
+$("regionSelect").disabled=true;$("regionSelect").value="ID";
+$("registerWallet").addEventListener("click",()=>{location.href="wallet-register.html"});
 $("gateBackStep").addEventListener("click",()=>{
  if(gateStep==="confirm"){pinDigits="";firstPin="";setGateStep("pin")}
  else if(gateStep==="pin"){pinDigits="";setGateStep("phone")}
