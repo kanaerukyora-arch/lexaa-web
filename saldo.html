@@ -224,7 +224,7 @@ html.register-page #accessGate #registerWallet{
 }
 
 /* LEXAA WALLET — rebuilt access UI over the clean fantasy background */
-#scene{background:#10052d url("saldo-login-background.png") center center/cover no-repeat!important}
+#scene{background:#10052d url("saldo-login-background-clean.jpg") center center/cover no-repeat!important}
 #bg,#veil,#sparkles{display:none!important}
 #accessGate{position:absolute!important;inset:0!important;z-index:20!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;padding:4.5% 7%!important;background:linear-gradient(90deg,rgba(8,0,28,.02) 0%,rgba(10,0,34,.02) 38%,rgba(12,0,35,.46) 100%)!important;overflow:auto!important}
 #accessGate[hidden]{display:none!important}
@@ -375,7 +375,7 @@ function setGateStep(step){
  $("gateBackStep").hidden=step==="phone";
  if(step==="phone"){
   $("phoneDisplay").value=selectedRegion.dial+(phoneDigits?" "+phoneDigits:"");
-  $("stepLabel").textContent=gateMode==="register"?"Masukkan nomor handphone lalu tekan Enter":"✦  Contoh: nomor handphone tanpa 0 di depan  ✦"; $("stepLabel").style.opacity=gateMode==="register"?"1":"0";
+  $("stepLabel").textContent=gateMode==="register"?"Masukkan nomor handphone lalu tekan Enter":"Masukkan nomor handphone"; $("stepLabel").style.opacity="1";
  }else{
   $("pinDisplay").querySelectorAll(".pin-dot").forEach((dot,i)=>dot.classList.toggle("filled",i<pinDigits.length));
   $("stepLabel").textContent=step==="pin"?(gateMode==="register"?"Buat PIN 4 digit":"Masukkan PIN 4 digit"):"Konfirmasi PIN 4 digit"; $("stepLabel").style.opacity="1";
