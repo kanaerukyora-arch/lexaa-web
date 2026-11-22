@@ -417,6 +417,48 @@ body.graphics-ultra #worldScreen .world-back{
 .location-consent-copy small{font:10px/1.35 Arial,sans-serif;color:#aebde2}
 #allowLocationBtn{flex:0 0 auto;border:1px solid #a9caff;border-radius:8px;padding:9px 10px;background:linear-gradient(135deg,#243d85,#512a91);color:#fff;font:600 10px Arial;box-shadow:0 0 12px #7c91ff66;text-shadow:0 0 6px #fff}
 #allowLocationBtn:disabled{opacity:.75}
+
+/* SALDO LEXAA — animated fantasy wallet */
+#saldoScreen{position:fixed;inset:0;z-index:40;display:none;overflow:hidden;background:#16064b;color:#fff;font-family:Georgia,'Times New Roman',serif}
+#saldoScreen.open{display:block}
+#saldoScreen .saldo-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+#saldoScreen:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(23,4,65,.03) 0%,rgba(24,5,75,.08) 38%,rgba(18,4,66,.32) 100%),linear-gradient(0deg,rgba(18,4,62,.28),transparent 45%,rgba(19,4,61,.12))}
+#saldoScreen:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(2px 2px at 13% 22%,#fff 98%,transparent),radial-gradient(2px 2px at 45% 18%,#ffe7ff 98%,transparent),radial-gradient(2px 2px at 84% 24%,#fff 98%,transparent),radial-gradient(1.5px 1.5px at 72% 78%,#d9caff 98%,transparent),radial-gradient(2px 2px at 93% 62%,#fff 98%,transparent);background-size:280px 210px;animation:saldoTwinkle 4s linear infinite}
+@keyframes saldoTwinkle{0%,100%{opacity:.25}50%{opacity:.95}}
+.saldo-title{position:absolute;z-index:4;left:8%;top:4%;font-size:clamp(32px,5.2vw,76px);font-style:italic;font-weight:bold;color:#fff;text-shadow:0 0 7px #fff,0 0 18px #b68cff,0 0 34px #713bff;letter-spacing:-.04em}
+.saldo-title:before{content:"♛";position:absolute;left:-.65em;top:-.2em;font-size:.62em;color:#ffdf83;text-shadow:0 0 12px #ffca54}
+.saldo-user{position:absolute;z-index:5;right:3.5%;top:4%;display:flex;align-items:center;gap:12px;min-width:210px;padding:9px 22px 9px 10px;border:2px solid #c99cff;border-radius:60px;background:linear-gradient(120deg,rgba(35,9,91,.88),rgba(18,8,67,.84));box-shadow:0 0 13px #d4a0ff,0 0 30px #7a37ff,inset 0 0 18px #a75cff88}
+.saldo-user-avatar{width:66px;height:66px;flex:0 0 66px;overflow:hidden;border:3px solid #e6caff;border-radius:50%;background:#30136e;box-shadow:0 0 14px #c68aff}
+.saldo-user-avatar img{width:100%;height:100%;object-fit:cover}
+.saldo-user-name{font-size:clamp(15px,1.5vw,23px);font-weight:bold;text-shadow:0 0 9px #fff}
+.saldo-user-level{display:inline-block;margin-top:5px;padding:4px 23px;border-radius:30px;background:linear-gradient(90deg,#8b42f4,#bd78ff);font:bold clamp(12px,1vw,16px) Arial,sans-serif;box-shadow:0 0 12px #c18aff}
+.saldo-main{position:absolute;z-index:4;left:39%;right:4%;top:34%;transform:translateY(-10%);display:flex;flex-direction:column;align-items:center}
+.saldo-heading{position:relative;z-index:2;min-width:58%;padding:8px 28px 12px;text-align:center;font-size:clamp(24px,3vw,44px);font-weight:bold;color:#fff0ff;text-shadow:0 0 8px #fff,0 0 18px #b98aff;background:linear-gradient(90deg,transparent,rgba(34,7,91,.9) 16%,rgba(34,7,91,.95) 84%,transparent);border-bottom:2px solid #e0b7ff;filter:drop-shadow(0 0 12px #a04dff)}
+.saldo-heading:before{content:"♛";display:block;margin-bottom:-8px;color:#ffdc78;font-size:1.7em;text-shadow:0 0 8px #fff1ad,0 0 20px #ffae28}
+.saldo-panel{position:relative;width:100%;min-height:150px;margin-top:-2px;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px);padding:20px 24px;border:3px solid #d8b4ff;border-radius:42px;background:linear-gradient(110deg,rgba(33,9,101,.88),rgba(18,6,71,.94) 55%,rgba(38,12,113,.88));outline:1px solid rgba(255,255,255,.78);outline-offset:-9px;box-shadow:0 0 13px #fff,0 0 30px #b05bff,0 0 58px #642cff,inset 0 0 30px #9c5bff99;animation:saldoGlow 3s ease-in-out infinite}
+@keyframes saldoGlow{0%,100%{filter:brightness(1);box-shadow:0 0 13px #fff,0 0 30px #b05bff,0 0 58px #642cff,inset 0 0 30px #9c5bff99}50%{filter:brightness(1.18);box-shadow:0 0 20px #fff,0 0 42px #d18aff,0 0 72px #793bff,inset 0 0 42px #bd7aff}}
+.saldo-wallet{font:clamp(54px,7vw,100px)/1 Arial,sans-serif;color:#f0dfff;text-shadow:0 0 8px white,0 0 22px #a77aff}
+.saldo-amount{font:bold clamp(42px,6.2vw,92px)/1 Arial,sans-serif;white-space:nowrap;letter-spacing:.015em;color:#fff;text-shadow:0 0 5px white,0 0 15px #d5aaff,0 0 30px #9c4cff,0 0 48px #6728ff}
+.saldo-tagline{margin:15px 0 0;text-align:center;font-style:italic;font-size:clamp(13px,1.4vw,21px);color:#fff2ff;text-shadow:0 0 8px #a45cff}
+.saldo-actions{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;margin-top:clamp(32px,5vw,68px)}
+.saldo-action{min-height:100px;display:flex;align-items:center;gap:14px;padding:13px 18px;border:2px solid #e4c4ff;border-radius:30px;color:#fff;background:linear-gradient(120deg,rgba(78,32,211,.96),rgba(39,13,132,.96));box-shadow:0 0 12px #c38aff,0 0 28px #793dff,inset 0 0 18px #d1aaff66;cursor:pointer;transition:transform .2s,filter .2s}
+.saldo-action:hover{transform:translateY(-4px);filter:brightness(1.2)}
+.saldo-action .action-icon{font:clamp(38px,4.5vw,64px)/1 Arial,sans-serif;filter:drop-shadow(0 0 9px #fff)}
+.saldo-action .action-copy{flex:1;text-align:left}
+.saldo-action strong{display:block;font-size:clamp(16px,1.7vw,27px);white-space:nowrap;text-shadow:0 0 8px #fff}
+.saldo-action small{display:block;margin-top:6px;font-size:clamp(10px,1vw,15px);white-space:nowrap}
+.saldo-action .action-arrow{font: bold 32px Arial}
+.saldo-action.gold{border-color:#ffe6a1;color:#5c2c00;background:linear-gradient(120deg,#fff0a9,#ffbd45 55%,#ffe18b);box-shadow:0 0 13px #ffe9a3,0 0 32px #ffb52f,inset 0 0 20px #fff8c7}
+.saldo-action.gold strong,.saldo-action.gold small{color:#58300a;text-shadow:0 1px 1px #fff5c7}
+.saldo-back{position:absolute;z-index:7;left:2%;top:3%;padding:9px 16px;border:1px solid #e0c4ff;border-radius:24px;background:rgba(25,6,75,.72);color:white;font:14px Georgia,serif;box-shadow:0 0 12px #a75aff;cursor:pointer}
+.saldo-toast{position:absolute;z-index:8;left:50%;bottom:5%;transform:translateX(-50%);padding:12px 22px;border:1px solid #e0c4ff;border-radius:24px;background:rgba(28,7,78,.92);box-shadow:0 0 18px #a75aff;color:white;font:14px Arial,sans-serif;opacity:0;pointer-events:none;transition:opacity .25s}
+.saldo-toast.show{opacity:1}
+@media(orientation:portrait){#saldoScreen{width:100dvh;height:100vw;left:100vw;top:0;right:auto;bottom:auto;transform:rotate(90deg);transform-origin:top left}}
+@media(max-width:700px){.saldo-title{left:7%;top:3%;font-size:clamp(25px,5vw,44px)}.saldo-user{right:2%;top:3%;min-width:0;padding:6px 13px 6px 7px;gap:7px}.saldo-user-avatar{width:45px;height:45px;flex-basis:45px}.saldo-main{left:36%;right:3%;top:35%}.saldo-panel{min-height:100px;padding:14px 10px;border-radius:26px}.saldo-actions{gap:9px;margin-top:25px}.saldo-action{min-height:72px;padding:9px;border-radius:20px;gap:7px}.saldo-action .action-icon{font-size:34px}.saldo-action .action-arrow{font-size:22px}.saldo-back{top:auto;bottom:3%;left:2%}}
+body.graphics-low #saldoScreen:after{display:none}body.graphics-low #saldoScreen .saldo-panel{animation:none;box-shadow:0 0 10px #a75aff}
+body.graphics-standard #saldoScreen .saldo-panel{animation:none}
+@media(prefers-reduced-motion:reduce){#saldoScreen:after,#saldoScreen .saldo-panel{animation:none!important}}
+
 </style></head>
 <body>
 <div class="bg"></div>
@@ -424,7 +466,7 @@ body.graphics-ultra #worldScreen .world-back{
 <video id="bgVideo" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="background.mp4" type="video/mp4"></video>
 <section id="homeScreen" aria-label="Beranda Lexaa">
  <div class="home-shade"></div>
- <div class="home-brand"><div class="home-avatar" id="homeAvatar">♛</div><div><h1 id="homeDisplayName">Lexaa</h1><div class="level">Lv. 0</div><div class="motto">Dream Bigger, Reach Higher.</div></div></div>
+ <div class="home-brand"><div class="home-avatar" id="homeAvatar">♛</div><div><h1 id="homeDisplayName">Lexaa</h1><div class="level" id="homeLevel">Lv. 0</div><div class="motto">Dream Bigger, Reach Higher.</div></div></div>
  <div class="home-top">
   <div class="status-cell"><div id="signalBars"><i></i><i></i><i></i><i></i></div><div><div class="status-main" id="networkType">Online</div><span class="status-sub">Jaringan</span></div></div>
   <div class="status-divider"></div>
@@ -446,7 +488,7 @@ body.graphics-ultra #worldScreen .world-back{
 <section id="worldScreen" aria-label="Jelajahi Dunia Lexaa">
  <button class="world-back" id="worldBackBtn" type="button" aria-label="Kembali ke beranda"><span class="back-halo"></span><span class="back-arrow">⟵</span><span class="back-label">KEMBALI</span><span class="back-gem">✧</span></button>
  <div class="world-grid">
-  <button class="world-card featured" type="button" aria-label="Saldo Lexaa">
+  <button class="world-card featured" id="saldoCardBtn" type="button" aria-label="Saldo Lexaa">
    <span class="ornament top"></span><span class="ornament bottom"></span>
    <span class="card-icon"><svg viewBox="0 0 120 100" aria-hidden="true"><path d="M60 4 77 34 60 61 43 34Z" fill="#e6d8ff" stroke="#fff" stroke-width="2"/><path d="M43 34 60 61 35 52Z" fill="#4bc8ff" stroke="#d7f8ff" stroke-width="2"/><path d="M77 34 60 61 85 52Z" fill="#8a5dff" stroke="#e9d9ff" stroke-width="2"/><path d="M60 61 35 52 60 91 85 52Z" fill="#2444c9" stroke="#b8d9ff" stroke-width="2"/><path d="M60 4V91M18 45Q60 12 102 45M12 56Q60 22 108 56" fill="none" stroke="#a8baff" stroke-width="1.6" opacity=".9"/><ellipse cx="60" cy="48" rx="53" ry="15" fill="none" stroke="#a48aff" stroke-width="2" transform="rotate(-13 60 48)"/></svg></span>
    <strong>SALDO LEXAA</strong><span class="divider">✧</span><small>Cek saldo akun kamu disini</small><span class="divider">✧</span>
@@ -454,6 +496,24 @@ body.graphics-ultra #worldScreen .world-back{
   <button class="world-card" type="button" aria-label="Segera hadir" disabled><span class="ornament top"></span><span class="ornament bottom"></span><span class="card-icon"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#6178c8" stroke-width="3" opacity=".8"/><circle cx="50" cy="50" r="29" fill="none" stroke="#a5baff" stroke-width="1.5"/><path d="M34 46V36a16 16 0 0 1 32 0v10" fill="none" stroke="#b8caff" stroke-width="7" stroke-linecap="round"/><rect x="26" y="43" width="48" height="39" rx="5" fill="#a9baff" stroke="#d8e5ff" stroke-width="3"/><circle cx="50" cy="59" r="6" fill="#24356f"/><path d="M50 63v9" stroke="#24356f" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="50" rx="47" ry="17" fill="none" stroke="#667ce0" stroke-width="1.5" transform="rotate(-22 50 50)"/></svg></span><strong>SEGERA HADIR</strong><span class="divider">✧</span><small>Fitur ini akan segera hadir</small><span class="divider">✧</span></button><button class="world-card" type="button" aria-label="Segera hadir" disabled><span class="ornament top"></span><span class="ornament bottom"></span><span class="card-icon"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#6178c8" stroke-width="3" opacity=".8"/><circle cx="50" cy="50" r="29" fill="none" stroke="#a5baff" stroke-width="1.5"/><path d="M34 46V36a16 16 0 0 1 32 0v10" fill="none" stroke="#b8caff" stroke-width="7" stroke-linecap="round"/><rect x="26" y="43" width="48" height="39" rx="5" fill="#a9baff" stroke="#d8e5ff" stroke-width="3"/><circle cx="50" cy="59" r="6" fill="#24356f"/><path d="M50 63v9" stroke="#24356f" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="50" rx="47" ry="17" fill="none" stroke="#667ce0" stroke-width="1.5" transform="rotate(-22 50 50)"/></svg></span><strong>SEGERA HADIR</strong><span class="divider">✧</span><small>Fitur ini akan segera hadir</small><span class="divider">✧</span></button><button class="world-card" type="button" aria-label="Segera hadir" disabled><span class="ornament top"></span><span class="ornament bottom"></span><span class="card-icon"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#6178c8" stroke-width="3" opacity=".8"/><circle cx="50" cy="50" r="29" fill="none" stroke="#a5baff" stroke-width="1.5"/><path d="M34 46V36a16 16 0 0 1 32 0v10" fill="none" stroke="#b8caff" stroke-width="7" stroke-linecap="round"/><rect x="26" y="43" width="48" height="39" rx="5" fill="#a9baff" stroke="#d8e5ff" stroke-width="3"/><circle cx="50" cy="59" r="6" fill="#24356f"/><path d="M50 63v9" stroke="#24356f" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="50" rx="47" ry="17" fill="none" stroke="#667ce0" stroke-width="1.5" transform="rotate(-22 50 50)"/></svg></span><strong>SEGERA HADIR</strong><span class="divider">✧</span><small>Fitur ini akan segera hadir</small><span class="divider">✧</span></button><button class="world-card" type="button" aria-label="Segera hadir" disabled><span class="ornament top"></span><span class="ornament bottom"></span><span class="card-icon"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#6178c8" stroke-width="3" opacity=".8"/><circle cx="50" cy="50" r="29" fill="none" stroke="#a5baff" stroke-width="1.5"/><path d="M34 46V36a16 16 0 0 1 32 0v10" fill="none" stroke="#b8caff" stroke-width="7" stroke-linecap="round"/><rect x="26" y="43" width="48" height="39" rx="5" fill="#a9baff" stroke="#d8e5ff" stroke-width="3"/><circle cx="50" cy="59" r="6" fill="#24356f"/><path d="M50 63v9" stroke="#24356f" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="50" rx="47" ry="17" fill="none" stroke="#667ce0" stroke-width="1.5" transform="rotate(-22 50 50)"/></svg></span><strong>SEGERA HADIR</strong><span class="divider">✧</span><small>Fitur ini akan segera hadir</small><span class="divider">✧</span></button><button class="world-card" type="button" aria-label="Segera hadir" disabled><span class="ornament top"></span><span class="ornament bottom"></span><span class="card-icon"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#6178c8" stroke-width="3" opacity=".8"/><circle cx="50" cy="50" r="29" fill="none" stroke="#a5baff" stroke-width="1.5"/><path d="M34 46V36a16 16 0 0 1 32 0v10" fill="none" stroke="#b8caff" stroke-width="7" stroke-linecap="round"/><rect x="26" y="43" width="48" height="39" rx="5" fill="#a9baff" stroke="#d8e5ff" stroke-width="3"/><circle cx="50" cy="59" r="6" fill="#24356f"/><path d="M50 63v9" stroke="#24356f" stroke-width="5" stroke-linecap="round"/><ellipse cx="50" cy="50" rx="47" ry="17" fill="none" stroke="#667ce0" stroke-width="1.5" transform="rotate(-22 50 50)"/></svg></span><strong>SEGERA HADIR</strong><span class="divider">✧</span><small>Fitur ini akan segera hadir</small><span class="divider">✧</span></button>
  </div>
 </section>
+
+<section id="saldoScreen" aria-label="Saldo Lexaa">
+ <video class="saldo-video" id="saldoVideo" autoplay muted loop playsinline preload="auto"><source src="saldo-background.mp4" type="video/mp4"></video>
+ <div class="saldo-title">Lexaa Saldo</div>
+ <div class="saldo-user"><div class="saldo-user-avatar" id="saldoAvatar">♛</div><div><div class="saldo-user-name" id="saldoDisplayName">Lexaa</div><div class="saldo-user-level" id="saldoLevel">Lv. 0</div></div></div>
+ <main class="saldo-main">
+  <div class="saldo-heading">Saldo Kamu</div>
+  <div class="saldo-panel"><div class="saldo-wallet" aria-hidden="true">▣</div><div class="saldo-amount" id="saldoAmount">Rp 0</div></div>
+  <p class="saldo-tagline">Terus kumpulkan saldo dan nikmati berbagai fitur menarik!</p>
+  <div class="saldo-actions">
+   <button class="saldo-action" id="saldoTopupBtn" type="button"><span class="action-icon">▣</span><span class="action-copy"><strong>Top Up Saldo</strong><small>Isi saldo kamu sekarang!</small></span><span class="action-arrow">›</span></button>
+   <button class="saldo-action gold" id="saldoRewardBtn" type="button"><span class="action-icon">♧</span><span class="action-copy"><strong>Dapatkan Saldo</strong><small>Selesaikan misi &amp; event!</small></span><span class="action-arrow">›</span></button>
+  </div>
+ </main>
+ <button class="saldo-back" id="saldoBackBtn" type="button">⟵ Kembali</button>
+ <div class="saldo-toast" id="saldoToast" role="status">Fitur ini segera hadir!</div>
+</section>
+
 <section id="intro"><div class="intro-content"><div class="small">WELCOME TO THE REALM OF</div><h1>Lexaa</h1><p>New Generation</p><button class="enter" id="enterBtn">MASUK KE LEXAA</button><div class="hint">Ketuk untuk memasuki dunia Lexaa</div></div></section>
 <main id="loginScreen"><div class="login-layout"><section class="login-card" aria-label="Login Lexaa">
 <span class="wing left" aria-hidden="true">❧</span><span class="wing right" aria-hidden="true">❧</span><span class="gem" aria-hidden="true">◆</span>
@@ -553,12 +613,39 @@ $("closeProfile").addEventListener("click",closeProfile);
 $("profileBackdrop").addEventListener("click",e=>{if(e.target===$("profileBackdrop"))closeProfile();});
 $("saveProfile").addEventListener("click",saveProfile);
 
+
+function openSaldo(){
+ $("homeScreen").classList.remove("show");$("worldScreen").classList.remove("open");$("saldoScreen").classList.add("open");
+ const name=currentProfile?.display_name||$("homeDisplayName").textContent||"Lexaa";
+ $("saldoDisplayName").textContent=name;
+ const avatar=currentProfile?.avatar_url;
+ $("saldoAvatar").innerHTML=avatar?'<img alt="Foto profil" src="'+avatar+'">':"♛";
+ $("saldoLevel").textContent=$("homeLevel")?.textContent||"Lv. 0";
+ $("saldoAmount").textContent="Rp 0";
+ const video=$("saldoVideo");if(video){video.loop=true;video.muted=true;video.play().catch(()=>{});}
+ history.pushState({lexaaSaldo:true},"","#saldo-lexaa");
+}
+function closeSaldo(){
+ $("saldoScreen").classList.remove("open");$("worldScreen").classList.add("open");
+ const video=$("saldoVideo");if(video)video.pause();
+ if(location.hash==="#saldo-lexaa")history.replaceState({lexaaWorld:true},"","#jelajahi-dunia");
+}
+let saldoToastTimer;
+function showSaldoToast(message){
+ const toast=$("saldoToast");toast.textContent=message;toast.classList.add("show");
+ clearTimeout(saldoToastTimer);saldoToastTimer=setTimeout(()=>toast.classList.remove("show"),2400);
+}
+$("saldoCardBtn").addEventListener("click",openSaldo);
+$("saldoBackBtn").addEventListener("click",closeSaldo);
+$("saldoTopupBtn").addEventListener("click",()=>showSaldoToast("Fitur Top Up akan segera hadir!"));
+$("saldoRewardBtn").addEventListener("click",()=>showSaldoToast("Misi dan Event akan segera hadir!"));
+
 function openWorld(){ $("homeScreen").classList.remove("show");$("worldScreen").classList.add("open");history.pushState({lexaaWorld:true},"","#jelajahi-dunia");}
 function closeWorld(){ $("worldScreen").classList.remove("open");$("homeScreen").classList.add("show");if(location.hash==="#jelajahi-dunia")history.replaceState({},"",location.pathname+location.search);}
 $("exploreWorldBtn").addEventListener("click",openWorld);
 $("worldBackBtn").addEventListener("click",closeWorld);
-window.addEventListener("popstate",()=>{if(!$("worldScreen").classList.contains("open"))return;closeWorld();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("worldScreen").classList.contains("open"))closeWorld();});
+window.addEventListener("popstate",()=>{if($("saldoScreen").classList.contains("open")){closeSaldo();return;}if($("worldScreen").classList.contains("open"))closeWorld();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("saldoScreen").classList.contains("open"))closeSaldo();else if(e.key==="Escape"&&$("worldScreen").classList.contains("open"))closeWorld();});
 
 function showHome(){
  $("intro").classList.add("hide");$("loginScreen").classList.remove("show");$("homeScreen").classList.add("show");
