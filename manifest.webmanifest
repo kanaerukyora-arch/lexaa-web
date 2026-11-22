@@ -1,0 +1,13 @@
+{
+ "id":"/",
+ "name":"Lexaa — New Generation",
+ "short_name":"Lexaa",
+ "description":"Jelajahi dunia Lexaa.",
+ "start_url":"/",
+ "scope":"/",
+ "display":"standalone",
+ "orientation":"any",
+ "background_color":"#080e24",
+ "theme_color":"#080e24",
+ "icons":[{"src":"/lexaa-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
