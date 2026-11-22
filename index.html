@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080e24"><title>Lexaa — New Generation</title>
+<meta name="theme-color" content="#080e24"><link rel="manifest" href="/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Lexaa — New Generation</title>
 <style>
 *{box-sizing:border-box} :root{--gold:#ffe7a0;--ice:#b8e6ff}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080e24}
@@ -469,6 +469,17 @@ body.graphics-low #saldoScreen:after{display:none}body.graphics-low #saldoScreen
 body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 @media(prefers-reduced-motion:reduce){#saldoScreen:after,#saldoScreen .saldo-panel{animation:none!important}}
 
+ 
+#installAppBackdrop{position:fixed;inset:0;z-index:2147482000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,7,24,.78)}
+#installAppBackdrop.show{display:flex}
+.install-app-card{position:relative;width:min(420px,92vw);padding:30px 24px 26px;text-align:center;border:1px solid #d7c2ff;border-radius:24px;background:linear-gradient(145deg,#171d42,#090e29);box-shadow:0 0 18px #b68aff,0 0 42px #6844bd;color:#fff}
+.install-app-card h2{margin:0 24px 10px;font-size:25px;color:#fff0c4;text-shadow:0 0 12px #b78aff}
+.install-app-card p{margin:8px 0 20px;color:#d8def5;font-size:14px;line-height:1.5}
+.install-app-card button.primary{width:100%;padding:14px 18px;border:1px solid #fff0b2;border-radius:16px;background:linear-gradient(90deg,#8d65e9,#d4adff);color:#160d36;font-weight:800;font-size:16px}
+.install-app-close{position:absolute;right:12px;top:9px;width:34px;height:34px;border:0;border-radius:50%;background:#ffffff18;color:#fff;font-size:25px}
+.install-progress{height:9px;overflow:hidden;border-radius:20px;background:#ffffff25;margin:18px 0 10px}
+.install-progress span{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#b8e6ff,#d9aaff);transition:width .25s}
+.install-state{font-size:13px;color:#dce8ff;min-height:20px}
 </style></head>
 <body>
 <div class="bg"></div>
@@ -488,7 +499,7 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
   <div class="status-divider"></div>
   <div class="status-cell"><div><div class="status-main" id="clockText">--:--:--</div><span class="status-sub" id="dateText">--</span></div></div>
  </div>
- <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav" id="profileMenu" role="button" tabindex="0"><span>♙</span>Profil</div><div class="home-nav" id="settingsMenu" role="button" tabindex="0"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav"><span>ⓘ</span>About</div></nav>
+ <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav" id="profileMenu" role="button" tabindex="0"><span>♙</span>Profil</div><div class="home-nav" id="settingsMenu" role="button" tabindex="0"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><div class="home-nav" id="installAppMenu" role="button" tabindex="0"><span>⇩</span>UNDUH APP</div></nav>
  <div class="settings-backdrop" id="settingsBackdrop" aria-hidden="true"><div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><button class="settings-close" id="closeSettings" type="button" aria-label="Tutup">×</button><h2 id="settingsTitle">Pengaturan</h2><p>Atur kualitas visual dan sesi akun Lexaa.</p><h3 class="graphics-title">Pengaturan Grafik</h3><div class="graphics-options" role="group" aria-label="Pilih kualitas grafik"><button class="graphics-option" data-graphics="low" type="button">LOW<small>Hemat baterai</small></button><button class="graphics-option" data-graphics="standard" type="button">STANDAR<small>Seimbang</small></button><button class="graphics-option" data-graphics="ultra" type="button">ULTRA<small>Efek maksimal</small></button></div><p class="graphics-note" id="graphicsDescription">Pilih kualitas sesuai kemampuan HP kamu.</p><button class="settings-action" id="switchAccountBtn" type="button">⇄　Ganti Akun</button><button class="settings-action logout" id="logoutBtn" type="button">↪　Log Out</button></div></div>
  <div class="profile-backdrop" id="profileBackdrop" aria-hidden="true"><div class="profile-card" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><button class="settings-close" id="closeProfile" type="button" aria-label="Tutup">×</button><h2 id="profileTitle">Edit Profil</h2><div class="profile-preview" id="profilePreview">♛</div><label for="avatarFile">Foto profil (akan dipotong persegi 1:1)</label><input id="avatarFile" type="file" accept="image/*"><div id="cropControls" hidden><label for="cropZoom">Zoom / Perbesar</label><input id="cropZoom" type="range" min="1" max="3" step=".05" value="1"><label for="cropX">Geser horizontal</label><input id="cropX" type="range" min="0" max="100" value="50"><label for="cropY">Geser vertikal</label><input id="cropY" type="range" min="0" max="100" value="50"></div><label for="editDisplayName">Nama Display</label><input id="editDisplayName" type="text" maxlength="40" required><label for="editUsername">Username</label><input id="editUsername" type="text" maxlength="20" pattern="[A-Za-z0-9_]+" required><button class="settings-action profile-save" id="saveProfile" type="button">Simpan Perubahan</button><div class="profile-message" id="profileMessage"></div></div></div>
  <div class="welcome-panel"><strong>Selamat datang di Lexaa!</strong><em>Semoga harimu penuh dengan keberuntungan. ✦</em></div>
@@ -814,4 +825,35 @@ $("forgotLink").addEventListener("click",async e=>{
 });
 
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
-</script></body></html>
+
+let lexaaInstallPrompt=null,lexaaInstallTimer=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();lexaaInstallPrompt=e;});
+window.addEventListener("appinstalled",()=>{
+ const state=document.getElementById("installAppState");if(state)state.textContent="Lexaa berhasil dipasang!";
+ const bar=document.getElementById("installAppBar");if(bar)bar.style.width="100%";
+});
+function openInstallPopup(){const b=document.getElementById("installAppBackdrop");b.classList.add("show");b.setAttribute("aria-hidden","false");}
+function closeInstallPopup(){document.getElementById("installAppBackdrop").classList.remove("show");document.getElementById("installAppBackdrop").setAttribute("aria-hidden","true");clearInterval(lexaaInstallTimer);}
+document.getElementById("installAppMenu").addEventListener("click",openInstallPopup);
+document.getElementById("installAppMenu").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openInstallPopup();}});
+document.getElementById("installAppClose").addEventListener("click",closeInstallPopup);
+document.getElementById("installAppNow").addEventListener("click",async()=>{
+ const btn=document.getElementById("installAppNow"),progress=document.getElementById("installAppProgress"),bar=document.getElementById("installAppBar"),state=document.getElementById("installAppState"),desc=document.getElementById("installAppDescription");
+ btn.disabled=true;btn.hidden=true;progress.hidden=false;desc.textContent="Lexaa sedang menyiapkan proses pemasangan...";
+ let n=0;lexaaInstallTimer=setInterval(()=>{n=Math.min(n+8,88);bar.style.width=n+"%";},180);
+ if(lexaaInstallPrompt){
+  const prompt=lexaaInstallPrompt;lexaaInstallPrompt=null;
+  try{await prompt.prompt();const choice=await prompt.userChoice;clearInterval(lexaaInstallTimer);
+   if(choice.outcome==="accepted"){bar.style.width="100%";state.textContent="Permintaan pemasangan diterima. Selesaikan proses dari jendela browser.";state.style.color="#c9ffd8";}
+   else{bar.style.width="0%";state.textContent="Pemasangan dibatalkan. Tutup popup dengan tombol × untuk mencoba lagi.";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}
+  }catch(err){clearInterval(lexaaInstallTimer);state.textContent="Browser belum dapat memulai pemasangan. Gunakan menu browser lalu pilih Tambahkan ke layar utama.";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}
+ }else{
+  clearInterval(lexaaInstallTimer);bar.style.width="100%";
+  state.textContent=window.matchMedia("(display-mode: standalone)").matches?"Lexaa sudah terpasang di perangkat ini.":"Browser belum menampilkan opsi instalasi. Buka menu ⋮ Chrome lalu pilih 'Tambahkan ke layar utama' atau 'Install app'.";
+  btn.hidden=false;btn.disabled=false;btn.textContent="Mengerti";
+  btn.onclick=()=>{btn.onclick=null;closeInstallPopup();};
+ }
+});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(err=>console.warn("PWA service worker:",err)));
+</script><div id="installAppBackdrop" aria-hidden="true"><section class="install-app-card" role="dialog" aria-modal="true" aria-labelledby="installAppTitle"><button class="install-app-close" id="installAppClose" type="button" aria-label="Tutup">×</button><h2 id="installAppTitle">Unduh Lexaa App</h2><p id="installAppDescription">Pasang Lexaa di perangkat kamu agar lebih mudah dibuka seperti aplikasi.</p><button class="primary" id="installAppNow" type="button">Unduh Sekarang</button><div id="installAppProgress" hidden><div class="install-progress"><span id="installAppBar"></span></div><div class="install-state" id="installAppState">Menyiapkan instalasi...</div></div></section></div>
+</body></html>
