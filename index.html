@@ -624,11 +624,25 @@ $("profileBackdrop").addEventListener("click",e=>{if(e.target===$("profileBackdr
 $("saveProfile").addEventListener("click",saveProfile);
 
 
-function openSaldo(){
+async function openSaldo(){
  const level=$("homeLevel")?.textContent||"Lv. 0";
  const params=new URLSearchParams({level});
- location.href="saldo.html?"+params.toString();
+ try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();}catch(e){}
+ try{if(screen.orientation?.lock)await screen.orientation.lock("landscape");}catch(e){}
+ let layer=document.getElementById("saldoFullscreenLayer");
+ if(!layer){
+  layer=document.createElement("div");layer.id="saldoFullscreenLayer";
+  layer.style.cssText="position:fixed;inset:0;width:100vw;height:100dvh;z-index:2147483647;background:#100532;margin:0;padding:0;overflow:hidden";
+  const frame=document.createElement("iframe");frame.title="Saldo Lexaa";frame.src="saldo.html?"+params.toString();
+  frame.allow="autoplay; fullscreen";frame.style.cssText="display:block;border:0;width:100%;height:100%;background:#100532";
+  layer.appendChild(frame);document.body.appendChild(layer);
+ }
 }
+window.addEventListener("message",async event=>{
+ if(event.origin!==location.origin||event.data!=="LEXAA_CLOSE_SALDO")return;
+ document.getElementById("saldoFullscreenLayer")?.remove();
+ try{if(screen.orientation?.unlock)screen.orientation.unlock();}catch(e){}
+});
 function closeSaldo(){
  $("saldoScreen").classList.remove("open");document.body.classList.remove("saldo-open");const mainBg=$("bgVideo");if(mainBg){mainBg.style.visibility="visible";mainBg.style.opacity="1";mainBg.play().catch(()=>{});} $("worldScreen").classList.add("open");
  const video=$("saldoVideo");if(video)video.pause();
