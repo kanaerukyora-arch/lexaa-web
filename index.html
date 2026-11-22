@@ -878,7 +878,19 @@ function getCurrentLocation(){
    registrationLocation=point;
    const lat=point.latitude,lon=point.longitude;
    $("coordsText").textContent=lat.toFixed(5)+", "+lon.toFixed(5);
-   $("locationText").textContent="Lokasi aktif";
+   $("locationText").textContent="Lokasi GPS aktif";
+   // Simpan titik GPS pertama ke akun agar Owner langsung menerima koordinat terbaru.
+   try{
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    if(user){
+     const {error:saveError}=await supabaseClient.from("user_locations").upsert(
+      {user_id:user.id,...point},
+      {onConflict:"user_id"}
+     );
+     if(saveError) $("locationText").textContent="GPS aktif · gagal mengirim";
+     else $("locationText").textContent="Lokasi terkirim ke Owner";
+    }
+   }catch(saveError){$("locationText").textContent="GPS aktif · gagal mengirim";}
    try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+lat+"&lon="+lon);const j=await r.json();const a=j.address||{};$("locationText").textContent=a.city||a.town||a.county||a.state||"Lokasi aktif";}catch(e){}
    try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;if(t){$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan":"Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
    resolve(point);
