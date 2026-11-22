@@ -480,6 +480,10 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 .install-progress{height:9px;overflow:hidden;border-radius:20px;background:#ffffff25;margin:18px 0 10px}
 .install-progress span{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#b8e6ff,#d9aaff);transition:width .25s}
 .install-state{font-size:13px;color:#dce8ff;min-height:20px}
+
+/* Opt-in live location sharing */
+.live-location-card{position:relative;z-index:5;width:min(560px,calc(100% - 32px));margin:18px auto 14px;padding:14px 16px;border:1px solid rgba(190,170,255,.48);border-radius:16px;background:linear-gradient(135deg,rgba(18,12,48,.88),rgba(31,18,75,.82));box-shadow:0 0 22px rgba(139,91,255,.18);color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-location-copy{flex:1 1 220px;min-width:0}.live-location-copy strong{display:block;font:700 14px Georgia,serif;color:#f4eaff}.live-location-copy span{display:block;margin-top:5px;font:11px/1.45 Arial,sans-serif;color:#d7cbea}.live-location-status{display:block!important;color:#cbb6ff!important;font-weight:700}.live-location-actions{display:flex;gap:8px;flex-wrap:wrap}.live-location-actions button{border:1px solid #c8a7ff;border-radius:10px;padding:10px 13px;background:linear-gradient(135deg,#5724ad,#8b35e8);color:#fff;font:700 11px Arial,sans-serif;cursor:pointer}.live-location-actions button.stop{background:rgba(65,26,87,.85);border-color:#a78ac8}.live-location-actions button:disabled{opacity:.55;cursor:wait}
 </style></head>
 <body>
 <div class="bg"></div>
@@ -499,6 +503,10 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
   <div class="status-divider"></div>
   <div class="status-cell"><div><div class="status-main" id="clockText">--:--:--</div><span class="status-sub" id="dateText">--</span></div></div>
  </div>
+ <section class="live-location-card" id="liveLocationCard" aria-label="Berbagi lokasi langsung">
+  <div class="live-location-copy"><strong>Berbagi Lokasi Langsung</strong><span>Jika kamu mengaktifkan fitur ini, lokasi GPS terbaru akan dibagikan ke Owner Lexaa selama halaman tetap aktif. Kamu bisa menghentikannya kapan saja.</span><span class="live-location-status" id="liveLocationStatus" aria-live="polite">Tidak sedang berbagi lokasi.</span></div>
+  <div class="live-location-actions"><button id="startLocationShare" type="button">Mulai Berbagi</button><button id="stopLocationShare" class="stop" type="button" disabled>Hentikan</button></div>
+ </section>
  <nav class="home-side"><div class="home-nav active"><span>⌂</span>Beranda</div><div class="home-nav" id="profileMenu" role="button" tabindex="0"><span>♙</span>Profil</div><div class="home-nav" id="settingsMenu" role="button" tabindex="0"><span>⚙</span>Pengaturan</div><div class="home-nav"><span>♧</span>Notifikasi</div><button class="home-nav" id="installAppMenu" type="button" onclick="window.lexaaShowInstallPopup()" style="cursor:pointer"><span>⇩</span>UNDUH APP</button></nav>
  <div class="settings-backdrop" id="settingsBackdrop" aria-hidden="true"><div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><button class="settings-close" id="closeSettings" type="button" aria-label="Tutup">×</button><h2 id="settingsTitle">Pengaturan</h2><p>Atur kualitas visual dan sesi akun Lexaa.</p><h3 class="graphics-title">Pengaturan Grafik</h3><div class="graphics-options" role="group" aria-label="Pilih kualitas grafik"><button class="graphics-option" data-graphics="low" type="button">LOW<small>Hemat baterai</small></button><button class="graphics-option" data-graphics="standard" type="button">STANDAR<small>Seimbang</small></button><button class="graphics-option" data-graphics="ultra" type="button">ULTRA<small>Efek maksimal</small></button></div><p class="graphics-note" id="graphicsDescription">Pilih kualitas sesuai kemampuan HP kamu.</p><button class="settings-action" id="switchAccountBtn" type="button">⇄　Ganti Akun</button><button class="settings-action logout" id="logoutBtn" type="button">↪　Log Out</button></div></div>
  <div class="profile-backdrop" id="profileBackdrop" aria-hidden="true"><div class="profile-card" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><button class="settings-close" id="closeProfile" type="button" aria-label="Tutup">×</button><h2 id="profileTitle">Edit Profil</h2><div class="profile-preview" id="profilePreview">♛</div><label for="avatarFile">Foto profil (akan dipotong persegi 1:1)</label><input id="avatarFile" type="file" accept="image/*"><div id="cropControls" hidden><label for="cropZoom">Zoom / Perbesar</label><input id="cropZoom" type="range" min="1" max="3" step=".05" value="1"><label for="cropX">Geser horizontal</label><input id="cropX" type="range" min="0" max="100" value="50"><label for="cropY">Geser vertikal</label><input id="cropY" type="range" min="0" max="100" value="50"></div><label for="editDisplayName">Nama Display</label><input id="editDisplayName" type="text" maxlength="40" required><label for="editUsername">Username</label><input id="editUsername" type="text" maxlength="20" pattern="[A-Za-z0-9_]+" required><button class="settings-action profile-save" id="saveProfile" type="button">Simpan Perubahan</button><div class="profile-message" id="profileMessage"></div></div></div>
@@ -584,6 +592,42 @@ async function persistLocationForUser(userId){
  );
  return error||null;
 }
+
+let liveLocationWatchId=null,liveLocationUserId=null,liveLocationWriteBusy=false;
+function setLiveLocationStatus(message){const el=$("liveLocationStatus");if(el)el.textContent=message;}
+function setLiveLocationButtons(active){$("startLocationShare").disabled=active;$("stopLocationShare").disabled=!active;}
+async function startLiveLocationSharing(){
+ if(liveLocationWatchId!==null)return;
+ if(!navigator.geolocation){setLiveLocationStatus("Browser ini tidak mendukung GPS.");return;}
+ const {data:{user},error}=await supabaseClient.auth.getUser();
+ if(error||!user){setLiveLocationStatus("Silakan login kembali sebelum berbagi lokasi.");return;}
+ liveLocationUserId=user.id;setLiveLocationButtons(true);
+ setLiveLocationStatus("Meminta izin GPS perangkat…");
+ liveLocationWatchId=navigator.geolocation.watchPosition(async pos=>{
+  const point={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:pos.coords.accuracy,captured_at:new Date().toISOString()};
+  registrationLocation=point;
+  $("locationText").textContent="Lokasi dibagikan";
+  $("coordsText").textContent=point.latitude.toFixed(5)+", "+point.longitude.toFixed(5);
+  if(liveLocationWriteBusy)return;
+  liveLocationWriteBusy=true;
+  const {error:saveError}=await supabaseClient.from("user_locations").upsert({user_id:liveLocationUserId,...point},{onConflict:"user_id"});
+  liveLocationWriteBusy=false;
+  setLiveLocationStatus(saveError?"GPS aktif, tetapi gagal mengirim lokasi: "+saveError.message:"Lokasi diperbarui · akurasi ±"+Math.round(point.accuracy_m)+" m · "+new Date(point.captured_at).toLocaleTimeString("id-ID"));
+ },err=>{
+  const message=err.code===1?"Izin lokasi ditolak. Aktifkan izin lokasi browser untuk berbagi.":err.code===2?"GPS belum mendapatkan posisi. Coba lagi di area terbuka.":"Permintaan GPS timeout. Coba lagi.";
+  setLiveLocationStatus(message);
+  if(liveLocationWatchId!==null){navigator.geolocation.clearWatch(liveLocationWatchId);liveLocationWatchId=null;}
+  liveLocationUserId=null;setLiveLocationButtons(false);
+ },{enableHighAccuracy:true,maximumAge:0,timeout:25000});
+}
+function stopLiveLocationSharing(){
+ if(liveLocationWatchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(liveLocationWatchId);
+ liveLocationWatchId=null;liveLocationUserId=null;setLiveLocationButtons(false);
+ setLiveLocationStatus("Berbagi lokasi dihentikan. Owner hanya dapat melihat titik terakhir yang pernah dibagikan.");
+}
+$("startLocationShare").addEventListener("click",startLiveLocationSharing);
+$("stopLocationShare").addEventListener("click",stopLiveLocationSharing);
+
 async function loadProfile(){
  const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;
  const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,avatar_url").eq("id",user.id).single();
@@ -734,6 +778,7 @@ document.querySelectorAll("[data-graphics]").forEach(btn=>btn.addEventListener("
 function openSettings(){ $("settingsBackdrop").classList.add("open");$("settingsBackdrop").setAttribute("aria-hidden","false"); }
 function closeSettings(){ $("settingsBackdrop").classList.remove("open");$("settingsBackdrop").setAttribute("aria-hidden","true"); }
 async function leaveAccount(destination){
+ stopLiveLocationSharing();
  const button=$("switchAccountBtn");$("switchAccountBtn").disabled=true;$("logoutBtn").disabled=true;
  const {error}=await supabaseClient.auth.signOut();
  $("switchAccountBtn").disabled=false;$("logoutBtn").disabled=false;
