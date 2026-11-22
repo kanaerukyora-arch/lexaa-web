@@ -26,8 +26,8 @@ declare
   v_user uuid := auth.uid();
 begin
   if v_user is null then raise exception 'Please sign in to Lexaa first.'; end if;
-  if p_phone !~ '^\+62[0-9]{8,13}$' then raise exception 'Invalid phone number.'; end if;
-  if p_pin !~ '^[0-9]{6}$' then raise exception 'PIN must contain exactly 6 digits.'; end if;
+  if p_phone !~ '^\+[1-9][0-9]{7,14}$' then raise exception 'Invalid phone number.'; end if;
+  if p_pin !~ '^[0-9]{4}$' then raise exception 'PIN must contain exactly 4 digits.'; end if;
   insert into public.lexaa_wallet_access(user_id, phone_e164, pin_hash)
   values (v_user, p_phone, extensions.crypt(p_pin, extensions.gen_salt('bf', 12)));
   return true;
@@ -47,7 +47,7 @@ declare
   v_row public.lexaa_wallet_access%rowtype;
 begin
   if v_user is null then raise exception 'Please sign in to Lexaa first.'; end if;
-  if p_phone !~ '^\+62[0-9]{8,13}$' or p_pin !~ '^[0-9]{6}$' then
+  if p_phone !~ '^\+[1-9][0-9]{7,14}$' or p_pin !~ '^[0-9]{4}$' then
     raise exception 'Invalid wallet credentials.';
   end if;
 
