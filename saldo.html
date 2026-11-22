@@ -92,6 +92,7 @@ let toastTimer;
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
 $("topup").addEventListener("click",()=>toast("Fitur Top Up akan segera hadir!"));
 $("reward").addEventListener("click",()=>toast("Misi dan Event akan segera hadir!"));
+window.addEventListener("pagehide",()=>sessionStorage.setItem("lexaa_return_world","1"));
 $("back").addEventListener("click",()=>{if(history.length>1)history.back();else location.href="index.html";});
 $("bg").addEventListener("error",()=>console.error("saldo-background.mp4 gagal dimuat"));
 </script>
