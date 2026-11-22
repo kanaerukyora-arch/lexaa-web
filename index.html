@@ -625,15 +625,9 @@ $("saveProfile").addEventListener("click",saveProfile);
 
 
 function openSaldo(){
- $("homeScreen").classList.remove("show");$("worldScreen").classList.remove("open");$("saldoScreen").classList.add("open");document.body.classList.add("saldo-open");const mainBg=$("bgVideo");if(mainBg){mainBg.pause();mainBg.style.visibility="hidden";mainBg.style.opacity="0";}
- const name=currentProfile?.display_name||$("homeDisplayName").textContent||"Lexaa";
- $("saldoDisplayName").textContent=name;
- const avatar=currentProfile?.avatar_url;
- $("saldoAvatar").innerHTML=avatar?'<img alt="Foto profil" src="'+avatar+'">':"♛";
- $("saldoLevel").textContent=$("homeLevel")?.textContent||"Lv. 0";
- $("saldoAmount").textContent="Rp 0";
- const video=$("saldoVideo");if(video){video.src="https://lexaa-web.pages.dev/saldo-background.mp4";video.loop=true;video.muted=true;video.load();video.play().catch(()=>{});}
- history.pushState({lexaaSaldo:true},"","#saldo-lexaa");
+ const level=$("homeLevel")?.textContent||"Lv. 0";
+ const params=new URLSearchParams({level});
+ location.href="saldo.html?"+params.toString();
 }
 function closeSaldo(){
  $("saldoScreen").classList.remove("open");document.body.classList.remove("saldo-open");const mainBg=$("bgVideo");if(mainBg){mainBg.style.visibility="visible";mainBg.style.opacity="1";mainBg.play().catch(()=>{});} $("worldScreen").classList.add("open");
@@ -654,7 +648,7 @@ function openWorld(){ $("homeScreen").classList.remove("show");$("worldScreen").
 function closeWorld(){ $("worldScreen").classList.remove("open");$("homeScreen").classList.add("show");if(location.hash==="#jelajahi-dunia")history.replaceState({},"",location.pathname+location.search);}
 $("exploreWorldBtn").addEventListener("click",openWorld);
 $("worldBackBtn").addEventListener("click",closeWorld);
-window.addEventListener("popstate",()=>{if($("saldoScreen").classList.contains("open")){closeSaldo();return;}if($("worldScreen").classList.contains("open"))closeWorld();});
+window.addEventListener("popstate",()=>{if(sessionStorage.getItem("lexaa_return_world")==="1"){sessionStorage.removeItem("lexaa_return_world");return;}if($("worldScreen").classList.contains("open"))closeWorld();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("saldoScreen").classList.contains("open"))closeSaldo();else if(e.key==="Escape"&&$("worldScreen").classList.contains("open"))closeWorld();});
 
 function showHome(){
