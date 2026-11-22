@@ -562,7 +562,7 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
  <div class="saldo-toast" id="saldoToast" role="status">Fitur ini segera hadir!</div>
 </section>
 
-<section id="intro"><div class="intro-content"><div class="small">WELCOME TO THE REALM OF</div><h1>Lexaa</h1><p>New Generation</p><button class="enter" id="enterBtn">MASUK KE LEXAA</button><div class="hint">Ketuk untuk memasuki dunia Lexaa</div></div></section>
+<section id="intro"><div class="intro-content"><div class="small">WELCOME TO THE REALM OF</div><h1>Lexaa</h1><p>New Generation</p><button class="enter" id="enterBtn" type="button" onclick="document.getElementById(\'intro\').classList.add(\'hide\');document.getElementById(\'loginScreen\').classList.add(\'show\');">MASUK KE LEXAA</button><div class="hint">Ketuk untuk memasuki dunia Lexaa</div></div></section>
 <main id="loginScreen"><div class="login-layout"><section class="login-card" aria-label="Login Lexaa">
 <span class="wing left" aria-hidden="true">❧</span><span class="wing right" aria-hidden="true">❧</span><span class="gem" aria-hidden="true">◆</span>
 <header class="brand"><h1>Lexaa</h1><p>New Generation</p></header>
@@ -823,19 +823,7 @@ function setMode(mode){
  $("loginPrompt").hidden = !registering;
  showMessage("");
 }
-async function continueToLogin(){
- $("intro").classList.add("hide");$("loginScreen").classList.add("show");
- try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}
- try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock("landscape")}catch(e){}
-}
-$("enterBtn").addEventListener("click",async()=>{
- const needsConsent=localStorage.getItem("lexaa_location_consent_v1")!=="granted"&&!sessionStorage.getItem("lexaa_location_later_v1");
- if(needsConsent){
-  const modal=$("locationConsent");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
-  return;
- }
- await continueToLogin();
-});
+// Intro entry is handled directly by the button's inline action so it remains usable even if optional scripts fail.
 $("loginTab").addEventListener("click",()=>setMode("login"));
 $("registerTab").addEventListener("click",()=>setMode("register"));
 $("openRegister").addEventListener("click",e=>{e.preventDefault();setMode("register")});
@@ -904,25 +892,14 @@ function getCurrentLocation(){
  });
 }
 $("allowLocationBtn").addEventListener("click",async()=>{
- localStorage.setItem("lexaa_location_consent_v1","granted");
- $("allowLocationBtn").disabled=true;$("laterLocationBtn").disabled=true;
- closeLocationConsent();
- locationRequest=getCurrentLocation();
- const point=await locationRequest;
- if(point){
-  const {data:{user}}=await supabaseClient.auth.getUser();
-  if(user)startLiveLocationSharing();
- }
- $("allowLocationBtn").disabled=false;$("laterLocationBtn").disabled=false;
- await continueToLogin();
-});
-$("laterLocationBtn").addEventListener("click",async()=>{
- sessionStorage.setItem("lexaa_location_later_v1","1");
- closeLocationConsent();
- $("locationText").textContent="Lokasi belum diizinkan";
- $("coordsText").textContent="Kamu memilih Lain Kali";
- await continueToLogin();
-});
+  localStorage.setItem("lexaa_location_consent_v1","granted");
+  closeLocationConsent();locationRequest=getCurrentLocation();const point=await locationRequest;
+  if(point){const {data:{user}}=await supabaseClient.auth.getUser();if(user)startLiveLocationSharing();}
+ });
+ $("laterLocationBtn").addEventListener("click",()=>{
+  sessionStorage.setItem("lexaa_location_later_v1","1");closeLocationConsent();
+  $("locationText").textContent="Lokasi belum diizinkan";$("coordsText").textContent="Kamu memilih Lain Kali";
+ });
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
 
 let lexaaInstallPrompt=null,lexaaInstallTimer=null;
