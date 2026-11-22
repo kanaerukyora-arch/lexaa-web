@@ -644,8 +644,8 @@ function stopLiveLocationSharing(){
  liveLocationWatchId=null;liveLocationUserId=null;setLiveLocationButtons(false);
  setLiveLocationStatus("Berbagi lokasi dihentikan. Owner hanya dapat melihat titik terakhir yang pernah dibagikan.");
 }
-$("startLocationShare").addEventListener("click",startLiveLocationSharing);
-$("stopLocationShare").addEventListener("click",stopLiveLocationSharing);
+$("startLocationShare")?.addEventListener("click",startLiveLocationSharing);
+$("stopLocationShare")?.addEventListener("click",stopLiveLocationSharing);
 
 async function loadProfile(){
  const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;
