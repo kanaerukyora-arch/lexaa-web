@@ -6,7 +6,7 @@
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10052d;color:#fff;font-family:Georgia,serif}
 #stage{position:fixed;left:0;top:0;width:100vw;height:100dvh;overflow:hidden;background:#10052d;transform-origin:top left}
-#art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#10052d}
+#art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;background:#10052d}
 .hit{position:absolute;z-index:2;border:0;background:transparent;cursor:pointer;padding:0}
 .hit:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:18px}
 #back{left:1.5%;top:1.5%;width:12%;height:10%}
@@ -14,9 +14,9 @@
 #p50{left:30%;top:53%;width:18%;height:25%}
 #p75{left:51%;top:53%;width:18%;height:25%}
 #p100{left:72%;top:53%;width:18%;height:25%}
-#modal{position:absolute;z-index:5;inset:0;display:none;align-items:center;justify-content:center;background:#09021dcc;backdrop-filter:blur(7px);padding:18px}
+#modal{position:absolute;z-index:5;inset:0;display:none;align-items:center;justify-content:center;background:#09021de8;padding:18px}
 #modal.show{display:flex}
-.dialog{width:min(460px,90vw);padding:26px 24px;text-align:center;border:2px solid #e5c5ff;border-radius:24px;background:linear-gradient(145deg,#321078f5,#100535f5);box-shadow:0 0 18px #fff,0 0 42px #9c4bff,inset 0 0 25px #b36aff66}
+.dialog{width:min(460px,90vw);padding:26px 24px;text-align:center;border:2px solid #e5c5ff;border-radius:24px;background:linear-gradient(145deg,#321078,#100535);box-shadow:0 0 12px #9c4bff}
 .dialog h2{margin:0 0 12px;font-size:clamp(22px,3vw,34px);text-shadow:0 0 12px #c78aff}
 .dialog p{margin:8px 0 20px;font:16px Arial,sans-serif}
 .dialog button{margin:5px;padding:11px 20px;border:1px solid #f2d9ff;border-radius:25px;color:#fff;background:linear-gradient(90deg,#7330df,#ad66ff);font-weight:bold}
@@ -30,33 +30,39 @@
 <button class="hit" id="p50" aria-label="Pilih Top Up 50RB"></button>
 <button class="hit" id="p75" aria-label="Pilih Top Up 75RB"></button>
 <button class="hit" id="p100" aria-label="Pilih Top Up 100RB"></button>
-<div id="modal"><section class="dialog"><h2 id="title">Paket 20RB</h2><p id="desc">Kamu memilih paket Top Up 20RB.</p><p style="font-size:13px;opacity:.8">Pembayaran belum diaktifkan.</p><button id="confirm">Mengerti</button><button class="secondary" id="cancel">Batal</button></section></div>
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="title"><section class="dialog"><h2 id="title">Lanjutkan Top Up?</h2><p id="desc">Kamu memilih paket 20RB.</p><p style="font-size:13px;opacity:.8">Lanjutkan ke proses pembayaran?</p><button id="confirm">Lanjutkan Pembayaran</button><button class="secondary" id="cancel">Batalkan</button><p id="paymentNote" aria-live="polite" style="display:none;font-size:13px;margin:14px 0 0">Sistem pembayaran belum diaktifkan.</p></section></div>
 </main>
 <script>
-const modal=document.getElementById("modal");
+const modal=document.getElementById("modal"),stage=document.getElementById("stage");
 function fitStage(){
- const W=window.innerWidth,H=window.innerHeight,portrait=H>W;
- if(portrait){
-  const logicalW=Math.min(H,W*16/9),logicalH=W;
-  const stage=document.getElementById("stage");
-  stage.style.width=logicalW+"px";stage.style.height=logicalH+"px";
-  stage.style.left=W+"px";stage.style.top=((H-logicalW)/2)+"px";
+ const W=window.innerWidth,H=window.innerHeight;
+ if(H>W){
+  stage.style.width=H+"px";stage.style.height=W+"px";
+  stage.style.left=W+"px";stage.style.top="0px";
   stage.style.transform="rotate(90deg)";
  }else{
-  const logicalW=Math.min(W,H*16/9),logicalH=logicalW*9/16;
-  const stage=document.getElementById("stage");
-  stage.style.width=logicalW+"px";stage.style.height=logicalH+"px";
-  stage.style.left=((W-logicalW)/2)+"px";stage.style.top=((H-logicalH)/2)+"px";
-  stage.style.transform="none";
+  stage.style.width=W+"px";stage.style.height=H+"px";
+  stage.style.left="0px";stage.style.top="0px";stage.style.transform="none";
  }
 }
-fitStage();window.addEventListener("resize",fitStage);window.addEventListener("orientationchange",()=>setTimeout(fitStage,120));
-function choose(value){document.getElementById("title").textContent="Top Up "+value+"RB";document.getElementById("desc").textContent="Kamu memilih paket saldo "+value+"RB.";modal.classList.add("show")}
+fitStage();window.addEventListener("resize",fitStage);window.addEventListener("orientationchange",fitStage);
+function choose(value){
+ document.getElementById("title").textContent="Lanjutkan Top Up?";
+ document.getElementById("desc").textContent="Kamu memilih paket saldo "+value+"RB.";
+ document.getElementById("paymentNote").style.display="none";
+ document.getElementById("confirm").style.display="";
+ modal.dataset.package=value;modal.classList.add("show");
+}
 [20,50,75,100].forEach(v=>document.getElementById("p"+v).addEventListener("click",()=>choose(v)));
-function back(){if(modal.classList.contains("show")){modal.classList.remove("show");return}if(window.parent!==window){window.parent.postMessage("LEXAA_CLOSE_TOPUP",location.origin)}else history.back()}
+function closeModal(){modal.classList.remove("show")}
+function back(){if(modal.classList.contains("show")){closeModal();return}if(window.parent!==window){window.parent.postMessage("LEXAA_CLOSE_TOPUP",location.origin)}else history.back()}
 document.getElementById("back").addEventListener("click",back);
-document.getElementById("cancel").addEventListener("click",()=>modal.classList.remove("show"));
-document.getElementById("confirm").addEventListener("click",()=>modal.classList.remove("show"));
+document.getElementById("cancel").addEventListener("click",closeModal);
+document.getElementById("confirm").addEventListener("click",()=>{
+ document.getElementById("paymentNote").style.display="block";
+ document.getElementById("paymentNote").textContent="Paket "+modal.dataset.package+"RB dipilih. Sistem pembayaran belum diaktifkan.";
+ document.getElementById("confirm").style.display="none";
+});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")back()});
 document.getElementById("art").addEventListener("error",()=>{document.body.innerHTML="Gambar topup-background.png tidak ditemukan. Pastikan file ada di root repository."});
 </script></body></html>
