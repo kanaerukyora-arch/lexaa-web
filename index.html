@@ -481,13 +481,38 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 .install-progress span{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#b8e6ff,#d9aaff);transition:width .25s}
 .install-state{font-size:13px;color:#dce8ff;min-height:20px}
 
-/* Opt-in live location sharing */
-.live-location-card{position:absolute;z-index:8;top:112px;right:3%;width:min(480px,46vw);margin:0;padding:14px 16px;border:1px solid rgba(190,170,255,.48);border-radius:16px;background:linear-gradient(135deg,rgba(18,12,48,.88),rgba(31,18,75,.82));box-shadow:0 0 22px rgba(139,91,255,.18);color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+/* Location consent prompt */
+.location-consent-backdrop{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(5,2,18,.78);backdrop-filter:blur(12px)}
+.location-consent-backdrop.show{display:flex}
+.location-consent-panel{width:min(460px,100%);padding:26px 24px;border:1px solid rgba(205,166,255,.7);border-radius:24px;background:linear-gradient(145deg,rgba(24,10,58,.98),rgba(9,5,30,.98));box-shadow:0 0 42px rgba(150,72,255,.35),inset 0 0 22px rgba(172,108,255,.1);color:#fff;text-align:center}
+.location-consent-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:18px;border:1px solid #c9a2ff;background:linear-gradient(135deg,#5720a9,#a33cff);box-shadow:0 0 22px #a64dff66;font-size:28px}
+.location-consent-panel h2{margin:0 0 10px;color:#f7eaff;font:700 clamp(21px,5vw,27px) Georgia,serif}
+.location-consent-panel p{margin:0;color:#e0d4f3;font:14px/1.65 Arial,sans-serif}
+.location-consent-note{display:block;margin-top:12px;color:#bda9d7;font:12px/1.55 Arial,sans-serif}
+.location-consent-actions{display:flex;gap:12px;margin-top:22px}
+.location-consent-actions button{flex:1;min-height:46px;border-radius:13px;padding:11px 14px;font:700 14px Arial,sans-serif;cursor:pointer}
+.location-consent-allow{border:1px solid #d7baff;background:linear-gradient(135deg,#7024d4,#a13cff);color:#fff;box-shadow:0 0 18px #983bff66}
+.location-consent-later{border:1px solid #a88acb;background:#21143d;color:#eadcff}
+@media(max-width:480px){.location-consent-panel{padding:23px 18px}.location-consent-actions{flex-direction:column}}
+/* Keep live-sharing controls off the home screen; sharing is managed by the first-visit consent prompt. */
+.live-location-card{display:none!important;position:absolute;z-index:8;top:112px;right:3%;width:min(480px,46vw);margin:0;padding:14px 16px;border:1px solid rgba(190,170,255,.48);border-radius:16px;background:linear-gradient(135deg,rgba(18,12,48,.88),rgba(31,18,75,.82));box-shadow:0 0 22px rgba(139,91,255,.18);color:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .live-location-copy{flex:1 1 220px;min-width:0}.live-location-copy strong{display:block;font:700 14px Georgia,serif;color:#f4eaff}.live-location-copy span{display:block;margin-top:5px;font:11px/1.45 Arial,sans-serif;color:#d7cbea}.live-location-status{display:block!important;color:#cbb6ff!important;font-weight:700}.live-location-actions{display:flex;gap:8px;flex-wrap:wrap}.live-location-actions button{border:1px solid #c8a7ff;border-radius:10px;padding:10px 13px;background:linear-gradient(135deg,#5724ad,#8b35e8);color:#fff;font:700 11px Arial,sans-serif;cursor:pointer}.live-location-actions button.stop{background:rgba(65,26,87,.85);border-color:#a78ac8}.live-location-actions button:disabled{opacity:.55;cursor:wait}
 @media(max-width:760px){.live-location-card{top:108px;right:10px;width:min(420px,calc(100% - 20px));padding:10px 12px}.live-location-copy strong{font-size:13px}.live-location-copy span{font-size:10px}.live-location-actions button{padding:8px 10px;font-size:10px}}
 </style></head>
 <body>
 <div class="bg"></div>
+<div class="location-consent-backdrop" id="locationConsent" aria-hidden="true">
+ <section class="location-consent-panel" role="dialog" aria-modal="true" aria-labelledby="locationConsentTitle" aria-describedby="locationConsentDescription">
+  <div class="location-consent-icon" aria-hidden="true">⌖</div>
+  <h2 id="locationConsentTitle">Izinkan Lokasi</h2>
+  <p id="locationConsentDescription">Izinkan lokasi agar kamu bisa menikmati pengalaman terbaik di Lexaa.</p>
+  <span class="location-consent-note">Jika diizinkan, Lexaa menggunakan GPS untuk menampilkan area dan cuaca, serta membagikan lokasi terbarumu kepada Owner selama Lexaa terbuka. Kamu bisa memilih Lain Kali.</span>
+  <div class="location-consent-actions">
+   <button class="location-consent-allow" id="allowLocationBtn" type="button">Izinkan Lokasi</button>
+   <button class="location-consent-later" id="laterLocationBtn" type="button">Lain Kali</button>
+  </div>
+ </section>
+</div>
 
 <video id="bgVideo" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="background.mp4" type="video/mp4"></video>
 <section id="homeScreen" aria-label="Beranda Lexaa">
@@ -596,7 +621,7 @@ async function persistLocationForUser(userId){
 
 let liveLocationWatchId=null,liveLocationUserId=null,liveLocationWriteBusy=false;
 function setLiveLocationStatus(message){const el=$("liveLocationStatus");if(el)el.textContent=message;}
-function setLiveLocationButtons(active){$("startLocationShare").disabled=active;$("stopLocationShare").disabled=!active;}
+function setLiveLocationButtons(active){const start=$("startLocationShare"),stop=$("stopLocationShare");if(start)start.disabled=active;if(stop)stop.disabled=!active;}
 async function startLiveLocationSharing(){
  if(liveLocationWatchId!==null)return;
  if(!navigator.geolocation){setLiveLocationStatus("Browser ini tidak mendukung GPS.");return;}
@@ -743,13 +768,11 @@ function startHomeIndicators(){
  updateNetwork();window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);if(conn)conn.addEventListener("change",updateNetwork);
  const ping=async()=>{const start=performance.now();try{await fetch(SUPABASE_URL+"/auth/v1/health",{method:"GET",headers:{apikey:SUPABASE_PUBLISHABLE_KEY},cache:"no-store"});$("pingValue").textContent=Math.round(performance.now()-start)+" ms";}catch(e){$("pingValue").textContent="-- ms";}};
  ping();setInterval(ping,15000);
- if(!navigator.geolocation){$("locationText").textContent="Tidak tersedia";return;}
- navigator.geolocation.getCurrentPosition(async pos=>{
-  const lat=pos.coords.latitude,lon=pos.coords.longitude;$("coordsText").textContent=lat.toFixed(3)+", "+lon.toFixed(3);
-  $("locationText").textContent="Lokasi aktif";
-  try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+lat+"&lon="+lon);const j=await r.json();const a=j.address||{};$("locationText").textContent=a.city||a.town||a.county||a.state||"Lokasi aktif";}catch(e){}
-  try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan": "Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
- },()=>{$("locationText").textContent="Lokasi nonaktif";$("coordsText").textContent="Izinkan lokasi di browser";$("weatherText").textContent="Butuh lokasi";},{enableHighAccuracy:false,timeout:12000,maximumAge:300000});
+ if(localStorage.getItem("lexaa_location_consent_v1")==="granted"){
+  getCurrentLocation().then(point=>{if(point)startLiveLocationSharing();});
+ }else{
+  $("locationText").textContent="Lokasi belum diizinkan";$("coordsText").textContent="Pilih Izinkan Lokasi";
+ }
 }
 
 const GRAPHICS_KEY="lexaa_graphics";
@@ -808,30 +831,6 @@ function setMode(mode){
  showMessage("");
 }
 $("enterBtn").addEventListener("click",async()=>{
- const hint=$("intro").querySelector(".hint");
- if(hint)hint.textContent="Izinkan lokasi untuk mengonfirmasi area.";
- if(navigator.geolocation){
-  locationRequest=new Promise(resolve=>{
-   navigator.geolocation.getCurrentPosition(pos=>{
-    registrationLocation={
-     latitude:pos.coords.latitude,
-     longitude:pos.coords.longitude,
-     accuracy_m:pos.coords.accuracy,
-     captured_at:new Date().toISOString()
-    };
-    if(hint)hint.textContent="Area berhasil dikonfirmasi. Silakan masuk ke Lexaa.";
-    resolve(registrationLocation);
-   },err=>{
-    registrationLocation=null;
-    if(hint)hint.textContent=err.code===1
-     ?"Izin lokasi tidak diberikan. Kamu tetap bisa masuk ke Lexaa."
-     :"Lokasi belum tersedia. Kamu tetap bisa masuk ke Lexaa.";
-    resolve(null);
-   },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
-  });
- }else{
-  if(hint)hint.textContent="Browser tidak mendukung lokasi. Kamu tetap bisa masuk ke Lexaa.";
- }
  $("intro").classList.add("hide");$("loginScreen").classList.add("show");
  try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}
  try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock("landscape")}catch(e){}
@@ -878,6 +877,52 @@ $("forgotLink").addEventListener("click",async e=>{
  showMessage(error?error.message:"Jika email terdaftar, tautan reset password akan dikirim.");
 });
 
+function closeLocationConsent(){
+ const modal=$("locationConsent");if(!modal)return;
+ modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
+}
+function getCurrentLocation(){
+ return new Promise(resolve=>{
+  if(!navigator.geolocation){$("locationText").textContent="GPS tidak tersedia";$("coordsText").textContent="Browser tidak mendukung lokasi";resolve(null);return;}
+  navigator.geolocation.getCurrentPosition(async pos=>{
+   const point={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:pos.coords.accuracy,captured_at:new Date().toISOString()};
+   registrationLocation=point;
+   const lat=point.latitude,lon=point.longitude;
+   $("coordsText").textContent=lat.toFixed(5)+", "+lon.toFixed(5);
+   $("locationText").textContent="Lokasi aktif";
+   try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+lat+"&lon="+lon);const j=await r.json();const a=j.address||{};$("locationText").textContent=a.city||a.town||a.county||a.state||"Lokasi aktif";}catch(e){}
+   try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;if(t){$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan":"Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
+   resolve(point);
+  },err=>{
+   registrationLocation=null;
+   $("locationText").textContent=err.code===1?"Izin lokasi ditolak":"Lokasi belum tersedia";
+   $("coordsText").textContent="Kamu tetap bisa memakai Lexaa";
+   $("weatherText").textContent="Cuaca tidak tersedia";
+   resolve(null);
+  },{enableHighAccuracy:true,timeout:20000,maximumAge:60000});
+ });
+}
+$("allowLocationBtn").addEventListener("click",async()=>{
+ localStorage.setItem("lexaa_location_consent_v1","granted");
+ $("allowLocationBtn").disabled=true;$("laterLocationBtn").disabled=true;
+ closeLocationConsent();
+ locationRequest=getCurrentLocation();
+ const point=await locationRequest;
+ if(point){
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  if(user)startLiveLocationSharing();
+ }
+ $("allowLocationBtn").disabled=false;$("laterLocationBtn").disabled=false;
+});
+$("laterLocationBtn").addEventListener("click",()=>{
+ localStorage.setItem("lexaa_location_consent_v1","later");
+ closeLocationConsent();
+ $("locationText").textContent="Lokasi belum diizinkan";
+ $("coordsText").textContent="Kamu memilih Lain Kali";
+});
+if(!localStorage.getItem("lexaa_location_consent_v1")){
+ const modal=$("locationConsent");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+}
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
 
 let lexaaInstallPrompt=null,lexaaInstallTimer=null;
