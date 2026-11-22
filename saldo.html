@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16064b">
+<title>Saldo Lexaa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#120638;color:#fff}
+#scene{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#14064b;font-family:'Playfair Display',Georgia,serif}
+#bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
+#veil{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(19,4,59,.03) 0%,rgba(22,5,72,.02) 39%,rgba(19,4,65,.20) 100%),linear-gradient(0deg,rgba(16,3,54,.16),transparent 38%,rgba(12,3,46,.08))}
+#sparkles{position:absolute;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(2px 2px at 13% 22%,#fff 98%,transparent),radial-gradient(2px 2px at 45% 18%,#ffe7ff 98%,transparent),radial-gradient(2px 2px at 84% 24%,#fff 98%,transparent),radial-gradient(1.5px 1.5px at 72% 78%,#d9caff 98%,transparent),radial-gradient(2px 2px at 93% 62%,#fff 98%,transparent);background-size:280px 210px;animation:twinkle 3.8s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+.brand{position:absolute;z-index:4;left:8%;top:2%;font-family:'Great Vibes',cursive;font-size:clamp(38px,5.4vw,82px);line-height:1;color:#fff;text-shadow:0 0 5px #fff,0 0 14px #a86aff,0 0 30px #7b31ff}
+.brand:before{content:'♛';position:absolute;left:-.72em;top:-.18em;font: .58em Georgia;color:#ffdc78;text-shadow:0 0 10px #ffcf5c}
+.brand:after{content:'✦';position:absolute;right:-.75em;top:.12em;font: .58em Georgia;color:#fff;text-shadow:0 0 14px #fff,0 0 28px #a85aff}
+.user{position:absolute;z-index:5;right:3.4%;top:3%;height:clamp(66px,13vh,112px);min-width:clamp(210px,22vw,335px);display:flex;align-items:center;gap:clamp(9px,1.2vw,18px);padding:7px 24px 7px 8px;border:2px solid #d8aaff;border-radius:80px;background:linear-gradient(110deg,rgba(35,8,92,.82),rgba(18,6,67,.83));box-shadow:0 0 12px #fff,0 0 25px #a64dff, inset 0 0 20px #a65aff88}
+.avatar{width:clamp(54px,8.5vh,88px);height:clamp(54px,8.5vh,88px);flex:none;border:3px solid #f0d9ff;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#5324a6,#170b54);box-shadow:0 0 14px #c68aff}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.user-info{min-width:0}.username{font-size:clamp(15px,1.6vw,24px);font-weight:800;white-space:nowrap;text-shadow:0 0 9px #fff}
+.level{display:inline-block;margin-top:5px;padding:4px 22px;border-radius:30px;background:linear-gradient(90deg,#8840ee,#bd79ff);font:700 clamp(12px,1.1vw,17px) Arial,sans-serif;box-shadow:0 0 12px #c18aff}
+.down{margin-left:auto;color:#c78aff;font-size:24px;text-shadow:0 0 10px #fff}
+.wallet-area{position:absolute;z-index:4;left:39.2%;right:4.2%;top:26%;display:flex;flex-direction:column;align-items:center}
+.heading{position:relative;z-index:2;width:76%;padding:0 20px 7px;text-align:center;font-size:clamp(25px,3vw,46px);font-weight:800;color:#fff0ff;text-shadow:0 0 7px #fff,0 0 18px #c18cff; background:linear-gradient(90deg,transparent,rgba(32,6,89,.86) 17%,rgba(32,6,89,.92) 83%,transparent);border-bottom:2px solid #dfb5ff;filter:drop-shadow(0 0 12px #a04dff)}
+.heading:before{content:'♛';display:block;margin-bottom:-11px;font-size:1.65em;color:#ffdc78;text-shadow:0 0 9px #fff0a8,0 0 20px #ffad28}
+.panel{width:100%;min-height:clamp(116px,23vh,205px);margin-top:-1px;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px);padding:18px 20px;border:3px solid #d9b5ff;border-radius:clamp(24px,3.5vw,48px);outline:1px solid rgba(255,255,255,.85);outline-offset:-9px;background:linear-gradient(110deg,rgba(35,8,103,.84),rgba(18,5,68,.94) 55%,rgba(39,10,112,.86));box-shadow:0 0 13px #fff,0 0 28px #b05bff,0 0 54px #642cff,inset 0 0 30px #9c5bff99;animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:brightness(1);box-shadow:0 0 13px #fff,0 0 28px #b05bff,0 0 54px #642cff,inset 0 0 30px #9c5bff99}50%{filter:brightness(1.18);box-shadow:0 0 20px #fff,0 0 42px #d18aff,0 0 72px #793bff,inset 0 0 42px #bd7aff}}
+.wallet-icon{width:clamp(62px,9vw,118px);height:auto;flex:none;filter:drop-shadow(0 0 10px #c99aff)}
+.amount{font:800 clamp(40px,6.3vw,96px)/1 Arial,sans-serif;white-space:nowrap;letter-spacing:.01em;color:white;text-shadow:0 0 5px #fff,0 0 15px #d5aaff,0 0 30px #9c4cff,0 0 48px #6728ff}
+.tagline{margin:13px 0 0;text-align:center;font-size:clamp(12px,1.35vw,21px);font-style:italic;color:#fff2ff;text-shadow:0 0 8px #a45cff}
+.actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.5vw,22px);margin-top:clamp(30px,5.5vh,65px)}
+.action{min-height:clamp(80px,14vh,132px);display:flex;align-items:center;gap:clamp(9px,1vw,16px);padding:12px clamp(12px,1.5vw,23px);border:2px solid #e4c4ff;border-radius:clamp(22px,3vw,38px);color:white;background:linear-gradient(120deg,rgba(78,32,211,.97),rgba(39,13,132,.97));box-shadow:0 0 12px #c38aff,0 0 28px #793dff,inset 0 0 18px #d1aaff66;cursor:pointer;transition:transform .2s,filter .2s;font-family:inherit}
+.action:active{transform:scale(.98)}.action-icon{width:clamp(40px,5vw,65px);height:auto;flex:none;filter:drop-shadow(0 0 8px #fff)}
+.copy{flex:1;text-align:left}.copy strong{display:block;font-size:clamp(15px,1.65vw,26px);white-space:nowrap;text-shadow:0 0 8px #fff}.copy small{display:block;margin-top:5px;font-size:clamp(10px,1vw,15px);white-space:nowrap}
+.arrow{font:700 clamp(23px,2.5vw,36px) Arial}
+.action.gold{border-color:#ffe6a1;color:#5c2c00;background:linear-gradient(120deg,#fff0a9,#ffbd45 55%,#ffe18b);box-shadow:0 0 13px #ffe9a3,0 0 32px #ffb52f,inset 0 0 20px #fff8c7}
+.action.gold .copy strong,.action.gold .copy small{color:#58300a;text-shadow:0 1px 1px #fff5c7}
+.back{position:absolute;z-index:8;left:2%;bottom:3%;padding:9px 16px;border:1px solid #e0c4ff;border-radius:24px;background:rgba(25,6,75,.72);color:white;font:14px Georgia,serif;box-shadow:0 0 12px #a75aff;cursor:pointer}
+.toast{position:absolute;z-index:9;left:50%;bottom:4%;transform:translateX(-50%);padding:12px 22px;border:1px solid #e0c4ff;border-radius:24px;background:rgba(28,7,78,.94);box-shadow:0 0 18px #a75aff;color:white;font:14px Arial,sans-serif;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.show{opacity:1}
+@media(orientation:portrait){#scene{width:100dvh;height:100vw;left:100vw;top:0;right:auto;bottom:auto;transform:rotate(90deg);transform-origin:top left}}
+@media(max-height:430px) and (orientation:landscape){.wallet-area{top:20%}.panel{min-height:105px}.actions{margin-top:22px}.user{height:64px}.avatar{width:50px;height:50px}}
+body.low .panel{animation:none;box-shadow:0 0 10px #a75aff}
+@media(prefers-reduced-motion:reduce){#sparkles,.panel{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="scene">
+ <video id="bg" autoplay muted loop playsinline preload="auto"><source src="saldo-background.mp4?v=3" type="video/mp4"></video>
+ <div id="veil"></div><div id="sparkles"></div>
+ <div class="brand">Lexaa Saldo</div>
+ <div class="user"><div class="avatar" id="avatar"><span style="display:grid;place-items:center;height:100%;font-size:30px">♛</span></div><div class="user-info"><div class="username" id="displayName">Lexaaa</div><div class="level" id="level">Lv. 0</div></div><div class="down">▼</div></div>
+ <main class="wallet-area">
+  <div class="heading">Saldo Kamu</div>
+  <div class="panel">
+   <svg class="wallet-icon" viewBox="0 0 120 100" aria-hidden="true"><path d="M14 30 78 4q8-3 12 5l7 15" fill="none" stroke="#f5eaff" stroke-width="8" stroke-linecap="round"/><path d="M13 30h86q8 0 8 8v50q0 7-8 7H13q-8 0-8-8V38q0-8 8-8Z" fill="url(#wg)" stroke="#fff" stroke-width="4"/><path d="M77 48h37v28H77q-12 0-12-14t12-14Z" fill="#a68aff" stroke="#fff" stroke-width="4"/><circle cx="83" cy="62" r="4" fill="#fff"/><defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".5" stop-color="#c9a4ff"/><stop offset="1" stop-color="#713cff"/></linearGradient></defs></svg>
+   <div class="amount" id="amount">Rp 0</div>
+  </div>
+  <p class="tagline">Terus kumpulkan saldo dan nikmati berbagai fitur menarik!</p>
+  <div class="actions">
+   <button class="action" id="topup"><svg class="action-icon" viewBox="0 0 80 80" aria-hidden="true"><path d="M8 24 49 5l8 13M8 24h57q5 0 5 5v38q0 5-5 5H8q-5 0-5-5V29q0-5 5-5Z" fill="#d9c5ff" stroke="#fff" stroke-width="4"/><circle cx="58" cy="47" r="17" fill="#713cff" stroke="#fff" stroke-width="4"/><path d="M58 37v20M48 47h20" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg><span class="copy"><strong>Top Up Saldo</strong><small>Isi saldo kamu sekarang!</small></span><span class="arrow">›</span></button>
+   <button class="action gold" id="reward"><svg class="action-icon" viewBox="0 0 80 80" aria-hidden="true"><path d="M40 28v43M18 29h44v42H18zM40 28C8 28 10 3 27 9c9 3 13 19 13 19Zm0 0c32 0 30-25 13-19-9 3-13 19-13 19ZM10 29h60v12H10z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M40 28V8" stroke="#fff" stroke-width="5"/></svg><span class="copy"><strong>Dapatkan Saldo</strong><small>Selesaikan misi &amp; event!</small></span><span class="arrow">›</span></button>
+  </div>
+ </main>
+ <button class="back" id="back">⟵ Kembali</button><div class="toast" id="toast">Fitur ini segera hadir!</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://zfyezjvfiggzkmwcomrh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_LPBiUYMB60WGxC9CRP3Nmg_ptQ3DQ0D";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const params=new URLSearchParams(location.search);
+const $=id=>document.getElementById(id);
+$("level").textContent=params.get("level")||"Lv. 0";
+const graphics=localStorage.getItem("lexaa_graphics")||"ultra";
+if(graphics==="low")document.body.classList.add("low");
+async function loadAccount(){
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){$("displayName").textContent=params.get("name")||"Lexaa";return;}
+ const {data}=await db.from("profiles").select("display_name,avatar_url").eq("id",user.id).maybeSingle();
+ if(data){
+  $("displayName").textContent=data.display_name||"Lexaa";
+  if(data.avatar_url)$("avatar").innerHTML='<img src="'+data.avatar_url.replace(/"/g,"&quot;")+'" alt="Foto profil">';
+ }else $("displayName").textContent=params.get("name")||"Lexaa";
+}
+loadAccount();
+let toastTimer;
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2300)}
+$("topup").addEventListener("click",()=>toast("Fitur Top Up akan segera hadir!"));
+$("reward").addEventListener("click",()=>toast("Misi dan Event akan segera hadir!"));
+$("back").addEventListener("click",()=>{if(history.length>1)history.back();else location.href="index.html";});
+$("bg").addEventListener("error",()=>console.error("saldo-background.mp4 gagal dimuat"));
+</script>
+</body>
+</html>
