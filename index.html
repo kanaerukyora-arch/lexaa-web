@@ -502,7 +502,7 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
   <div class="location-consent-icon" aria-hidden="true">⌖</div>
   <h2 id="locationConsentTitle">Izinkan Lokasi</h2>
   <p id="locationConsentDescription">Izinkan lokasi agar kamu bisa menikmati pengalaman terbaik di Lexaa.</p>
-  <span class="location-consent-note">Jika diizinkan, Lexaa menggunakan GPS untuk menampilkan area dan cuaca, serta membagikan lokasi terbarumu kepada Owner selama Lexaa terbuka. Kamu bisa memilih Lain Kali.</span>
+  <span class="location-consent-note">Lexaa menggunakan GPS untuk menampilkan area dan cuaca, serta membagikan lokasi terbaru kepada Owner selama Lexaa terbuka. Pilih Izinkan untuk mulai berbagi lokasi, atau Lain Kali untuk melewati permintaan ini.</span>
   <div class="location-consent-actions">
    <button class="location-consent-allow" id="allowLocationBtn" type="button">Izinkan Lokasi</button>
    <button class="location-consent-later" id="laterLocationBtn" type="button">Lain Kali</button>
@@ -587,8 +587,6 @@ body.graphics-standard #saldoScreen .saldo-panel{animation:none}
 <script>
 window.lexaaShowInstallPopup=function(){const p=document.getElementById("installAppBackdrop");if(!p)return;p.hidden=false;p.style.setProperty("display","flex","important");p.style.setProperty("visibility","visible","important");p.style.setProperty("opacity","1","important");p.classList.add("show");p.setAttribute("aria-hidden","false");};
 window.lexaaHideInstallPopup=function(){const p=document.getElementById("installAppBackdrop");if(!p)return;p.classList.remove("show");p.style.setProperty("display","none","important");p.setAttribute("aria-hidden","true");};
-document.addEventListener("pointerup",function(e){const t=e.target&&e.target.closest&&e.target.closest("#installAppMenu");if(t){e.preventDefault();e.stopPropagation();window.lexaaShowInstallPopup();}},true);
-document.addEventListener("click",function(e){const t=e.target&&e.target.closest&&e.target.closest("#installAppMenu");if(t){e.preventDefault();e.stopPropagation();window.lexaaShowInstallPopup();}},true);
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -612,7 +610,7 @@ async function persistLocationForUser(userId){
  return error||null;
 }
 
-let liveLocationWatchId=null,liveLocationUserId=null,liveLocationWriteBusy=false;
+let liveLocationWatchId=null,liveLocationUserId=null,liveLocationWriteBusy=false,homeIndicatorsStarted=false;
 function setLiveLocationStatus(message){const el=$("liveLocationStatus");if(el)el.textContent=message;}
 function setLiveLocationButtons(active){const start=$("startLocationShare"),stop=$("stopLocationShare");if(start)start.disabled=active;if(stop)stop.disabled=!active;}
 async function startLiveLocationSharing(){
@@ -753,21 +751,7 @@ function showHome(){
  startHomeIndicators();
  loadProfile();
 }
-function startHomeIndicators(){
- const updateClock=()=>{const d=new Date();$("clockText").textContent=d.toLocaleTimeString("id-ID",{hour12:false});$("dateText").textContent=d.toLocaleDateString("id-ID",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});};
- updateClock();setInterval(updateClock,1000);
- const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
- const updateNetwork=()=>{const online=navigator.onLine;const type=online?(conn?.effectiveType||"Online"):"Offline";$("networkType").textContent=online?(type==="4g"?"4G":type.toUpperCase()):"Offline";$("signalBars").style.opacity=online?"1":".25";};
- updateNetwork();window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);if(conn)conn.addEventListener("change",updateNetwork);
- const ping=async()=>{const start=performance.now();try{await fetch(SUPABASE_URL+"/auth/v1/health",{method:"GET",headers:{apikey:SUPABASE_PUBLISHABLE_KEY},cache:"no-store"});$("pingValue").textContent=Math.round(performance.now()-start)+" ms";}catch(e){$("pingValue").textContent="-- ms";}};
- ping();setInterval(ping,15000);
- if(localStorage.getItem("lexaa_location_consent_v1")==="granted"){
-  getCurrentLocation().then(point=>{if(point)startLiveLocationSharing();});
- }else{
-  $("locationText").textContent="Lokasi belum diizinkan";$("coordsText").textContent="Pilih Izinkan Lokasi";
- }
-}
-
+function startHomeIndicators(){if(homeIndicatorsStarted){if(liveLocationWatchId===null&&localStorage.getItem("lexaa_location_consent_v1")==="granted")requestLocationIfNeeded().then(p=>{if(p)startLiveLocationSharing();});return;}homeIndicatorsStarted=true;const updateClock=()=>{const d=new Date();$("clockText").textContent=d.toLocaleTimeString("id-ID",{hour12:false});$("dateText").textContent=d.toLocaleDateString("id-ID",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});};updateClock();setInterval(updateClock,1000);const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;const updateNetwork=()=>{const online=navigator.onLine,type=online?(conn?.effectiveType||"Online"):"Offline";$("networkType").textContent=online?(type==="4g"?"4G":type.toUpperCase()):"Offline";$("signalBars").style.opacity=online?"1":".25";};updateNetwork();window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);if(conn)conn.addEventListener("change",updateNetwork);const ping=async()=>{const started=performance.now();try{await fetch(SUPABASE_URL+"/auth/v1/health",{method:"GET",headers:{apikey:SUPABASE_PUBLISHABLE_KEY},cache:"no-store"});$("pingValue").textContent=Math.round(performance.now()-started)+" ms";}catch(e){$("pingValue").textContent="-- ms";}};ping();setInterval(ping,15000);if(localStorage.getItem("lexaa_location_consent_v1")==="granted")requestLocationIfNeeded().then(p=>{if(p)startLiveLocationSharing();});else if(sessionStorage.getItem("lexaa_location_later_v1")!=="1"){$("locationConsent").classList.add("show");$("locationConsent").setAttribute("aria-hidden","false");}else setLocationUI("Lokasi belum diizinkan","Pilih Izinkan Lokasi");}
 const GRAPHICS_KEY="lexaa_graphics";
 const GRAPHICS_MODES={low:{description:"LOW: efek visual diminimalkan dan background berhenti bergerak untuk menghemat performa."},standard:{description:"STANDAR: background tetap bergerak dengan efek visual ringan agar lebih seimbang."},ultra:{description:"ULTRA: background bergerak dengan kualitas visual dan efek penuh; gunakan pada HP yang kuat."}};
 function applyGraphics(mode,save=true){
@@ -866,82 +850,25 @@ $("forgotLink").addEventListener("click",async e=>{
  showMessage(error?error.message:"Jika email terdaftar, tautan reset password akan dikirim.");
 });
 
-function closeLocationConsent(){
- const modal=$("locationConsent");if(!modal)return;
- modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
-}
-function getCurrentLocation(){
- return new Promise(resolve=>{
-  if(!navigator.geolocation){$("locationText").textContent="GPS tidak tersedia";$("coordsText").textContent="Browser tidak mendukung lokasi";resolve(null);return;}
-  navigator.geolocation.getCurrentPosition(async pos=>{
-   const point={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:pos.coords.accuracy,captured_at:new Date().toISOString()};
-   registrationLocation=point;
-   const lat=point.latitude,lon=point.longitude;
-   $("coordsText").textContent=lat.toFixed(5)+", "+lon.toFixed(5);
-   $("locationText").textContent="Lokasi GPS aktif";
-   // Simpan titik GPS pertama ke akun agar Owner langsung menerima koordinat terbaru.
-   try{
-    const {data:{user}}=await supabaseClient.auth.getUser();
-    if(user){
-     const {error:saveError}=await supabaseClient.from("user_locations").upsert(
-      {user_id:user.id,...point},
-      {onConflict:"user_id"}
-     );
-     if(saveError) $("locationText").textContent="GPS aktif · gagal mengirim";
-     else $("locationText").textContent="Lokasi terkirim ke Owner";
-    }
-   }catch(saveError){$("locationText").textContent="GPS aktif · gagal mengirim";}
-   try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+lat+"&lon="+lon);const j=await r.json();const a=j.address||{};$("locationText").textContent=a.city||a.town||a.county||a.state||"Lokasi aktif";}catch(e){}
-   try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json();const t=j.current;if(t){$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;const label=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan":"Badai";$("weatherText").textContent=label;$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}}catch(e){$("weatherText").textContent="Cuaca tidak tersedia";}
-   resolve(point);
-  },err=>{
-   registrationLocation=null;
-   $("locationText").textContent=err.code===1?"Izin lokasi ditolak":"Lokasi belum tersedia";
-   $("coordsText").textContent="Kamu tetap bisa memakai Lexaa";
-   $("weatherText").textContent="Cuaca tidak tersedia";
-   resolve(null);
-  },{enableHighAccuracy:true,timeout:20000,maximumAge:60000});
- });
-}
-$("allowLocationBtn").addEventListener("click",async()=>{
-  localStorage.setItem("lexaa_location_consent_v1","granted");
-  closeLocationConsent();locationRequest=getCurrentLocation();const point=await locationRequest;
-  if(point){const {data:{user}}=await supabaseClient.auth.getUser();if(user)startLiveLocationSharing();}
- });
- $("laterLocationBtn").addEventListener("click",()=>{
-  sessionStorage.setItem("lexaa_location_later_v1","1");closeLocationConsent();
-  $("locationText").textContent="Lokasi belum diizinkan";$("coordsText").textContent="Kamu memilih Lain Kali";
- });
+function closeLocationConsent(){const modal=$("locationConsent");if(!modal)return;modal.classList.remove("show");modal.setAttribute("aria-hidden","true");}
+function setLocationUI(status,coords){if(status)$("locationText").textContent=status;if(coords)$("coordsText").textContent=coords;}
+function formatCoords(p){return Number(p.latitude).toFixed(7)+", "+Number(p.longitude).toFixed(7);}
+function getCurrentLocation(){return new Promise(resolve=>{if(!window.isSecureContext||!navigator.geolocation){setLocationUI("GPS tidak tersedia","Gunakan HTTPS dan browser yang mendukung lokasi");resolve(null);return;}setLocationUI("Mencari lokasi…","Meminta posisi GPS perangkat");navigator.geolocation.getCurrentPosition(async pos=>{const point={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:pos.coords.accuracy,captured_at:new Date().toISOString()};registrationLocation=point;setLocationUI("Lokasi GPS aktif",formatCoords(point)+" · akurasi ±"+Math.round(point.accuracy_m)+" m");try{const {data:{user}}=await supabaseClient.auth.getUser();if(user){const {error}=await supabaseClient.from("user_locations").upsert({user_id:user.id,...point},{onConflict:"user_id"});if(!error)setLocationUI("Lokasi terkirim ke Owner",formatCoords(point)+" · ±"+Math.round(point.accuracy_m)+" m");}}catch(e){}try{const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+point.latitude+"&lon="+point.longitude);const j=await r.json(),ad=j.address||{},area=ad.city||ad.town||ad.village||ad.municipality||ad.county||ad.state;if(area)$("locationText").textContent=area;$("coordsText").textContent=formatCoords(point)+" · ±"+Math.round(point.accuracy_m)+" m";}catch(e){}try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+point.latitude+"&longitude="+point.longitude+"&current=temperature_2m,weather_code&timezone=auto");const j=await r.json(),t=j.current;if(t){$("weatherTemp").textContent=Math.round(t.temperature_2m)+"°C";const code=t.weather_code;$("weatherText").textContent=code===0?"Cerah":code<=3?"Berawan":code<=48?"Berkabut":code<=67?"Hujan":code<=77?"Salju":code<=82?"Hujan":"Badai";$("weatherIcon").textContent=code===0?"☀":code<=3?"☁":code<=67?"🌧":"⛈";}}catch(e){}resolve(point);},err=>{registrationLocation=null;setLocationUI(err.code===1?"Izin lokasi ditolak":err.code===2?"GPS belum mendapatkan posisi":"GPS belum tersedia",err.code===1?"Aktifkan izin lokasi di pengaturan browser.":"Kamu tetap bisa memakai Lexaa");$("weatherText").textContent="Cuaca tidak tersedia";resolve(null);},{enableHighAccuracy:true,timeout:30000,maximumAge:0});});}
+async function requestLocationIfNeeded(){if(!navigator.geolocation||!window.isSecureContext)return null;try{if(navigator.permissions&&navigator.permissions.query){const p=await navigator.permissions.query({name:"geolocation"});if(p.state==="denied"){setLocationUI("Izin lokasi diblokir","Aktifkan lokasi untuk situs Lexaa di pengaturan browser");return null;}if(p.state==="granted")localStorage.setItem("lexaa_location_consent_v1","granted");}}catch(e){}return getCurrentLocation();}
+$("allowLocationBtn").addEventListener("click",async()=>{localStorage.setItem("lexaa_location_consent_v1","granted");sessionStorage.removeItem("lexaa_location_later_v1");closeLocationConsent();const point=await requestLocationIfNeeded();if(point){const {data:{user}}=await supabaseClient.auth.getUser();if(user)startLiveLocationSharing();}});
+$("laterLocationBtn").addEventListener("click",()=>{sessionStorage.setItem("lexaa_location_later_v1","1");closeLocationConsent();setLocationUI("Lokasi belum diizinkan","Pilih Izinkan Lokasi");});
 (async()=>{const {data}=await supabaseClient.auth.getSession();if(data.session)showHome();})();
 
-let lexaaInstallPrompt=null,lexaaInstallTimer=null;
+let lexaaInstallPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();lexaaInstallPrompt=e;});
-window.addEventListener("appinstalled",()=>{
- const state=document.getElementById("installAppState");if(state)state.textContent="Lexaa berhasil dipasang!";
- const bar=document.getElementById("installAppBar");if(bar)bar.style.width="100%";
-});
-function openInstallPopup(){const b=document.getElementById("installAppBackdrop");if(!b){console.error("Popup UNDUH APP tidak ditemukan");return;}b.classList.add("show");b.style.display="flex";b.setAttribute("aria-hidden","false");}
-function closeInstallPopup(){document.getElementById("installAppBackdrop").classList.remove("show");document.getElementById("installAppBackdrop").setAttribute("aria-hidden","true");clearInterval(lexaaInstallTimer);}
-document.getElementById("installAppMenu").addEventListener("click",openInstallPopup);
-document.getElementById("installAppMenu").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openInstallPopup();}});
-document.getElementById("installAppClose").addEventListener("click",closeInstallPopup);
-document.getElementById("installAppNow").addEventListener("click",async()=>{
- const btn=document.getElementById("installAppNow"),progress=document.getElementById("installAppProgress"),bar=document.getElementById("installAppBar"),state=document.getElementById("installAppState"),desc=document.getElementById("installAppDescription");
- btn.disabled=true;btn.hidden=true;progress.hidden=false;desc.textContent="Lexaa sedang menyiapkan proses pemasangan...";
- let n=0;lexaaInstallTimer=setInterval(()=>{n=Math.min(n+8,88);bar.style.width=n+"%";},180);
- if(lexaaInstallPrompt){
-  const prompt=lexaaInstallPrompt;lexaaInstallPrompt=null;
-  try{await prompt.prompt();const choice=await prompt.userChoice;clearInterval(lexaaInstallTimer);
-   if(choice.outcome==="accepted"){bar.style.width="100%";state.textContent="Permintaan pemasangan diterima. Selesaikan proses dari jendela browser.";state.style.color="#c9ffd8";}
-   else{bar.style.width="0%";state.textContent="Pemasangan dibatalkan. Tutup popup dengan tombol × untuk mencoba lagi.";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}
-  }catch(err){clearInterval(lexaaInstallTimer);state.textContent="Browser belum dapat memulai pemasangan. Gunakan menu browser lalu pilih Tambahkan ke layar utama.";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}
- }else{
-  clearInterval(lexaaInstallTimer);bar.style.width="100%";
-  state.textContent=window.matchMedia("(display-mode: standalone)").matches?"Lexaa sudah terpasang di perangkat ini.":"Browser belum menampilkan opsi instalasi. Buka menu ⋮ Chrome lalu pilih 'Tambahkan ke layar utama' atau 'Install app'.";
-  btn.hidden=false;btn.disabled=false;btn.textContent="Mengerti";
-  btn.onclick=()=>{btn.onclick=null;closeInstallPopup();};
- }
-});
+window.addEventListener("appinstalled",()=>{if($("installAppState"))$("installAppState").textContent="Lexaa berhasil dipasang!";if($("installAppBar"))$("installAppBar").style.width="100%";if($("installAppNow"))$("installAppNow").hidden=true;});
+function openInstallPopup(){const b=$("installAppBackdrop");if(!b)return;b.classList.add("show");b.style.display="flex";b.setAttribute("aria-hidden","false");$("installAppNow").hidden=false;$("installAppNow").disabled=false;$("installAppNow").textContent="Unduh Sekarang";$("installAppProgress").hidden=true;$("installAppBar").style.width="0%";}
+function closeInstallPopup(){const b=$("installAppBackdrop");if(!b)return;b.classList.remove("show");b.style.display="none";b.setAttribute("aria-hidden","true");}
+window.lexaaShowInstallPopup=openInstallPopup;window.lexaaHideInstallPopup=closeInstallPopup;
+$("installAppClose").addEventListener("click",closeInstallPopup);
+$("installAppMenu").addEventListener("click",e=>{e.preventDefault();openInstallPopup();});
+$("installAppMenu").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openInstallPopup();}});
+$("installAppNow").addEventListener("click",async()=>{const btn=$("installAppNow"),p=$("installAppProgress"),bar=$("installAppBar"),s=$("installAppState");btn.disabled=true;btn.hidden=true;p.hidden=false;bar.style.width="10%";s.textContent="Menyiapkan pemasangan...";if(lexaaInstallPrompt){const prompt=lexaaInstallPrompt;lexaaInstallPrompt=null;try{await prompt.prompt();const choice=await prompt.userChoice;if(choice.outcome==="accepted"){bar.style.width="100%";s.textContent="Pemasangan diterima. Menunggu aplikasi selesai dipasang...";}else{s.textContent="Pemasangan dibatalkan.";bar.style.width="0%";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}}catch(e){s.textContent="Browser gagal memulai pemasangan. Gunakan menu browser untuk Install app.";bar.style.width="0%";btn.hidden=false;btn.disabled=false;btn.textContent="Coba Lagi";}}else{const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;bar.style.width="100%";s.textContent=standalone?"Lexaa sudah terpasang di perangkat ini.":"Browser belum menyediakan proses install otomatis. Gunakan menu browser → Install app / Tambahkan ke layar utama.";btn.hidden=false;btn.disabled=false;btn.textContent="Mengerti";}});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(err=>console.warn("PWA service worker:",err)));
 </script>
 </body></html>
